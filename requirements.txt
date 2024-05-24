@@ -1,0 +1,8 @@
+sentence_transformers
+langchain
+langchain_community
+langchain_core
+pqdm
+tqdm
+openml
+chromadb

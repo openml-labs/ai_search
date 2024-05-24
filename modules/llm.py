@@ -11,6 +11,7 @@ from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
 from langchain_community.llms import HuggingFaceHub
 from langchain_community.vectorstores.chroma import Chroma
 from tqdm import tqdm
@@ -19,17 +20,23 @@ from tqdm import tqdm
 def load_document_and_create_vector_store(
     metadata_df,
     persist_directory="./chroma_db/",
-    model_name="BAAI/bge-base-en-v1.5",
+    # model_name="BAAI/bge-base-en-v1.5",
+    model_name = "Intel/bge-small-en-v1.5-rag-int8-static",
     device="cpu",
     normalize_embeddings=True,
     recreate_chroma=False,
 ) -> Chroma:
     # load model
     model_kwargs = {"device": device}
-    encode_kwargs = {"normalize_embeddings": normalize_embeddings}
+    encode_kwargs = {"normalize_embeddings": normalize_embeddings, "quantized": True}
     embeddings = HuggingFaceEmbeddings(
-        model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs
+        model_name=model_name, model_kwargs=model_kwargs, encode_kwargs=encode_kwargs,
     )
+    # embeddings = QuantizedBiEncoderEmbeddings(
+    #     model_name=model_name,
+    #     encode_kwargs=encode_kwargs,
+    #     model_kwargs=model_kwargs,
+    # )
 
     # if the directory already exists, load the vector store else create a new one
     if os.path.exists(persist_directory) and recreate_chroma == False:
@@ -37,8 +44,7 @@ def load_document_and_create_vector_store(
         return db
     else:
         # load data
-        # might need to chunk if the descriptions are too large, fine for now
-        loader = DataFrameLoader(metadata_df, page_content_column="description")
+        loader = DataFrameLoader(metadata_df, page_content_column="Combined_information")
         documents = loader.load()
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000, chunk_overlap=150
@@ -58,9 +64,15 @@ def load_document_and_create_vector_store(
         ]
 
         db = Chroma(embedding_function=embeddings, persist_directory=persist_directory)
-        for i in tqdm(range(0, len(unique_docs), 100)):
-            db.add_documents(unique_docs[i : i + 100], ids=unique_ids[i : i + 100])
-        # db.persist()
+        # add documents to the vector store in batches of 100
+        # if len(unique_docs) < 100:
+        #     db.add_documents(unique_docs, ids=unique_ids)
+        # else:
+        #     for i in tqdm(range(0, len(unique_docs), 100)):
+        #         db.add_documents(unique_docs[i : i + 100], ids=unique_ids[i : i + 100])
+        # return db
+        for i in tqdm(range(len(unique_docs))):
+            db.add_document(unique_docs[i], ids=unique_ids[i])
         return db
 
 
@@ -112,6 +124,7 @@ def create_result_dataframe(query, qa, all_dataset_metadata) -> pd.DataFrame:
         result.metadata["did"]: result.page_content
         for result in results["source_documents"]
     }
-    df = pd.DataFrame(list(result_to_dict.items()), columns=["did", "description"])
+    df = pd.DataFrame(list(result_to_dict.items()), columns=["did", "name", "Combined_information"])
     # add short description
-    return pd.merge(all_dataset_metadata, df, on='did', how='inner')
+    # return pd.merge(all_dataset_metadata, df, on='did', how='inner')
+    return df
