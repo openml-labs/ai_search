@@ -72,7 +72,7 @@ def load_document_and_create_vector_store(
         #         db.add_documents(unique_docs[i : i + 100], ids=unique_ids[i : i + 100])
         # return db
         for i in tqdm(range(len(unique_docs))):
-            db.add_document(unique_docs[i], ids=unique_ids[i])
+            db.add_documents(unique_docs[i], ids=unique_ids[i])
         return db
 
 
