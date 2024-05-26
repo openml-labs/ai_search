@@ -1,8 +1,1 @@
-sentence_transformers
-langchain
-langchain_community
-langchain_core
-pqdm
-tqdm
-openml
-chromadb
+pip install sentence_transformers langchain langchain_community langchain_core pqdm tqdm openml chromadb oslo.concurrency
