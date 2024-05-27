@@ -1,0 +1,13 @@
+{
+    "rqa_prompt_template" : "This database is a list of dataset metadata. Use the following pieces of context to find the relevant document. Answer only from the context given using the {question} given. If you do not know the answer, say you do not know. {context}",
+    "num_return_documents" : 50,
+    "embedding_model": "BAAI/bge-base-en-v1.5",
+    "llm_model": "HuggingFaceH4/zephyr-7b-beta",
+    "persist_dir": "./data/chroma_db/",
+    "recreate_chroma": false,
+    "recreate_data_cache" : false,
+    "data_download_n_jobs" : 20,
+    "training" : false,
+    "search_type" : "similarity"
+
+}
