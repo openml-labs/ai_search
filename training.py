@@ -3,10 +3,12 @@ from modules.utils import *
 
 # Load the config file and set training to true
 config = load_config_and_device("config.json")
-config["training"] == True
+config["training"] = True
+logging.info("Training is set to True.")
 
 # Download the data, generate metadata, create the vector database, create the LLM chain, and run a test query 
 for type_of_data in ["dataset", "flow"]:
+    config["type_of_data"] = type_of_data
     # Check if ./data/ folder exists if not create it
     if not os.path.exists("./data/"):
         os.makedirs("./data/")

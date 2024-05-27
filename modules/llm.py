@@ -64,7 +64,7 @@ def load_document_and_create_vector_store(
     model_kwargs = {"device": config["device"]}
     encode_kwargs = {"normalize_embeddings": True}
     embeddings = HuggingFaceEmbeddings(
-        model_name=config["model_name"],
+        model_name=config["embedding_model"],
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
     )
