@@ -4,10 +4,11 @@ from modules.utils import *
 # Load the config file and set training to true
 config = load_config_and_device("config.json")
 config["training"] = True
-logging.info("Training is set to True.")
+print("[INFO] Training is set to True.")
 
 # Download the data, generate metadata, create the vector database, create the LLM chain, and run a test query 
 for type_of_data in ["dataset", "flow"]:
+    print(f"[INFO] Type of data - {type_of_data}")
     config["type_of_data"] = type_of_data
     # Check if ./data/ folder exists if not create it
     if not os.path.exists("./data/"):
@@ -41,3 +42,4 @@ for type_of_data in ["dataset", "flow"]:
     result_data_frame = get_result_from_query(
         query=query_test_dict[type_of_data], qa=qa, config=config
     )
+    print(result_data_frame)

@@ -31,6 +31,7 @@ def load_and_process_data(metadata_df, page_content_column):
 
 
 def generate_unique_documents(documents):
+    # https://stackoverflow.com/questions/76265631/chromadb-add-single-document-only-if-it-doesnt-exist
     # Generate unique IDs for the documents
     ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, doc.page_content)) for doc in documents]
     unique_ids = list(set(ids))
@@ -67,6 +68,7 @@ def load_document_and_create_vector_store(
         model_name=config["embedding_model"],
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
+        show_progress = True
     )
 
     # Collection names are used to separate the different types of data in the database
@@ -76,13 +78,13 @@ def load_document_and_create_vector_store(
     # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
     if config["training"] == False:
         # Check if the directory already exists, if not raise an exception
-        if not os.path.exists(config["persist_directory"]):
+        if not os.path.exists(config["persist_dir"]):
             raise Exception(
                 "Persist directory does not exist. Please run the training pipeline first."
             )
         # load the vector store
         return Chroma(
-            persist_directory=config["persist_directory"],
+            persist_directory=config["persist_dir"],
             embedding_function=embeddings,
             collection_name=dict_collection_names[config["type_of_data"]],
         )
@@ -101,7 +103,7 @@ def load_document_and_create_vector_store(
         # Initialize the database
         db = Chroma(
             embedding_function=embeddings,
-            persist_directory=config["persist_directory"],
+            persist_directory=config["persist_dir"],
             collection_name=collection_name,
         )
 

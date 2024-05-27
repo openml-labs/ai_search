@@ -9,10 +9,10 @@ import json
 
 from pqdm.threads import pqdm
 # from pqdm.processes import pqdm
-import logging
+from pathlib import Path
 
 def find_device():
-    logging.info("Finding device.")
+    print("[INFO] Finding device.")
     if torch.cuda.is_available():
         return "cuda"
     elif torch.backends.mps.is_available():
@@ -29,18 +29,26 @@ def load_config_and_device(config_file):
     
     # Find device and set it in the config between cpu and cuda and mps if available
     config["device"] = find_device()
-    logging.info(f"Device found: {config['device']}")
+    print(f"[INFO] Device found: {config['device']}")
     return config
 
-def get_dataset_description(dataset_name) -> openml.datasets.dataset.OpenMLDataset:
+def get_dataset_description(dataset_id) -> openml.datasets.dataset.OpenMLDataset:
     # Get the dataset description from OpenML using the dataset name
     # TODO : Check for objects that do not have qualities being not downloaded properly
+    # try:
     data = openml.datasets.get_dataset(
-        dataset_name,
+        dataset_id = dataset_id,
         download_data=False,
         download_qualities=True,
         download_features_meta_data=True,
     )
+    # except: # all exceptions are because no qualities/meta_data exist. in this case only the id and description are used
+        # data = openml.datasets.get_dataset(
+        #     dataset_id = dataset_id,
+        #     download_data=False,
+        #     download_qualities=False,
+        #     download_features_meta_data=False,
+        # )
 
     return data
 
@@ -57,7 +65,7 @@ def get_all_metadata_from_openml(config) -> Union[List, List]:
     # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
     # TODO : Check if this behavior is correct, or if data does not exist, send to training pipeline?
     if config["training"] == False:
-        logging.info("Training is set to False.")
+        print("[INFO] Training is set to False.")
         # Check if the metadata files exist for all types of data
         if not os.path.exists(save_filename):
             raise Exception(
@@ -71,48 +79,57 @@ def get_all_metadata_from_openml(config) -> Union[List, List]:
     
     # If we are training, we need to recreate the cache and get the metadata from OpenML
     if config["training"] == True:
-        logging.info("Training is set to True.")
+        print("[INFO] Training is set to True.")
         # the id column name is different for dataset and flow, so we need to handle that
         dict_id_column_name = {"dataset": "did", "flow": "id"}
         id_column_name = dict_id_column_name[config["type_of_data"]]
 
         # Gather all OpenML objects of the type of data
         if config["type_of_data"] == "dataset":
-            logging.info("Getting dataset metadata.")
+            print("[INFO] Getting dataset metadata.")
             all_objects = openml.datasets.list_datasets(output_format="dataframe")
         elif config["type_of_data"] == "flow":
-            logging.info("Getting flow metadata.")
+            print("[INFO] Getting flow metadata.")
             all_objects = openml.flows.list_flows(output_format="dataframe")
 
-        # List all identifiers
-        data_id = [all_objects.iloc[i][id_column_name] for i in range(len(all_objects))]
-
-        # Get a list of all object names
-        object_names = all_objects["name"].tolist()
+        # get cache directory
+        # cache_directory = Path(openml.config.get_cache_directory())
 
         if config["type_of_data"] == "dataset":
+            print("[INFO] Checking downloaded files and skipping them.")
+            # cached_files = os.listdir(cache_directory/"datasets")
+             # List all identifiers
+            # all_objects = all_objects[~all_objects.did.astype(str).isin(cached_files)]
+            data_id = [int(all_objects.iloc[i][id_column_name]) for i in range(len(all_objects))]
+
             # Initialize cache before using parallel (following OpenML python API documentation)
-            logging.info("Initializing cache.")
-            get_dataset_description(object_names[0])
+            print("[INFO] Initializing cache.")
+            get_dataset_description(data_id[0])
 
             # Get all object metadata using n_jobs parallel threads from openml
-            logging.info("Getting dataset metadata from OpenML.")
+            print("[INFO] Getting dataset metadata from OpenML.")
             openml_data_object = pqdm(
-                object_names, get_dataset_description, n_jobs=config["data_download_n_jobs"]
+                data_id, get_dataset_description, n_jobs=config["data_download_n_jobs"]
             )
         elif config["type_of_data"] == "flow":
+            print("[INFO] Checking downloaded files and skipping them.")
+            # cached_files = os.listdir(cache_directory/"flows")
+             # List all identifiers
+            # all_objects = all_objects[~all_objects.id.astype(str).isin(cached_files)]
+            
+            data_id = [int(all_objects.iloc[i][id_column_name]) for i in range(len(all_objects))]
             # Initialize cache before using parallel (following OpenML python API documentation)
-            logging.info("Initializing cache.")
+            print("[INFO] Initializing cache.")
             get_flow_description(data_id[0])
 
             # Get all object metadata using n_jobs parallel threads from openml
-            logging.info("Getting flow metadata from OpenML.")
+            print("[INFO] Getting flow metadata from OpenML.")
             openml_data_object = pqdm(
                 data_id, get_flow_description, n_jobs=config["data_download_n_jobs"]
             )
 
         # Save the metadata to a file
-        logging.info("Saving metadata to file.")
+        print("[INFO] Saving metadata to file.")
         with open(save_filename, "wb") as f:
             pickle.dump((openml_data_object, data_id, all_objects), f)
         
@@ -122,6 +139,7 @@ def extract_attribute(attribute, attr_name):
     return getattr(attribute, attr_name, "")
 
 def join_attributes(attribute, attr_name):
+    
     return (
         " ".join([f"{k} : {v}," for k, v in getattr(attribute, attr_name, {}).items()])
         if hasattr(attribute, attr_name)
