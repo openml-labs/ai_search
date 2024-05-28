@@ -1,6 +1,6 @@
 import os
-from typing import Tuple
 import uuid
+from typing import Tuple
 
 import langchain
 import langchain_community
@@ -11,7 +11,6 @@ from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
-
 # from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
 from langchain_community.llms import HuggingFaceHub
 from langchain_community.vectorstores.chroma import Chroma

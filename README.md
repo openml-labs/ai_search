@@ -7,7 +7,7 @@
 - Clone the repository
 - Create a virtual environment and activate it
 <!-- - Install the requirements using `pip install -r requirements.txt` -->
-- For now, install `pip install sentence_transformers langchain langchain_community langchain_core pqdm tqdm openml chromadb oslo.concurrency`
+- For now, install `pip install sentence_transformers langchain langchain_community langchain_core pqdm tqdm openml chromadb oslo.concurrency fastapi`
   - A proper requirements file will be provided shortly
 - Install oslo.concurrency using `pip install oslo.concurrency`
 - Hugging face
@@ -16,32 +16,33 @@
   - Navigate to this [page](https://huggingface.co/settings/tokens) and copy the access token
   - Run `export HUGGINGFACEHUB_API_TOKEN=your_token_here` to set the token (in the shell)
       - For some weird reason, this is not read if you are using WSL2 and the VSCode connection. (Using a normal jupyter notebook/terminal works fine) 
+- Run training.py (for the first time/to update the model). This takes care of basically everything. (Refer to the training section for more details)
+- Run `uvicorn main:app` to start the FastAPI server. 
+  - Navigate to `{localhost}/docs`
+  - Click on any endpoint and then click on "Try it out" to test the API
 
-### For Datasets
-- Run the main.py using `python main.py --query "query"`
-- Check/change the config in main.py for more options
-- Example query: `python main.py --query "Find a dataset about diabetes"`
-- What happens automatically:
-  - Uses the openml API to download metadata and qualities of all datasets and caches them (locally by default) and to a pickle file. [This takes a while!!]
-  - Creates a vector store with chunked data to a persistent dataset store (./chroma_db). Entries are added with a unique hash generated based on the text content to prevent duplicates. [This takes a while!!]
-  - Relevant modules are downloaded from Huggingface automatically and cached.
-  - A RAG pipeline is created with the vector store and the relevant modules. This pipeline is used to generate answers for the query.
+### Training
+- Run the training.py using `python training.py`
+
+### Inference
+- Run the inference.py using `uvicorn main:app`
 
 ## Config
-- The config is present in main.py for now. This will be moved to a separate file/format later.
+- The main config file is `config.json` 
 - Possible options are as follows:
   - rqa_prompt_template: The template for the RAG pipeline search prompt. This is used by the model to query the database. 
   - num_return_documents: Number of documents to return for a query. Too high a number can lead to Out of Memory errors. (Defaults to 50)
   - embedding_model: The model to use for generating embeddings. This is used to generate embeddings for the documents as a means of comparison using the LLM's embeddings. (Defaults to BAAI/bge-base-en-v1.5)
   - llm_model: The main workhorse of the pipeline. (Defaults to HuggingFaceH4/zephyr-7b-beta)
   - persist_dir: The directory to store the cached data. Defaults to ./chroma_db/ and stores the embeddings for the documents with a unique hash. (Defaults to ./chroma_db/)
-  - recreate_chroma: Whether to recreate the chroma_db or not. Useful for changes in data. (Duplicate entries are not added by default) Defaults to False.
-  - recreate_data_cache: Whether to redownload dataset metadata and qualities or not. (Defaults to False)
   - data_download_n_jobs: Number of jobs to run in parallel for downloading data. (Defaults to 20)
-  - device: Device to create the embeddings on. (Defaults to 'cuda' if available else 'cpu'). Usually using a GPU/Apple Silicon is recommended.
+  - training: Whether to train the model or not. (Defaults to False) this is automatically set to True when when running the training.py script.
+  - search_type : The type of vector comparison to use. (Defaults to "similarity")
 
 ## Files and Directories
 - The modules for the RAG pipeline are present in modules/
-- The main file for the pipeline is main.py . This file is used to run the pipeline. (This will later be converted to a FastAPI app)
-    - For now, the config is present in main.py
-- main.ipynb is a notebook that can be used to run the pipeline interactively. This is useful for debugging and testing.
+  - utils.py : Contains utility functions for the pipeline and data
+  - llm.py : Contains all the functions related to the LLM
+  - This will be refactored soon
+- The training script is present in training.py . Runnning this script will take care of everything.
+- The FastAPI server is present in inference.py. Run this to start the server.

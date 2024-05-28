@@ -1,15 +1,15 @@
+import json
 import os
 import pickle
+# from pqdm.processes import pqdm
+from pathlib import Path
 from typing import List, Union
 
 import openml
-import torch
 import pandas as pd
-import json
-
+import torch
 from pqdm.threads import pqdm
-# from pqdm.processes import pqdm
-from pathlib import Path
+
 
 def find_device():
     print("[INFO] Finding device.")

@@ -4,8 +4,6 @@
     "embedding_model": "BAAI/bge-base-en-v1.5",
     "llm_model": "HuggingFaceH4/zephyr-7b-beta",
     "persist_dir": "./data/chroma_db/",
-    "recreate_chroma": false,
-    "recreate_data_cache" : false,
     "data_download_n_jobs" : 20,
     "training" : false,
     "search_type" : "similarity"
