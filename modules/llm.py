@@ -95,6 +95,7 @@ def load_document_and_create_vector_store(
     Returns: db (Chroma)
     """
     # load model
+    print("[INFO] Loading model...")
     model_kwargs = {"device": config["device"]}
     encode_kwargs = {"normalize_embeddings": True}
     embeddings = HuggingFaceEmbeddings(
@@ -103,7 +104,7 @@ def load_document_and_create_vector_store(
         encode_kwargs=encode_kwargs,
         # show_progress = True
     )
-
+    print("[INFO] Model loaded.")
     # Collection names are used to separate the different types of data in the database
 
     dict_collection_names = {"dataset": "datasets", "flow": "flows"}
@@ -244,6 +245,11 @@ def process_documents(source_documents, key_name):
         }
     return dict_results
 
+def make_clickable(val):
+    """
+    Description: Make the URL clickable in the dataframe.
+    """
+    return '<a href="{}">{}</a>'.format(val,val)
 
 def create_output_dataframe(dict_results, type_of_data):
     """
@@ -254,12 +260,50 @@ def create_output_dataframe(dict_results, type_of_data):
     Returns: A dataframe with the results and duplicate names removed.
     """
     output_df = pd.DataFrame(dict_results).T.reset_index()
+    # output_df["urls"] = output_df["index"].apply(
+    #     lambda x: f"https://www.openml.org/api/v1/json/{type_of_data}/{x}"
+    # )
+    # https://www.openml.org/search?type=data&sort=runs&status=any&id=31
     output_df["urls"] = output_df["index"].apply(
-        lambda x: f"https://www.openml.org/api/v1/json/{type_of_data}/{x}"
+        lambda x: f"https://www.openml.org/search?type={type_of_data}&id={x}"
     )
+    output_df["urls"] = output_df["urls"].apply(make_clickable)
+    # data = openml.datasets.get_dataset(
     # get rows with unique names
+    if type_of_data == "data":
+        output_df["command"] = output_df["index"].apply(
+            lambda x: f"dataset = openml.datasets.get_dataset({x})"
+        )
+    elif type_of_data == "flow":
+        output_df["command"] = output_df["index"].apply(
+            lambda x: f"flow = openml.flows.get_flow({x})"
+        )
     output_df = output_df.drop_duplicates(subset=["name"])
+    # order the columns
+    output_df = output_df[
+        ["index","name", "command","urls", "page_content"]
+    ].rename(columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"})
     return output_df
+
+def check_query(query):
+    """
+    Description: Performs checks on the query
+    - Replaces %20 with space character (browsers do this automatically when spaces are in the URL)
+    - Removes leading and trailing spaces
+    - Limits the query to 150 characters
+    
+    Input: query (str)
+    
+    Returns: None
+    """
+    if query == "":
+        raise ValueError("Query cannot be empty.")
+    query = query.replace(
+        "%20", " "
+    )  # replace %20 with space character (browsers do this automatically when spaces are in the URL)
+    query = query.strip()
+    query = query[:150]
+    return query
 
 
 def get_result_from_query(query, qa, type_of_query) -> pd.DataFrame:
@@ -279,6 +323,10 @@ def get_result_from_query(query, qa, type_of_query) -> pd.DataFrame:
     else:
         raise ValueError(f"Unsupported type_of_data: {type_of_query}")
 
+    # Process the query
+    query = check_query(query)
+    if query == "":
+        return ""
     source_documents = fetch_results(query, qa)
     dict_results = process_documents(source_documents, key_name)
     output_df = create_output_dataframe(dict_results, type_of_query)

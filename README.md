@@ -18,8 +18,7 @@
       - For some weird reason, this is not read if you are using WSL2 and the VSCode connection. (Using a normal jupyter notebook/terminal works fine) 
 - Run training.py (for the first time/to update the model). This takes care of basically everything. (Refer to the training section for more details)
 - Run `uvicorn main:app` to start the FastAPI server. 
-  - Navigate to `{localhost}/docs`
-  - Click on any endpoint and then click on "Try it out" to test the API
+- Enjoy :)
 
 ### Training
 - Run the training.py using `python training.py`

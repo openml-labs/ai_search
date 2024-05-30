@@ -3,6 +3,7 @@
 import json
 import os
 import pickle
+
 # from pqdm.processes import pqdm
 from pathlib import Path
 from typing import List, Union
@@ -102,16 +103,17 @@ def get_all_metadata_from_openml(config) -> Union[List, List]:
     # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
     # TODO : Check if this behavior is correct, or if data does not exist, send to training pipeline?
     if config["training"] == False:
-        print("[INFO] Training is set to False.")
+        # print("[INFO] Training is set to False.")
         # Check if the metadata files exist for all types of data
         if not os.path.exists(save_filename):
             raise Exception(
                 "Metadata files do not exist. Please run the training pipeline first."
             )
-
+        print("[INFO] Loading metadata from file.")
         # Load the metadata files for all types of data
         with open(save_filename, "rb") as f:
             all_data_descriptions, data_id, all_datasets = pickle.load(f)
+        print("[INFO] Metadata loaded.")
         return all_data_descriptions, data_id, all_datasets
 
     # If we are training, we need to recreate the cache and get the metadata from OpenML

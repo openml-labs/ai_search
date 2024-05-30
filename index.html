@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Page</title>
+    <!-- DataTables CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css"
+    />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <!-- DataTables JS -->
+    <script
+      type="text/javascript"
+      charset="utf8"
+      src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"
+    ></script>
+    <style>
+      #loading-container {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 10px;
+        background: #f3f3f3;
+        border-radius: 5px;
+        overflow: hidden;
+        z-index: 1000;
+      }
+
+      #loading {
+        width: 100%;
+        height: 100%;
+        background: #007bff;
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          transform: translateX(-100%);
+        }
+        50% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+      .text-wrap {
+        white-space: normal;
+      }
+      .width-200 {
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OpenML Advanced Search</h1>
+    <form id="searchForm">
+      <input
+        type="text"
+        id="query"
+        name="query"
+        placeholder="Enter your query"
+        required
+      />
+      <select id="queryType" name="queryType" required>
+        <option value="dataset">Dataset</option>
+        <option value="flow">Flow</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <div id="loading-container">
+      <div id="loading"></div>
+    </div>
+    <div id="result">
+      <table id="resultTable" class="display compact">
+        <thead>
+          <tr>
+            <!-- These headers will be dynamically populated -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      document
+        .getElementById("searchForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const query = document.getElementById("query").value;
+          const queryType = document.getElementById("queryType").value;
+          let endpoint = `/${queryType}/${query}`;
+          const loadingContainer = document.getElementById("loading-container");
+          const result = document.getElementById("result");
+
+          try {
+            loadingContainer.style.display = "block";
+            result.style.display = "none";
+
+            const response = await fetch(endpoint);
+            const data = await response.json();
+
+            // Ensure previous DataTable is destroyed properly
+            if ($.fn.dataTable.isDataTable("#resultTable")) {
+              $("#resultTable").DataTable().clear().destroy();
+            }
+
+            // Populate table headers and data if any data is returned
+            if (data.length > 0) {
+              const columns = Object.keys(data[0]).map((key) => ({
+                title: key,
+                data: key,
+              }));
+              $("#resultTable").DataTable({
+                data: data,
+                columns: columns,
+              });
+              result.style.display = "block";
+            } else {
+              result.innerHTML = "<p>No results found</p>";
+              result.style.display = "block";
+            }
+          } catch (error) {
+            result.innerText = "An error occurred: " + error;
+            result.style.display = "block";
+          } finally {
+            loadingContainer.style.display = "none";
+          }
+        });
+    </script>
+  </body>
+</html>
