@@ -3,7 +3,7 @@ from modules.utils import *
 import chromadb
 
 # Load the config file and set training to true
-config = load_config_and_device("config.json")
+config = load_config_and_device("config.json", training=True)
 client = chromadb.PersistentClient(path=config["persist_dir"])
 config["training"] = True
 print(config)
@@ -26,6 +26,6 @@ for type_of_data in ["dataset", "flow"]:
 
     # Run the test query
     result_data_frame = get_result_from_query(
-        query=query_test_dict[type_of_data], qa=qa, type_of_query=type_of_data
+        query=query_test_dict[type_of_data], qa=qa, type_of_query=type_of_data,config=config
     )
     print(result_data_frame)

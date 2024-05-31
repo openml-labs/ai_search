@@ -32,7 +32,6 @@
   - rqa_prompt_template: The template for the RAG pipeline search prompt. This is used by the model to query the database. 
   - num_return_documents: Number of documents to return for a query. Too high a number can lead to Out of Memory errors. (Defaults to 50)
   - embedding_model: The model to use for generating embeddings. This is used to generate embeddings for the documents as a means of comparison using the LLM's embeddings. (Defaults to BAAI/bge-base-en-v1.5)
-  - llm_model: The main workhorse of the pipeline. (Defaults to HuggingFaceH4/zephyr-7b-beta)
   - persist_dir: The directory to store the cached data. Defaults to ./chroma_db/ and stores the embeddings for the documents with a unique hash. (Defaults to ./chroma_db/)
   - data_download_n_jobs: Number of jobs to run in parallel for downloading data. (Defaults to 20)
   - training: Whether to train the model or not. (Defaults to False) this is automatically set to True when when running the training.py script.

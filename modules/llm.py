@@ -10,18 +10,30 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
-from langchain_community.embeddings import (HuggingFaceEmbeddings,
-                                            SentenceTransformerEmbeddings)
-from langchain_community.llms import HuggingFaceHub
+from langchain_community.embeddings import (
+    HuggingFaceEmbeddings,
+    SentenceTransformerEmbeddings,
+)
+from collections import OrderedDict
+
+# from langchain_community.llms import HuggingFaceHub
+from langchain_community.llms import HuggingFaceEndpoint
 from langchain_community.vectorstores.chroma import Chroma
 from langchain_core.embeddings import Embeddings
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.chains import create_retrieval_chain
+
+
 from tqdm import tqdm
 
 from .utils import create_metadata_dataframe, get_all_metadata_from_openml
+from flashrank import Ranker, RerankRequest
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 # --- ADDING OBJECTS TO CHROMA DB AND LOADING THE VECTOR STORE ---
+
 
 def load_and_process_data(metadata_df, page_content_column):
     """
@@ -51,7 +63,7 @@ def generate_unique_documents(documents):
 
     Returns: unique_docs (list), unique_ids (list)
     """
-    # 
+    #
     # Generate unique IDs for the documents
     ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, doc.page_content)) for doc in documents]
     unique_ids = list(set(ids))
@@ -70,9 +82,9 @@ def generate_unique_documents(documents):
 def add_documents_to_db(db, unique_docs, unique_ids):
     """
     Description: Add documents to the vector store in batches of 200.
-    
+
     Input: db (Chroma), unique_docs (list), unique_ids (list)
-    
+
     Returns: None
     """
     if len(unique_docs) < 200:
@@ -89,9 +101,9 @@ def load_document_and_create_vector_store(
 ) -> Chroma:
     """
     Description: Load the documents and create the vector store. If the training flag is set to True, the documents are added to the vector store. If the training flag is set to False, the vector store is loaded from the persist directory.
-    
+
     Input: metadata_df (pd.DataFrame), chroma_client (chromadb.PersistentClient), config (dict)
-    
+
     Returns: db (Chroma)
     """
     # load model
@@ -147,7 +159,9 @@ def load_document_and_create_vector_store(
 
         return db
 
+
 # --- LLM CHAIN SETUP ---
+
 
 def initialize_llm_chain(
     vectordb,
@@ -155,46 +169,26 @@ def initialize_llm_chain(
 ) -> langchain.chains.retrieval_qa.base.RetrievalQA:
     """
     Description: Initialize the LLM chain and setup Retrieval QA with the specified configuration.
-    
+
     Input: vectordb (Chroma), config (dict)
-    
+
     Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
     """
-    HUGGINGFACEHUB_API_KEY = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
+    # HUGGINGFACEHUB_API_KEY = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
     # use export HUGGINGFACEHUB_API_TOKEN=your_token_here to set the token (in the shell)
 
-    retriever = vectordb.as_retriever(
+    return vectordb.as_retriever(
         search_type=config["search_type"],
         search_kwargs={"k": config["num_return_documents"]},
     )
-    llm = HuggingFaceHub(
-        repo_id=config["llm_model"],
-        # Temperature=0.1,
-        # max_length=512,
-        model_kwargs={"temperature": 0.1, "max_length": 512},
-        huggingfacehub_api_token=HUGGINGFACEHUB_API_KEY,
-    )
-    RQA_PROMPT = PromptTemplate(
-        template=config["rqa_prompt_template"], input_variables=["context", "question"]
-    )
-
-    rqa_chain_type_kwargs = {"prompt": RQA_PROMPT}
-    return RetrievalQA.from_chain_type(
-        llm,
-        retriever=retriever,
-        chain_type_kwargs=rqa_chain_type_kwargs,
-        return_source_documents=True,
-        verbose=False,
-    )
-
-
+   
 def setup_vector_db_and_qa(config, data_type, client):
     """
-    Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage. 
+    Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
     This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.
-    
+
     Input: config (dict), data_type (str), client (chromadb.PersistentClient)
-    
+
     Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
     """
 
@@ -215,51 +209,73 @@ def setup_vector_db_and_qa(config, data_type, client):
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
     return qa
 
+
 # --- PROCESSING RESULTS ---
 
-def fetch_results(query, qa):
+
+def fetch_results(query, qa,config, type_of_query):
     """
     Description: Fetch results for the query using the QA chain.
-    
-    Input: query (str), qa (langchain.chains.retrieval_qa.base.RetrievalQA)
-    
+
+    Input: query (str), qa (langchain.chains.retrieval_qa.base.RetrievalQA), type_of_query (str), config (dict)
+
     Returns: results["source_documents"] (list)
     """
-    results = qa.invoke({"query": query})
-    return results["source_documents"]
+    results = qa.invoke(input=query, config = {"temperature" : config["temperature"], "top-p": config["top_p"]})
+    id_column = {"dataset": "did", "flow": "id", "data":"did"}
+    id_column = id_column[type_of_query]
+
+    if config["reranking"] == True:
+        print("[INFO] Reranking results...")
+        ranker = Ranker()
+        rerankrequest = RerankRequest(query=query, passages=[{"id":result.metadata[id_column], "text":result.page_content} for result in results])
+        ranking = ranker.rerank(rerankrequest)
+        ids = [result["id"] for result in ranking]
+        ranked_results = [result for result in results if result.metadata[id_column] in ids]
+        print("[INFO] Reranking complete.")
+        return ranked_results
+
+    else:
+        return results
 
 
 def process_documents(source_documents, key_name):
     """
     Description: Process the source documents and create a dictionary with the key_name as the key and the name and page content as the values.
-    
+
     Input: source_documents (list), key_name (str)
-    
+
     Returns: dict_results (dict)
     """
-    dict_results = {}
+    dict_results = OrderedDict()
     for result in source_documents:
         dict_results[result.metadata[key_name]] = {
             "name": result.metadata["name"],
             "page_content": result.page_content,
         }
-    return dict_results
+    ids = [result.metadata[key_name] for result in source_documents]
+    return dict_results, ids
 
+    
 def make_clickable(val):
     """
     Description: Make the URL clickable in the dataframe.
     """
-    return '<a href="{}">{}</a>'.format(val,val)
+    return '<a href="{}">{}</a>'.format(val, val)
 
-def create_output_dataframe(dict_results, type_of_data):
+
+def create_output_dataframe(dict_results, type_of_data, ids_order):
     """
     Description: Create an output dataframe with the results. The URLs are API calls to the OpenML API for the specific type of data.
-    
+
     Input: dict_results (dict), type_of_data (str)
-    
+
     Returns: A dataframe with the results and duplicate names removed.
     """
     output_df = pd.DataFrame(dict_results).T.reset_index()
+    # order the rows based on the order of the ids
+    output_df["index"] = output_df["index"].astype(int)
+    output_df = output_df.set_index("index").loc[ids_order].reset_index()
     # output_df["urls"] = output_df["index"].apply(
     #     lambda x: f"https://www.openml.org/api/v1/json/{type_of_data}/{x}"
     # )
@@ -280,10 +296,11 @@ def create_output_dataframe(dict_results, type_of_data):
         )
     output_df = output_df.drop_duplicates(subset=["name"])
     # order the columns
-    output_df = output_df[
-        ["index","name", "command","urls", "page_content"]
-    ].rename(columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"})
+    output_df = output_df[["index", "name", "command", "urls", "page_content"]].rename(
+        columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"}
+    )
     return output_df
+
 
 def check_query(query):
     """
@@ -291,9 +308,9 @@ def check_query(query):
     - Replaces %20 with space character (browsers do this automatically when spaces are in the URL)
     - Removes leading and trailing spaces
     - Limits the query to 150 characters
-    
+
     Input: query (str)
-    
+
     Returns: None
     """
     if query == "":
@@ -306,12 +323,12 @@ def check_query(query):
     return query
 
 
-def get_result_from_query(query, qa, type_of_query) -> pd.DataFrame:
+def get_result_from_query(query, qa, type_of_query, config) -> pd.DataFrame:
     """
     Description: Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
-    
+
     Input: query (str), qa (langchain.chains.retrieval_qa.base.RetrievalQA), type_of_query (str)
-    
+
     Returns: output_df (pd.DataFrame)
     """
     if type_of_query == "dataset":
@@ -327,8 +344,8 @@ def get_result_from_query(query, qa, type_of_query) -> pd.DataFrame:
     query = check_query(query)
     if query == "":
         return ""
-    source_documents = fetch_results(query, qa)
-    dict_results = process_documents(source_documents, key_name)
-    output_df = create_output_dataframe(dict_results, type_of_query)
+    source_documents = fetch_results(query, qa,config=config, type_of_query=type_of_query)
+    dict_results, ids_order = process_documents(source_documents, key_name)
+    output_df = create_output_dataframe(dict_results, type_of_query, ids_order)
 
     return output_df
