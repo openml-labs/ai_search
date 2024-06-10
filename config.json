@@ -8,5 +8,5 @@
     "search_type" : "similarity",
     "temperature" : 0.95,
     "top_p" : 0.95,
-    "reranking" : true
+    "reranking" : false
 }

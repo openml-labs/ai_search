@@ -5,6 +5,9 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from modules.llm import *
 from modules.utils import *
 import aiofiles
+from langchain.globals import set_llm_cache
+from langchain_community.cache import SQLiteCache
+
 
 app = FastAPI()
 # Config and DB
@@ -19,7 +22,7 @@ print(config)
 # Setup llm chain, initialize the retriever and llm, and setup Retrieval QA
 qa_dataset = setup_vector_db_and_qa(config=config, data_type="dataset", client=client)
 qa_flow = setup_vector_db_and_qa(config=config, data_type="flow", client=client)
-
+set_llm_cache(SQLiteCache(database_path="./data/.langchain.db"))
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():

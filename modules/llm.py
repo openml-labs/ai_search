@@ -226,14 +226,18 @@ def fetch_results(query, qa,config, type_of_query):
     id_column = id_column[type_of_query]
 
     if config["reranking"] == True:
-        print("[INFO] Reranking results...")
-        ranker = Ranker()
-        rerankrequest = RerankRequest(query=query, passages=[{"id":result.metadata[id_column], "text":result.page_content} for result in results])
-        ranking = ranker.rerank(rerankrequest)
-        ids = [result["id"] for result in ranking]
-        ranked_results = [result for result in results if result.metadata[id_column] in ids]
-        print("[INFO] Reranking complete.")
-        return ranked_results
+        try:
+            print("[INFO] Reranking results...")
+            ranker = Ranker(model_name="ms-marco-MiniLM-L-12-v2", cache_dir="/tmp/")
+            rerankrequest = RerankRequest(query=query, passages=[{"id":result.metadata[id_column], "text":result.page_content} for result in results])
+            ranking = ranker.rerank(rerankrequest)
+            ids = [result["id"] for result in ranking]
+            ranked_results = [result for result in results if result.metadata[id_column] in ids]
+            print("[INFO] Reranking complete.")
+            return ranked_results
+        except Exception as e:
+            print(f"[ERROR] Reranking failed: {e}")
+            return results
 
     else:
         return results
@@ -318,8 +322,14 @@ def check_query(query):
     query = query.replace(
         "%20", " "
     )  # replace %20 with space character (browsers do this automatically when spaces are in the URL)
+    # query = query.replace(
+    #     "dataset", ""
+    # )
+    # query = query.replace(
+    #     "flow", ""
+    # )
     query = query.strip()
-    query = query[:150]
+    query = query[:200]
     return query
 
 
