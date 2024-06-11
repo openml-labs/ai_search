@@ -23,7 +23,7 @@ for type_of_data in ["dataset", "flow"]:
     if not os.path.exists("./data/"):
         os.makedirs("./data/")
 
-    qa = setup_vector_db_and_qa(config=config, data_type="flow", client=client)
+    qa = setup_vector_db_and_qa(config=config, data_type=config["type_of_data"], client=client)
 
     # Run the test query
     result_data_frame = get_result_from_query(

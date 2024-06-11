@@ -5,6 +5,7 @@
     "persist_dir": "./data/chroma_db/",
     "data_download_n_jobs" : 20,
     "training" : false,
+    "ignore_downloading_data": true,
     "search_type" : "similarity",
     "temperature" : 0.95,
     "top_p" : 0.95,
