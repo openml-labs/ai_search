@@ -52,7 +52,11 @@ def generate_unique_documents(documents):
     """
     #
     # Generate unique IDs for the documents
-    ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, doc.page_content)) for doc in documents]
+    # ids = [str(uuid.uuid5(doc.page_content)) for doc in documents]
+    try:
+        ids = [doc.did for doc in documents]
+    except:
+        ids = [doc.id for doc in documents]
     unique_ids = list(set(ids))
 
     # Ensure that only docs that correspond to unique ids are kept and that only one of the duplicate ids is kept
@@ -131,11 +135,17 @@ def load_document_and_create_vector_store(
         # Generate unique documents
         unique_docs, unique_ids = generate_unique_documents(documents)
 
+        # number of unique documents vs total documents
+        print(
+            f"Number of unique documents: {len(unique_docs)} vs Total documents: {len(documents)}"
+        )
+
         # Determine the collection name based on the type of data
         collection_name = dict_collection_names[config["type_of_data"]]
 
         # Initialize the database
         db = Chroma(
+            client=chroma_client,
             embedding_function=embeddings,
             persist_directory=config["persist_dir"],
             collection_name=collection_name,

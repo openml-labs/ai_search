@@ -16,15 +16,15 @@ def find_device(training: bool = False):
     Returns: device (str) : The device to use for the pipeline.
     """
     print("[INFO] Finding device.")
-    if training == False:
-        return "cpu"
+    # if training == False:
+    #     return "cpu"
+    # else:
+    if torch.cuda.is_available():
+        return "cuda"
+    elif torch.backends.mps.is_available():
+        return "mps"
     else:
-        if torch.cuda.is_available():
-            return "cuda"
-        elif torch.backends.mps.is_available():
-            return "mps"
-        else:
-            return "cpu"
+        return "cpu"
 
 
 def load_config_and_device(config_file: str, training: bool = False):
