@@ -6,7 +6,24 @@ import pandas as pd
 from flashrank import Ranker, RerankRequest
 from tqdm import tqdm
 
+from langchain_community.document_transformers import LongContextReorder
 # --- PROCESSING RESULTS ---
+
+def long_context_reorder(results):
+    """
+    Description: Lost in the middle reorder: the less relevant documents will be at the
+    middle of the list and more relevant elements at beginning / end.
+    See: https://arxiv.org/abs//2307.03172
+    
+    Input: results (list)
+    
+    Returns: reorder results (list)
+    """
+    print("[INFO] Reordering results...")
+    reordering = LongContextReorder()
+    results = reordering.transform_documents(results)
+    print("[INFO] Reordering complete.")
+    return results
 
 
 def fetch_results(query, qa, config, type_of_query):
@@ -21,6 +38,8 @@ def fetch_results(query, qa, config, type_of_query):
         input=query,
         config={"temperature": config["temperature"], "top-p": config["top_p"]},
     )
+    if config["long_context_reorder"] == True:
+        results = long_context_reorder(results)
     id_column = {"dataset": "did", "flow": "id", "data": "did"}
     id_column = id_column[type_of_query]
 
@@ -129,12 +148,12 @@ def check_query(query):
     query = query.replace(
         "%20", " "
     )  # replace %20 with space character (browsers do this automatically when spaces are in the URL)
-    # query = query.replace(
-    #     "dataset", ""
-    # )
-    # query = query.replace(
-    #     "flow", ""
-    # )
+    query = query.replace(
+        "dataset", ""
+    )
+    query = query.replace(
+        "flow", ""
+    )
     query = query.strip()
     query = query[:200]
     return query

@@ -4,10 +4,12 @@
     "embedding_model": "BAAI/bge-base-en-v1.5",
     "persist_dir": "./data/chroma_db/",
     "data_download_n_jobs" : 20,
-    "training" : true,
+    "training" : false,
+    "ignore_downloading_data": false,
     "search_type" : "similarity",
     "temperature" : 0.95,
     "top_p" : 0.95,
     "reranking" : false,
-    "hybrid_search" : true
+    "long_context_reorder" : true
+
 }

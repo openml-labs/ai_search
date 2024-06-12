@@ -34,7 +34,7 @@ async def read_root():
 async def read_dataset(query: str):
     try:
         result_data_frame = get_result_from_query(query=query, qa=qa_dataset, type_of_query="dataset", config=config)
-        print(result_data_frame.head())
+        # print(result_data_frame.head())
         return JSONResponse(content=result_data_frame.to_dict(orient="records"), status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -43,7 +43,7 @@ async def read_dataset(query: str):
 async def read_flow(query: str):
     try:
         result_data_frame = get_result_from_query(query=query, qa=qa_flow, type_of_query="flow", config=config)
-        print(result_data_frame.head())
+        # print(result_data_frame.head())
         return JSONResponse(content=result_data_frame.to_dict(orient="records"), status_code=200)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

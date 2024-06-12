@@ -1,7 +1,28 @@
 # RAG Pipeline for OpenML
 
-- This repository contains the code for the RAG pipeline for OpenML. As a start, we are focusing on using a RAG pipeline to help users find a dataset on OpenML using Natural Language queries.
-- This will be further extended to include flows, runs etc.
+- This repository contains the code for the RAG pipeline for OpenML. 
+
+## Features
+### RAG
+- Multi-threaded downloading of OpenML datasets
+- Combining all information about a dataset to enable searching
+- Chunking of the data to prevent OOM errors 
+- Hashed entries by document content to prevent duplicate entries to the database
+- RAG pipeline for OpenML datasets/flows
+- Specify config["training"] = True/False to switch between training and inference mode
+- Option to modify the prompt before querying the database (Example: HTML string replacements)
+- Results are returned in either JSON or dataframe format
+- Easily customizable pipeline
+- Easily run multiple queries and aggregate the results
+### Enhancements
+- One config file to rule them all
+- GUI search interface using FastAPI (uvicorn main:app) with extra search bar for the results
+- Option for Long Context Reordering of results (https://arxiv.org/abs//2307.03172)
+- Option for FlashRank Reranking of results
+- Caching queries in a database for faster retrieval
+- Auto detect and use GPU/MPS if available for training
+## Testing
+- Load testing using Locust (locust -f tests/locust_test.py --host http://127.0.0.1:8000 )
 
 ## Setup
 - Clone the repository

@@ -13,8 +13,17 @@ from tqdm import tqdm
 
 from .metadata_utils import (create_metadata_dataframe,
                              get_all_metadata_from_openml)
-
 # from langchain_community.llms import HuggingFaceHub
+
+
+## Pseudo code to add the BM25Retriever and EnsembleRetriever to the vector store
+# chunks = splitter.split_documents(docs)
+# vectorstore_retreiver = vectorstore.as_retriever(search_kwargs={"k": 3})
+# keyword_retriever = BM25Retriever.from_documents(chunks)
+# keyword_retriever.k =  3
+# ensemble_retriever = EnsembleRetriever(retrievers=[vectorstore_retreiver,
+#                                                    keyword_retriever],
+#                                        weights=[0.3, 0.7])
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
@@ -35,7 +44,7 @@ def load_and_process_data(metadata_df, page_content_column):
     documents = loader.load()
 
     # Split documents
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)
     documents = text_splitter.split_documents(documents)
 
     return documents

@@ -16,12 +16,12 @@ def find_device(training: bool = False):
     Returns: device (str) : The device to use for the pipeline.
     """
     print("[INFO] Finding device.")
-    # if training == False:
-    #     return "cpu"
-    # else:
     if torch.cuda.is_available():
         return "cuda"
     elif torch.backends.mps.is_available():
+        if training == False:
+            # loading metadata on mps for inference is quite slow. So disabling for now.
+            return "cpu"
         return "mps"
     else:
         return "cpu"

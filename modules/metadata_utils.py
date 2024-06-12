@@ -58,7 +58,7 @@ def get_all_metadata_from_openml(config) -> Union[List, List]:
     save_filename = f"./data/all_{config['type_of_data']}_metadata.pkl"
     # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
     # TODO : Check if this behavior is correct, or if data does not exist, send to training pipeline?
-    if config["training"] == False:
+    if config["training"] == False or config["ignore_downloading_data"] == True:
         # print("[INFO] Training is set to False.")
         # Check if the metadata files exist for all types of data
         if not os.path.exists(save_filename):
