@@ -7,6 +7,8 @@ from modules.utils import *
 import aiofiles
 from langchain.globals import set_llm_cache
 from langchain_community.cache import SQLiteCache
+from httpx import ConnectTimeout
+from tenacity import retry, stop_after_attempt, retry_if_exception_type
 
 
 app = FastAPI()
@@ -24,6 +26,14 @@ qa_dataset = setup_vector_db_and_qa(config=config, data_type="dataset", client=c
 qa_flow = setup_vector_db_and_qa(config=config, data_type="flow", client=client)
 set_llm_cache(SQLiteCache(database_path="./data/.langchain.db"))
 
+# Send test query as first query to avoid cold start
+try:
+    print("[INFO] Sending first query to avoid cold start.")
+    result_data_frame = get_result_from_query(query="mushroom", qa=qa_dataset, type_of_query="dataset", config=config)
+    result_data_frame = get_result_from_query(query="physics flow", qa=qa_flow, type_of_query="flow", config=config)
+except Exception as e:
+    print("Error in first query: ", e)
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
     async with aiofiles.open("index.html", mode="r") as f:
@@ -31,6 +41,7 @@ async def read_root():
     return HTMLResponse(content=html_content, status_code=200)
 
 @app.get("/dataset/{query}", response_class=JSONResponse)
+@retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
 async def read_dataset(query: str):
     try:
         result_data_frame = get_result_from_query(query=query, qa=qa_dataset, type_of_query="dataset", config=config)
@@ -40,6 +51,7 @@ async def read_dataset(query: str):
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.get("/flow/{query}", response_class=JSONResponse)
+@retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
 async def read_flow(query: str):
     try:
         result_data_frame = get_result_from_query(query=query, qa=qa_flow, type_of_query="flow", config=config)

@@ -23,7 +23,7 @@
 - Auto detect and use GPU/MPS if available for training
 ## Testing
 - Load testing using Locust (locust -f tests/locust_test.py --host http://127.0.0.1:8000 )
-
+- Approx 62.9 ms ± 9.86 ms per request
 ## Setup
 - Clone the repository
 - Create a virtual environment and activate it
