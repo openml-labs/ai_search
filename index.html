@@ -9,7 +9,6 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous"
     />
 
@@ -17,14 +16,12 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
-      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
       crossorigin="anonymous"
     />
 
     <!-- Latest compiled and minified JavaScript -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
-      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
       crossorigin="anonymous"
     ></script>
     <link
@@ -41,6 +38,7 @@
       src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"
     ></script>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:weight@100;200;300;400;500;600;700;800&display=swap");
       #loading-container {
         display: none;
         position: fixed;
@@ -62,11 +60,11 @@
         animation: loading 1.5s infinite;
       }
 
-      #body {
+      /* #body {
         width: 100%;
         height: 100%;
 
-      }
+      } */
 
       @keyframes loading {
         0% {
@@ -86,18 +84,83 @@
         width: 200px;
       }
 
+      body{
+        background-color:#eee;
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+       }
+
+       .height{
+        height: 100vh;
+       }
+       
+
+       .search{
+       position: relative;
+       box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+         
+       }
+
+       .search input{
+
+        height: 60px;
+        text-indent: 25px;
+        border: 2px solid #d6d4d4;
+
+
+       }
+
+
+       .search input:focus{
+
+        box-shadow: none;
+        border: 2px solid blue;
+
+
+       }
+
+       .search .fa-search{
+
+        position: absolute;
+        top: 20px;
+        left: 16px;
+
+       }
+
+       .search button{
+
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        height: 50px;
+        width: 110px;
+        background: blue;
+
+       }
+
     </style>
   </head>
   <body>
-    <h1>OpenML AI search</h1>
-    <form id="searchForm">
-      <input
+    
+    
+      <!-- <input
         type="text"
         id="query"
         name="query"
         placeholder="Enter your query"
         required
-      />
+      /> -->
+      <div class="container">
+
+        <div class="row height d-flex justify-content-center align-items-center">
+<h1>OpenML AI search</h1>
+<form id="searchForm">
+      <div class="search">
+        <i class="fa fa-search"></i>
+        <!-- <input type="text" class="form-control" placeholder="Have a question? Ask Now"> -->
+        <input type = "text" id = "query" name = "query" placeholder = "Enter your query" class="form-control">
+      </div>
+
       <select id="queryType" name="queryType" required>
         <option value="dataset">Dataset</option>
         <option value="flow">Flow</option>
@@ -120,6 +183,8 @@
       </table>
     </div>
 
+      </div>
+      </div>
     <script>
       document
         .getElementById("searchForm")

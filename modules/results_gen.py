@@ -1,22 +1,26 @@
 # This file pertains to all the utility functions required for creating and managing the vector database
 
+from __future__ import annotations
 from collections import OrderedDict
-
+from typing import Sequence, Tuple
+import langchain
 import pandas as pd
 from flashrank import Ranker, RerankRequest
+from langchain_community.document_transformers.long_context_reorder import LongContextReorder
+from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
-from langchain_community.document_transformers import LongContextReorder
 # --- PROCESSING RESULTS ---
 
-def long_context_reorder(results):
+
+def long_context_reorder(results: Sequence[Document]) -> Sequence[Document]:
     """
     Description: Lost in the middle reorder: the less relevant documents will be at the
     middle of the list and more relevant elements at beginning / end.
     See: https://arxiv.org/abs//2307.03172
-    
+
     Input: results (list)
-    
+
     Returns: reorder results (list)
     """
     print("[INFO] Reordering results...")
@@ -26,7 +30,7 @@ def long_context_reorder(results):
     return results
 
 
-def fetch_results(query, qa, config, type_of_query):
+def fetch_results(query: str, qa: langchain.chains.retrieval_qa.base.RetrievalQA, type_of_query: str, config: dict) -> Sequence[Document]:
     """
     Description: Fetch results for the query using the QA chain.
 
@@ -69,7 +73,7 @@ def fetch_results(query, qa, config, type_of_query):
         return results
 
 
-def process_documents(source_documents, key_name):
+def process_documents(source_documents : Sequence[Document]) -> Tuple[OrderedDict, list]:
     """
     Description: Process the source documents and create a dictionary with the key_name as the key and the name and page content as the values.
 
@@ -79,22 +83,22 @@ def process_documents(source_documents, key_name):
     """
     dict_results = OrderedDict()
     for result in source_documents:
-        dict_results[result.metadata[key_name]] = {
+        dict_results[result.metadata["did"]] = {
             "name": result.metadata["name"],
             "page_content": result.page_content,
         }
-    ids = [result.metadata[key_name] for result in source_documents]
+    ids = [result.metadata["did"] for result in source_documents]
     return dict_results, ids
 
 
-def make_clickable(val):
+def make_clickable(val : str) -> str:
     """
     Description: Make the URL clickable in the dataframe.
     """
     return '<a href="{}">{}</a>'.format(val, val)
 
 
-def create_output_dataframe(dict_results, type_of_data, ids_order):
+def create_output_dataframe(dict_results: dict, type_of_data: str, ids_order: list) -> pd.DataFrame:
     """
     Description: Create an output dataframe with the results. The URLs are API calls to the OpenML API for the specific type of data.
 
@@ -132,7 +136,7 @@ def create_output_dataframe(dict_results, type_of_data, ids_order):
     return output_df
 
 
-def check_query(query):
+def check_query(query: str) -> str:
     """
     Description: Performs checks on the query
     - Replaces %20 with space character (browsers do this automatically when spaces are in the URL)
@@ -148,12 +152,8 @@ def check_query(query):
     query = query.replace(
         "%20", " "
     )  # replace %20 with space character (browsers do this automatically when spaces are in the URL)
-    query = query.replace(
-        "dataset", ""
-    )
-    query = query.replace(
-        "flow", ""
-    )
+    # query = query.replace("dataset", "")
+    # query = query.replace("flow", "")
     query = query.strip()
     query = query[:200]
     return query
@@ -170,20 +170,19 @@ def get_result_from_query(query, qa, type_of_query, config) -> pd.DataFrame:
     if type_of_query == "dataset":
         # Fixing the key_name for dataset because of the way the OpenML API returns the data
         type_of_query = "data"
-        key_name = "did"
     elif type_of_query == "flow":
-        key_name = "id"
+        type_of_query = "flow"
     else:
         raise ValueError(f"Unsupported type_of_data: {type_of_query}")
 
     # Process the query
     query = check_query(query)
     if query == "":
-        return ""
+        return pd.DataFrame()
     source_documents = fetch_results(
         query, qa, config=config, type_of_query=type_of_query
     )
-    dict_results, ids_order = process_documents(source_documents, key_name)
+    dict_results, ids_order = process_documents(source_documents)
     output_df = create_output_dataframe(dict_results, type_of_query, ids_order)
 
     return output_df
@@ -191,7 +190,7 @@ def get_result_from_query(query, qa, type_of_query, config) -> pd.DataFrame:
 
 def aggregate_multiple_queries_and_count(
     queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query"
-):
+) -> pd.DataFrame:
     """
     Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results
 

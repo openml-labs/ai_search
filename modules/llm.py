@@ -1,37 +1,30 @@
 # This file contains all the LLM related code - models, vector stores, and the retrieval QA chain etc.
-
+from __future__ import annotations
 import os
 import uuid
+from chromadb.api import ClientAPI
+import langchain
+import pandas as pd
 
 from langchain.retrievers import BM25Retriever, EnsembleRetriever
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 # from langchain_community.llms import HuggingFaceHub
 from langchain_community.vectorstores.chroma import Chroma
 from tqdm import tqdm
+import random
 
 from .metadata_utils import (create_metadata_dataframe,
                              get_all_metadata_from_openml)
-# from langchain_community.llms import HuggingFaceHub
-
-
-## Pseudo code to add the BM25Retriever and EnsembleRetriever to the vector store
-# chunks = splitter.split_documents(docs)
-# vectorstore_retreiver = vectorstore.as_retriever(search_kwargs={"k": 3})
-# keyword_retriever = BM25Retriever.from_documents(chunks)
-# keyword_retriever.k =  3
-# ensemble_retriever = EnsembleRetriever(retrievers=[vectorstore_retreiver,
-#                                                    keyword_retriever],
-#                                        weights=[0.3, 0.7])
-
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 # --- ADDING OBJECTS TO CHROMA DB AND LOADING THE VECTOR STORE ---
 
 
-def load_and_process_data(metadata_df, page_content_column):
+# def load_and_process_data(metadata_df, page_content_column):
+def load_and_process_data(metadata_df: pd.DataFrame, page_content_column: str) -> list:
     """
     Description: Load and process the data for the vector store. Split the documents into chunks of 1000 characters.
 
@@ -44,13 +37,13 @@ def load_and_process_data(metadata_df, page_content_column):
     documents = loader.load()
 
     # Split documents
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=30)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=150)
     documents = text_splitter.split_documents(documents)
 
     return documents
 
 
-def generate_unique_documents(documents):
+def generate_unique_documents(documents: list, db: Chroma) -> tuple:
     """
     Description: Generate unique documents by removing duplicates. This is done by generating unique IDs for the documents and keeping only one of the duplicate IDs.
         Source: https://stackoverflow.com/questions/76265631/chromadb-add-single-document-only-if-it-doesnt-exist
@@ -59,150 +52,163 @@ def generate_unique_documents(documents):
 
     Returns: unique_docs (list), unique_ids (list)
     """
-    #
-    # Generate unique IDs for the documents
-    # ids = [str(uuid.uuid5(doc.page_content)) for doc in documents]
-    try:
-        ids = [doc.did for doc in documents]
-    except:
-        ids = [doc.id for doc in documents]
-    unique_ids = list(set(ids))
 
-    # Ensure that only docs that correspond to unique ids are kept and that only one of the duplicate ids is kept
+    # Remove duplicates based on ID (from database)
+    new_document_ids = set([str(x.metadata["did"]) for x in documents])
+    print(f"[INFO] Generating unique documents. Total documents: {len(documents)}")
+    try:
+        old_dids = set([str(x["did"]) for x in db.get()["metadatas"]])
+    except KeyError:
+        old_dids = set([str(x["id"]) for x in db.get()["metadatas"]])
+
+    new_dids = new_document_ids - old_dids
+    documents = [x for x in documents if str(x.metadata["did"]) in new_dids]
+    ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS,doc.page_content)) for doc in documents]
+
+    # Remove duplicates based on document content (from new documents)
+    unique_ids = list(set(ids))
     seen_ids = set()
     unique_docs = [
-        doc
-        for doc, id in zip(documents, ids)
-        if id not in seen_ids and (seen_ids.add(id) or True)
-    ]
+            doc
+            for doc, id in zip(documents, ids)
+            if id not in seen_ids and (seen_ids.add(id) or True)
+        ]
 
     return unique_docs, unique_ids
 
 
-def add_documents_to_db(db, unique_docs, unique_ids):
+# def load_document_and_create_vector_store(metadata_df, chroma_client, config) -> Chroma:
+def load_document_and_create_vector_store(metadata_df: pd.DataFrame, chroma_client:ClientAPI , config: dict) -> Chroma:
     """
-    Description: Add documents to the vector store in batches of 200.
+    Loads the documents and creates the vector store. If the training flag is set to True,
+    the documents are added to the vector store. If the training flag is set to False,
+    the vector store is loaded from the persist directory.
 
-    Input: db (Chroma), unique_docs (list), unique_ids (list)
+    Args:
+        metadata_df (pd.DataFrame): The metadata dataframe.
+        chroma_client (chromadb.PersistentClient): The Chroma client.
+        config (dict): The configuration dictionary.
 
-    Returns: None
+    Returns:
+        Chroma: The Chroma vector store.
     """
-    if len(unique_docs) < 200:
-        db.add_documents(unique_docs, ids=unique_ids)
-    else:
-        for i in tqdm(range(0, len(unique_docs), 200)):
-            db.add_documents(unique_docs[i : i + 200], ids=unique_ids[i : i + 200])
+    embeddings = load_model(config)
+    collection_name = get_collection_name(config)
+
+    if not config["training"]:
+        return load_vector_store(chroma_client, config, embeddings, collection_name)
+
+    return create_vector_store(
+        metadata_df, chroma_client, config, embeddings, collection_name
+    )
 
 
-def load_document_and_create_vector_store(
-    metadata_df,
-    chroma_client,
-    config,
-) -> Chroma:
+def load_model(config: dict) -> HuggingFaceEmbeddings | None:
     """
-    Description: Load the documents and create the vector store. If the training flag is set to True, the documents are added to the vector store. If the training flag is set to False, the vector store is loaded from the persist directory.
-
-    Input: metadata_df (pd.DataFrame), chroma_client (chromadb.PersistentClient), config (dict)
-
-    Returns: db (Chroma)
+    Description: Load the model using HuggingFaceEmbeddings.
+    
+    Input: config (dict)
+    
+    Returns: HuggingFaceEmbeddings
     """
-    # load model
     print("[INFO] Loading model...")
-    model_kwargs = {"device": config["device"]}
+    model_kwargs = {"device": config["device"], "trust_remote_code": True}
     encode_kwargs = {"normalize_embeddings": True}
     embeddings = HuggingFaceEmbeddings(
         model_name=config["embedding_model"],
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
-        # show_progress = True
+        show_progress = True,
+        # trust_remote_code=True
     )
     print("[INFO] Model loaded.")
-    # Collection names are used to separate the different types of data in the database
+    return embeddings
 
-    dict_collection_names = {"dataset": "datasets", "flow": "flows"}
 
-    # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
-    if config["training"] == False:
-        # Check if the directory already exists, if not raise an exception
-        if not os.path.exists(config["persist_dir"]):
-            raise Exception(
-                "Persist directory does not exist. Please run the training pipeline first."
-            )
-        # load the vector store
-        return Chroma(
-            client=chroma_client,
-            persist_directory=config["persist_dir"],
-            embedding_function=embeddings,
-            collection_name=dict_collection_names[config["type_of_data"]],
+def get_collection_name(config: dict) -> str:
+    """
+    Description: Get the collection name based on the type of data provided in the config.
+    
+    Input: config (dict)
+    
+    Returns: str
+    """
+    return {"dataset": "datasets", "flow": "flows"}.get(
+        config["type_of_data"], "default"
+    )
+
+
+def load_vector_store(chroma_client: ClientAPI, config: dict, embeddings: HuggingFaceEmbeddings, collection_name: str) -> Chroma:
+    """
+    Description: Load the vector store from the persist directory.
+    
+    Input: chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
+    
+    Returns: Chroma
+    """
+    if not os.path.exists(config["persist_dir"]):
+        raise Exception(
+            "Persist directory does not exist. Please run the training pipeline first."
         )
 
-    elif config["training"] == True:
-        # Load and process data
-        documents = load_and_process_data(
-            metadata_df, page_content_column="Combined_information"
-        )
-        # Generate unique documents
-        unique_docs, unique_ids = generate_unique_documents(documents)
+    return Chroma(
+        client=chroma_client,
+        persist_directory=config["persist_dir"],
+        embedding_function=embeddings,
+        collection_name=collection_name,
+    )
 
-        # number of unique documents vs total documents
-        print(
-            f"Number of unique documents: {len(unique_docs)} vs Total documents: {len(documents)}"
-        )
 
-        # Determine the collection name based on the type of data
-        collection_name = dict_collection_names[config["type_of_data"]]
+# def create_vector_store(
+#     metadata_df, chroma_client, config, embeddings, collection_name
+# ):
+def create_vector_store(
+    metadata_df: pd.DataFrame, chroma_client:ClientAPI, config: dict, embeddings: HuggingFaceEmbeddings, collection_name: str 
+) -> Chroma:
+    """
+    Description: Create the vector store using Chroma db. The documents are loaded and processed, unique documents are generated, and the documents are added to the vector store.
+    
+    Input: metadata_df (pd.DataFrame), chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
+    
+    Returns: db (Chroma)
+    """
 
-        # Initialize the database
-        db = Chroma(
-            client=chroma_client,
-            embedding_function=embeddings,
-            persist_directory=config["persist_dir"],
-            collection_name=collection_name,
-        )
+    db = Chroma(
+        client=chroma_client,
+        embedding_function=embeddings,
+        persist_directory=config["persist_dir"],
+        collection_name=collection_name,
+    )
 
-        # Add documents to the database
-        add_documents_to_db(db, unique_docs, unique_ids)
+    documents = load_and_process_data(
+        metadata_df, page_content_column="Combined_information"
+    )
+    if config["testing_flag"]:
+        # subset the data for testing
+        if config["test_subset_2000"] == True:
+            print("[INFO] Subsetting the data to 2000 rows.")
+            documents = documents[:2000]
+    unique_docs, unique_ids = generate_unique_documents(documents, db)
 
+    print(
+        f"Number of unique documents: {len(unique_docs)} vs Total documents: {len(documents)}"
+    )
+    if len(unique_docs) == 0:
+        print("No new documents to add.")
         return db
+    else:
+        db.add_documents(unique_docs, ids=unique_ids)
 
-
-def setup_vector_db_and_qa(config, data_type, client):
-    """
-    Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
-    This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.
-
-    Input: config (dict), data_type (str), client (chromadb.PersistentClient)
-
-    Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
-    """
-
-    config["type_of_data"] = data_type
-    # Download the data if it does not exist
-    openml_data_object, data_id, all_metadata = get_all_metadata_from_openml(
-        config=config
-    )
-    # Create the combined metadata dataframe
-    metadata_df, all_metadata = create_metadata_dataframe(
-        openml_data_object, data_id, all_metadata, config=config
-    )
-    # Create the vector store
-    vectordb = load_document_and_create_vector_store(
-        metadata_df, config=config, chroma_client=client
-    )
-    # Add Bm25Retriever and EnsembleRetriever 
-
-    # Initialize the LLM chain and setup Retrieval QA
-    qa = initialize_llm_chain(vectordb=vectordb, config=config)
-    return qa
+    return db
 
 
 # --- LLM CHAIN SETUP ---
 
 
 def initialize_llm_chain(
-    vectordb,
-    config,
-):
+    vectordb: Chroma,
+    config : dict
+) -> langchain.chains.retrieval_qa.base.RetrievalQA:
     """
     Description: Initialize the LLM chain and setup Retrieval QA with the specified configuration.
 
@@ -210,8 +216,6 @@ def initialize_llm_chain(
 
     Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
     """
-    # HUGGINGFACEHUB_API_KEY = os.environ.get("HUGGINGFACEHUB_API_TOKEN")
-    # use export HUGGINGFACEHUB_API_TOKEN=your_token_here to set the token (in the shell)
 
     return vectordb.as_retriever(
         search_type=config["search_type"],
@@ -219,7 +223,7 @@ def initialize_llm_chain(
     )
 
 
-def setup_vector_db_and_qa(config, data_type, client):
+def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> langchain.chains.retrieval_qa.base.RetrievalQA:
     """
     Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
     This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.

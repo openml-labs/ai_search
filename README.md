@@ -21,9 +21,10 @@
 - Option for FlashRank Reranking of results
 - Caching queries in a database for faster retrieval
 - Auto detect and use GPU/MPS if available for training
+- Auto retry failed queries for a set number of times (2)
 ## Testing
-- Load testing using Locust (locust -f tests/locust_test.py --host http://127.0.0.1:8000 )
-- Approx 62.9 ms ± 9.86 ms per request
+- Start the FastAPI server using `uvicorn main:app`
+- Load testing using Locust (locust -f tests/locust_test.py --host http://127.0.0.1:8000 ) using a different terminal
 ## Setup
 - Clone the repository
 - Create a virtual environment and activate it
@@ -53,6 +54,9 @@
   - rqa_prompt_template: The template for the RAG pipeline search prompt. This is used by the model to query the database. 
   - num_return_documents: Number of documents to return for a query. Too high a number can lead to Out of Memory errors. (Defaults to 50)
   - embedding_model: The model to use for generating embeddings. This is used to generate embeddings for the documents as a means of comparison using the LLM's embeddings. (Defaults to BAAI/bge-base-en-v1.5)
+    - BAAI/bge-base-en-v1.5
+    - BAAI/bge-large-en-v1.5
+    - WhereIsAI/UAE-Large-V1
   - persist_dir: The directory to store the cached data. Defaults to ./chroma_db/ and stores the embeddings for the documents with a unique hash. (Defaults to ./chroma_db/)
   - data_download_n_jobs: Number of jobs to run in parallel for downloading data. (Defaults to 20)
   - training: Whether to train the model or not. (Defaults to False) this is automatically set to True when when running the training.py script.
