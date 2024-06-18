@@ -158,6 +158,21 @@ def load_vector_store(chroma_client: ClientAPI, config: dict, embeddings: Huggin
         collection_name=collection_name,
     )
 
+def add_documents_to_db(db, unique_docs, unique_ids):
+    """
+    Description: Add documents to the vector store in batches of 200.
+
+    Input: db (Chroma), unique_docs (list), unique_ids (list)
+
+    Returns: None
+    """
+    bs = 512
+    if len(unique_docs) < bs:
+        db.add_documents(unique_docs, ids=unique_ids)
+    else:
+        for i in tqdm(range(0, len(unique_docs), bs)):
+            db.add_documents(unique_docs[i : i + bs], ids=unique_ids[i : i + bs])
+
 
 # def create_vector_store(
 #     metadata_df, chroma_client, config, embeddings, collection_name
@@ -197,7 +212,8 @@ def create_vector_store(
         print("No new documents to add.")
         return db
     else:
-        db.add_documents(unique_docs, ids=unique_ids)
+        # db.add_documents(unique_docs, ids=unique_ids)
+        add_documents_to_db(db, unique_docs, unique_ids)
 
     return db
 

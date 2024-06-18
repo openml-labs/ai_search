@@ -9,7 +9,8 @@ if config["testing_flag"] == True:
     config["persist_dir"] = "./data/chroma_db_testing/"
     config["test_subset_2000"] = True
     config["data_dir"] = "./data/testing_data/"
-    config["training"] = True
+
+config["training"] = True
     # config["device"] = "cpu"
 
 client = chromadb.PersistentClient(path=config["persist_dir"])
