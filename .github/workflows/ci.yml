@@ -1,0 +1,55 @@
+``` yaml
+name: ci # (1)!
+on:
+  push:
+    branches:
+      - master # (2)!
+      - main
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV # (3)!
+      - uses: actions/cache@v4
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - run: pip install mkdocs-material # (4)!
+      - run: mkdocs gh-deploy --force
+```
+
+1.  You can change the name to your liking.
+
+2.  At some point, GitHub renamed `master` to `main`. If your default branch
+    is named `master`, you can safely remove `main`, vice versa.
+
+3.  Store the `cache_id` environmental variable to access it later during cache
+    `key` creation. The name is case-sensitive, so be sure to align it with `${{ env.cache_id }}`.
+
+    - The `--utc` option makes sure that each workflow runner uses the same time zone.
+    - The `%V` format assures a cache update once a week.
+    - You can change the format to `%F` to have daily cache updates.
+
+    You can read the [manual page] to learn more about the formatting options of the `date` command.
+
+4.  This is the place to install further [MkDocs plugins] or Markdown
+    extensions with `pip` to be used during the build:
+
+    ``` sh
+    pip install \
+      mkdocs-material \
+      mkdocs-awesome-pages-plugin \
+      mkdocs-material-extensions mkdocstrings mkdocstrings-python
+    ```
