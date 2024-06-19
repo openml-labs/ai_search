@@ -1,0 +1,29 @@
+site_name: OpenML RAG Documentation
+theme:
+  name: material
+  features:
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - attr_list
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.inlinehilite
+  - toc:
+      permalink: true
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [modules]
+          load_external_modules: true
+          show_source: true
+          options:
+            docstring_section_style: table
+            show_docstring_functions: true
