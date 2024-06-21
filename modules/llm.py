@@ -13,12 +13,17 @@ from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 # from langchain_community.llms import HuggingFaceHub
 from langchain_community.vectorstores.chroma import Chroma
 from tqdm import tqdm
-import random
+from langchain_community.llms import Ollama
+from langchain import PromptTemplate
+from typing import Sequence
+from langchain_core.documents import Document
+from langchain.chains.llm import LLMChain
 
 from .metadata_utils import (create_metadata_dataframe,
                              get_all_metadata_from_openml)
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
+
 
 # --- ADDING OBJECTS TO CHROMA DB AND LOADING THE VECTOR STORE ---
 
@@ -265,3 +270,24 @@ def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> la
     # Initialize the LLM chain and setup Retrieval QA
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
     return qa
+
+
+def get_llm_chain(config: dict) -> LLMChain:
+    """
+    Description: Get the LLM chain with the specified model and prompt template.
+    
+    Input: config (dict)
+    
+    Returns: LLMChain
+    """
+
+    llm = Ollama(
+        model = config["llm_model"] 
+    )  
+    map_template = config["llm_prompt_template"]
+    map_prompt = PromptTemplate.from_template(map_template)
+    return LLMChain(llm=llm, prompt=map_prompt)
+
+async def get_llm_result(docs: Sequence[Document], config:dict):
+    llm_chain = get_llm_chain(config=config)
+    return llm_chain.invoke({"docs": docs})["text"]

@@ -159,7 +159,7 @@ def check_query(query: str) -> str:
     return query
 
 
-def get_result_from_query(query, qa, type_of_query, config) -> pd.DataFrame:
+def get_result_from_query(query, qa, type_of_query, config) -> Tuple[pd.DataFrame, Sequence[Document]]:
     """
     Description: Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
 
@@ -178,14 +178,14 @@ def get_result_from_query(query, qa, type_of_query, config) -> pd.DataFrame:
     # Process the query
     query = check_query(query)
     if query == "":
-        return pd.DataFrame()
+        return pd.DataFrame(), []
     source_documents = fetch_results(
         query, qa, config=config, type_of_query=type_of_query
     )
     dict_results, ids_order = process_documents(source_documents)
     output_df = create_output_dataframe(dict_results, type_of_query, ids_order)
 
-    return output_df
+    return output_df, source_documents
 
 
 def aggregate_multiple_queries_and_count(

@@ -1,6 +1,29 @@
 # RAG Pipeline for OpenML
 
 - This repository contains the code for the RAG pipeline for OpenML. 
+- Documentation page : <attempting to deploy>
+  - For now, ```mkdocs serve -a localhost:8001``` to view the documentation
+
+## Getting started
+- A docker image will be provided at a later date for easier setup
+- Clone the repository
+- Create a virtual environment and activate it
+<!-- - Install the requirements using `pip install -r requirements.txt` -->
+- For now, install `pip install sentence_transformers langchain langchain_community langchain_core pqdm tqdm openml chromadb oslo.concurrency fastapi`
+  - A proper requirements file will be provided shortly
+- Install oslo.concurrency using `pip install oslo.concurrency`
+- Hugging face
+  - Make an account on HF if you do not have one
+  - Log in
+  - Navigate to this [page](https://huggingface.co/settings/tokens) and copy the access token
+  - Run `export HUGGINGFACEHUB_API_TOKEN=your_token_here` to set the token (in the shell)
+      - For some weird reason, this is not read if you are using WSL2 and the VSCode connection. (Using a normal jupyter notebook/terminal works fine) 
+- Run training.py (for the first time/to update the model). This takes care of basically everything. (Refer to the training section for more details)
+- Install Ollama (https://ollama.com/) and download the models `ollama run qwen2:1.5b` and `ollama run phi3`
+- Run `uvicorn backend:app` to start the FastAPI server. 
+- Run `streamlit run main.py` to start the Streamlit frontend (this uses the FastAPI server so make sure it is running)
+- Enjoy :)
+
 
 ## Features
 ### RAG
@@ -25,28 +48,12 @@
 ## Testing
 - Start the FastAPI server using `uvicorn main:app`
 - Load testing using Locust (locust -f tests/locust_test.py --host http://127.0.0.1:8000 ) using a different terminal
-## Setup
-- Clone the repository
-- Create a virtual environment and activate it
-<!-- - Install the requirements using `pip install -r requirements.txt` -->
-- For now, install `pip install sentence_transformers langchain langchain_community langchain_core pqdm tqdm openml chromadb oslo.concurrency fastapi`
-  - A proper requirements file will be provided shortly
-- Install oslo.concurrency using `pip install oslo.concurrency`
-- Hugging face
-  - Make an account on HF if you do not have one
-  - Log in
-  - Navigate to this [page](https://huggingface.co/settings/tokens) and copy the access token
-  - Run `export HUGGINGFACEHUB_API_TOKEN=your_token_here` to set the token (in the shell)
-      - For some weird reason, this is not read if you are using WSL2 and the VSCode connection. (Using a normal jupyter notebook/terminal works fine) 
-- Run training.py (for the first time/to update the model). This takes care of basically everything. (Refer to the training section for more details)
-- Run `uvicorn main:app` to start the FastAPI server. 
-- Enjoy :)
 
 ### Training
-- Run the training.py using `python training.py`
+- Run the training using `python training.py`
 
 ### Inference
-- Run the inference.py using `uvicorn main:app`
+- Run the inference using `uvicorn main:app`
 
 ## Config
 - The main config file is `config.json` 
