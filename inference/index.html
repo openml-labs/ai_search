@@ -9,20 +9,22 @@
       
       
       
+        <link rel="prev" href="../docker/">
       
-        <link rel="next" href="configuration/">
+      
+        <link rel="next" href="../testing/">
       
       
-      <link rel="icon" href="assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
     
     
       
-        <title>OpenML RAG Documentation</title>
+        <title>Inference - OpenML RAG Documentation</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.66ac8b77.min.css">
       
       
 
@@ -41,9 +43,9 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -62,7 +64,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rag-pipeline-for-openml" class="md-skip">
+        <a href="#inference" class="md-skip">
           Skip to content
         </a>
       
@@ -78,7 +80,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="OpenML RAG Documentation" class="md-header__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+    <a href=".." title="OpenML RAG Documentation" class="md-header__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -98,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RAG pipeline for OpenML
+              Inference
             
           </span>
         </div>
@@ -173,7 +175,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="OpenML RAG Documentation" class="md-nav__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+    <a href=".." title="OpenML RAG Documentation" class="md-nav__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
@@ -188,30 +190,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    RAG pipeline for OpenML
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -220,35 +202,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting started
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -260,7 +213,7 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -280,7 +233,7 @@
   
   
     <li class="md-nav__item">
-      <a href="docker/" class="md-nav__link">
+      <a href="../docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -297,10 +250,19 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="inference/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -309,6 +271,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -320,7 +283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -340,7 +303,7 @@
   
   
     <li class="md-nav__item">
-      <a href="training/" class="md-nav__link">
+      <a href="../training/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -395,7 +358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modules/general_utils/" class="md-nav__link">
+      <a href="../modules/general_utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -416,7 +379,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modules/llm_module/" class="md-nav__link">
+      <a href="../modules/llm_module/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -437,7 +400,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modules/metadata_module/" class="md-nav__link">
+      <a href="../modules/metadata_module/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -458,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modules/result_gen/" class="md-nav__link">
+      <a href="../modules/result_gen/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -499,23 +462,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#getting-started" class="md-nav__link">
-    <span class="md-ellipsis">
-      Getting started
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -529,21 +475,9 @@
                   
 
 
-<h1 id="rag-pipeline-for-openml">RAG pipeline for OpenML<a class="headerlink" href="#rag-pipeline-for-openml" title="Permanent link">&para;</a></h1>
+<h1 id="inference">Inference<a class="headerlink" href="#inference" title="Permanent link">&para;</a></h1>
 <ul>
-<li>This repository contains the code for the RAG pipeline for OpenML. </li>
-</ul>
-<h2 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h2>
-<ul>
-<li>A docker image will be provided at a later date for easier setup</li>
-<li>Clone the repository</li>
-<li>Create a virtual environment and activate it</li>
-<li>Install the requirements using <code>pip install -r requirements.txt</code></li>
-<li>Run training.py (for the first time/to update the model). This takes care of basically everything. (Refer to the training section for more details)</li>
-<li>Install Ollama (https://ollama.com/) and download the models <code>ollama run qwen2:1.5b</code> and <code>ollama run phi3</code></li>
-<li>Run <code>uvicorn backend:app</code> to start the FastAPI server. </li>
-<li>Run <code>streamlit run main.py</code> to start the Streamlit frontend (this uses the FastAPI server so make sure it is running)</li>
-<li>Enjoy :)</li>
+<li>Run the inference using <code>uvicorn main:app</code> and <code>streamlit run main.py</code> in different processes.</li>
 </ul>
 
 
@@ -591,10 +525,10 @@
     </div>
     
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["content.code.copy"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.dd8806f2.min.js"></script>
+      <script src="../assets/javascripts/bundle.dd8806f2.min.js"></script>
       
     
   </body>

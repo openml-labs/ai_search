@@ -197,7 +197,107 @@
         
   
   <span class="md-ellipsis">
-    Welcome to MkDocs
+    RAG pipeline for OpenML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker container
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training
   </span>
   
 
@@ -222,10 +322,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -236,8 +336,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Modules
           </label>
@@ -662,7 +762,7 @@
 <p>Returns: None</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
 <span class="normal">167</span>
 <span class="normal">168</span>
@@ -712,7 +812,7 @@
 <p>Returns: db (Chroma)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
@@ -816,7 +916,7 @@
 <p>Returns: unique_docs (list), unique_ids (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
@@ -902,7 +1002,7 @@
 <p>Returns: str</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
@@ -946,7 +1046,7 @@
 <p>Returns: LLMChain</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
@@ -998,7 +1098,7 @@
 <p>Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
@@ -1052,7 +1152,7 @@
 <p>Returns: chunked documents (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
@@ -1188,7 +1288,7 @@ the vector store is loaded from the persist directory.</p>
     </table>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
 <span class="normal"> 87</span>
 <span class="normal"> 88</span>
@@ -1256,7 +1356,7 @@ the vector store is loaded from the persist directory.</p>
 <p>Returns: HuggingFaceEmbeddings</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
@@ -1318,7 +1418,7 @@ the vector store is loaded from the persist directory.</p>
 <p>Returns: Chroma</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
@@ -1379,7 +1479,7 @@ This also downloads the embedding model if it does not exist. The QA chain is th
 <p>Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/llm.py</code></summary>
+              <summary>Source code in <code>serving/modules/llm.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
 <span class="normal">248</span>
 <span class="normal">249</span>
