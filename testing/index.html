@@ -319,6 +319,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#unit-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#load-testing" class="md-nav__link">
     <span class="md-ellipsis">
       Load Testing
@@ -331,6 +340,51 @@
   <a href="#running-the-load-test" class="md-nav__link">
     <span class="md-ellipsis">
       Running the load test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      All tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      TestConfig
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_check_data_dirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_check_data_dirs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_setup_vector_db_and_qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_setup_vector_db_and_qa
     </span>
   </a>
   
@@ -517,6 +571,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#unit-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unit Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#load-testing" class="md-nav__link">
     <span class="md-ellipsis">
       Load Testing
@@ -529,6 +592,51 @@
   <a href="#running-the-load-test" class="md-nav__link">
     <span class="md-ellipsis">
       Running the load test
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#all-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      All tests
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      TestConfig
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_check_data_dirs" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_check_data_dirs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#unit_testing.TestConfig.test_setup_vector_db_and_qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      test_setup_vector_db_and_qa
     </span>
   </a>
   
@@ -550,6 +658,10 @@
 
 
 <h1 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h1>
+<h2 id="unit-testing">Unit Testing<a class="headerlink" href="#unit-testing" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Run <code>python -m unittest tests/unit_testing.py</code> to run the unit tests.</li>
+</ul>
 <h2 id="load-testing">Load Testing<a class="headerlink" href="#load-testing" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Load testing can be done using Locust, a load testing tool that allows you to simulate users querying the API and measure the performance of the API under load from numerous users.</li>
@@ -560,6 +672,253 @@
 <li>Start the FastAPI server using <code>uvicorn main:app</code></li>
 <li>Load testing using Locust (<code>locust -f tests/locust_test.py --host http://127.0.0.1:8000</code> ) using a different terminal</li>
 </ul>
+<h2 id="all-tests">All tests<a class="headerlink" href="#all-tests" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<a id="unit_testing.TestConfig"></a>
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="unittest.TestCase">TestCase</span></code></p>
+
+
+              <details class="quote">
+                <summary>Source code in <code>tests/unit_testing.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TestConfig</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rqa_prompt_template&quot;</span><span class="p">,</span> <span class="s2">&quot;llm_prompt_template&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_return_documents&quot;</span><span class="p">,</span> <span class="s2">&quot;embedding_model&quot;</span><span class="p">,</span> <span class="s2">&quot;llm_model&quot;</span><span class="p">,</span> <span class="s2">&quot;num_documents_for_llm&quot;</span><span class="p">,</span> <span class="s2">&quot;data_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;persist_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;testing_flag&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore_downloading_data&quot;</span><span class="p">,</span> <span class="s2">&quot;test_subset_2000&quot;</span><span class="p">,</span> <span class="s2">&quot;data_download_n_jobs&quot;</span><span class="p">,</span> <span class="s2">&quot;training&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;top_p&quot;</span><span class="p">,</span> <span class="s2">&quot;search_type&quot;</span><span class="p">,</span> <span class="s2">&quot;reranking&quot;</span><span class="p">,</span> <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_test_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;Find me a dataset about flowers that has a high number of instances.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="s2">&quot;Find me a flow that uses the RandomForestClassifier.&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">def</span> <span class="nf">test_check_data_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Check if the data directory exists.</span>
+<span class="sd">        Returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">test_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Check if the config has the required keys.</span>
+<span class="sd">        Returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">test_setup_vector_db_and_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Check if the setup_vector_db_and_qa function works as expected.</span>
+<span class="sd">        Returns: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">type_of_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">qa</span> <span class="o">=</span> <span class="n">setup_vector_db_and_qa</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">type_of_data</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result_data_frame</span> <span class="o">=</span> <span class="n">get_result_from_query</span><span class="p">(</span>
+                <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">query_test_dict</span><span class="p">[</span><span class="n">type_of_data</span><span class="p">],</span>
+                <span class="n">qa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qa</span><span class="p">,</span>
+                <span class="n">type_of_query</span><span class="o">=</span><span class="n">type_of_data</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_data_frame</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="unit_testing.TestConfig.test_check_data_dirs" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">test_check_data_dirs</span><span class="p">()</span></code>
+
+<a href="#unit_testing.TestConfig.test_check_data_dirs" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Check if the data directory exists.
+Returns: None</p>
+
+            <details class="quote">
+              <summary>Source code in <code>tests/unit_testing.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_check_data_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Check if the data directory exists.</span>
+<span class="sd">    Returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">]))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">]))</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="unit_testing.TestConfig.test_config" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">test_config</span><span class="p">()</span></code>
+
+<a href="#unit_testing.TestConfig.test_config" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Check if the config has the required keys.
+Returns: None</p>
+
+            <details class="quote">
+              <summary>Source code in <code>tests/unit_testing.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Check if the config has the required keys.</span>
+<span class="sd">    Returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_keys</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="unit_testing.TestConfig.test_setup_vector_db_and_qa" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">test_setup_vector_db_and_qa</span><span class="p">()</span></code>
+
+<a href="#unit_testing.TestConfig.test_setup_vector_db_and_qa" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Check if the setup_vector_db_and_qa function works as expected.
+Returns: None</p>
+
+            <details class="quote">
+              <summary>Source code in <code>tests/unit_testing.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_setup_vector_db_and_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Check if the setup_vector_db_and_qa function works as expected.</span>
+<span class="sd">    Returns: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">type_of_data</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;flow&quot;</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">qa</span> <span class="o">=</span> <span class="n">setup_vector_db_and_qa</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">type_of_data</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">qa</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_data_frame</span> <span class="o">=</span> <span class="n">get_result_from_query</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">query_test_dict</span><span class="p">[</span><span class="n">type_of_data</span><span class="p">],</span>
+            <span class="n">qa</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">qa</span><span class="p">,</span>
+            <span class="n">type_of_query</span><span class="o">=</span><span class="n">type_of_data</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_data_frame</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
