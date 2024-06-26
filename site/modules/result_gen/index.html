@@ -981,7 +981,7 @@ group_cols: List of columns to group by</p>
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
-<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_result_from_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qa</span><span class="p">,</span> <span class="n">type_of_query</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="normal">188</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_result_from_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qa</span><span class="p">,</span> <span class="n">type_of_query</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Document</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.</span>
 
@@ -1000,14 +1000,14 @@ group_cols: List of columns to group by</p>
     <span class="c1"># Process the query</span>
     <span class="n">query</span> <span class="o">=</span> <span class="n">check_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">query</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(),</span> <span class="p">[]</span>
     <span class="n">source_documents</span> <span class="o">=</span> <span class="n">fetch_results</span><span class="p">(</span>
         <span class="n">query</span><span class="p">,</span> <span class="n">qa</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">type_of_query</span><span class="o">=</span><span class="n">type_of_query</span>
     <span class="p">)</span>
     <span class="n">dict_results</span><span class="p">,</span> <span class="n">ids_order</span> <span class="o">=</span> <span class="n">process_documents</span><span class="p">(</span><span class="n">source_documents</span><span class="p">)</span>
     <span class="n">output_df</span> <span class="o">=</span> <span class="n">create_output_dataframe</span><span class="p">(</span><span class="n">dict_results</span><span class="p">,</span> <span class="n">type_of_query</span><span class="p">,</span> <span class="n">ids_order</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">output_df</span>
+    <span class="k">return</span> <span class="n">output_df</span><span class="p">,</span> <span class="n">source_documents</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

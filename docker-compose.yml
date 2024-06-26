@@ -1,0 +1,16 @@
+# version: '0.1'
+services:
+  fastapi:
+    build: serving/
+    ports: 
+      - 8000:8000
+      - 8501:8501
+    networks:
+      - deploy_network
+    container_name: ai_module
+    # command: sh -c "streamlit run main.py& && uvicorn backend:app --host 0.0.0.0 --port 8000 --reload"
+    # command: ["sh", "-c", "streamlit run main.py&", "&&", "uvicorn" ,"backend:app" ,"--host", "0.0.0.0"]
+
+networks:
+  deploy_network:
+    driver: bridge

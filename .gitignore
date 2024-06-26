@@ -1,0 +1,15 @@
+venv
+generate_semantic_tags/data/dataset_description.pickle
+*.pkl
+chroma_db/
+*.sqlite3
+*.pkl
+*.pyc
+*.DS_store
+*.ipynb_checkpoints
+*.csv
+serving/data/
+serving/data/*
+**/__pycache__/
+**/*.ipynb_checkpoints/
+*checkpoint*
