@@ -62,8 +62,8 @@ async def read_dataset(query: str):
 
         # Respond with the result data frame
         initial_response = result_data_frame.to_dict(orient="records")
-        
-        llm_summary = await get_llm_result(result_documents[:config["num_documents_for_llm"]], config=config)
+
+        llm_summary = get_llm_result(result_documents[:config["num_documents_for_llm"]], config=config)
         response = JSONResponse(content={"initial_response": initial_response, "llm_summary": llm_summary}, status_code=200)
         
         return response

@@ -1,17 +1,5 @@
 import streamlit as st
-import aiofiles
-import chromadb
-from httpx import ConnectTimeout
-from langchain.globals import set_llm_cache
-from langchain_community.cache import SQLiteCache
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
-import asyncio
-from modules.llm import *
-from modules.utils import *
-
 import requests
-
-
 # Main Streamlit App
 st.title("OpenML AI Search")
 
@@ -21,10 +9,16 @@ query = st.text_input("Enter your query")
 if st.button("Submit"):
     if query_type == "Dataset":
         with st.spinner("waiting for results..."):
-            response = requests.get(f"http://localhost:8000/dataset/{query}", json={"query": query, "type": "dataset"}).json()
+            try:
+                response = requests.get(f"http://fastapi:8000/dataset/{query}", json={"query": query, "type": "dataset"}).json()
+            except:
+                response = requests.get(f"http://0.0.0.0:8000/dataset/{query}", json={"query": query, "type": "dataset"}).json()
     else:
         with st.spinner("waiting for results..."):
-            response = requests.get(f"http://localhost:8000/flow/{query}", json={"query": query, "type": "flow"}).json()
+            try:
+                response = requests.get(f"http://fastapi:8000/flow/{query}", json={"query": query, "type": "flow"}).json()
+            except:
+                response = requests.get(f"http://0.0.0.0:8000/flow/{query}", json={"query": query, "type": "flow"}).json()
     # print(response)
     
     if response["initial_response"] is not None:

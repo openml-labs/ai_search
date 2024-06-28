@@ -13,3 +13,4 @@ serving/data/*
 **/__pycache__/
 **/*.ipynb_checkpoints/
 *checkpoint*
+*.pid

@@ -7,6 +7,7 @@ import langchain
 import pandas as pd
 
 from langchain.retrievers import BM25Retriever, EnsembleRetriever
+from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
@@ -272,7 +273,7 @@ def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> la
     return qa
 
 
-def get_llm_chain(config: dict) -> LLMChain:
+def get_llm_chain(config: dict, local:bool =False) -> LLMChain|bool:
     """
     Description: Get the LLM chain with the specified model and prompt template.
     
@@ -280,14 +281,27 @@ def get_llm_chain(config: dict) -> LLMChain:
     
     Returns: LLMChain
     """
-
+    base_url = "http://127.0.0.1:11434" if local else "http://ollama:11434"
     llm = Ollama(
-        model = config["llm_model"] 
+        model = config["llm_model"] , base_url = base_url
     )  
+    # llm = Ollama(
+        # model = config["llm_model"]
+    # )
+    # print(llm)
     map_template = config["llm_prompt_template"]
     map_prompt = PromptTemplate.from_template(map_template)
-    return LLMChain(llm=llm, prompt=map_prompt)
+    # return LLMChain(llm=llm, prompt=map_prompt)
+    return map_prompt | llm | StrOutputParser()
 
-async def get_llm_result(docs: Sequence[Document], config:dict):
-    llm_chain = get_llm_chain(config=config)
-    return llm_chain.invoke({"docs": docs})["text"]
+def get_llm_result(docs: Sequence[Document], config:dict):
+    try:
+        llm_chain = get_llm_chain(config=config, local=False)
+        return llm_chain.invoke({"docs": docs})
+    except Exception as e:
+        # print(e)
+        llm_chain = get_llm_chain(config=config, local=True)
+        return llm_chain.invoke({"docs": docs})
+        # return "LLM model failed to generate a summary at the moment, please try again later."
+    # llm_chain = get_llm_chain(config=config, local=True)
+    # return llm_chain.invoke({"docs": docs})

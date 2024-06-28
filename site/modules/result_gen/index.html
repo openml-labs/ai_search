@@ -195,7 +195,107 @@
         
   
   <span class="md-ellipsis">
-    Welcome to MkDocs
+    RAG pipeline for OpenML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker container
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training
   </span>
   
 
@@ -220,10 +320,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -234,8 +334,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Modules
           </label>
@@ -611,7 +711,7 @@ group_cols: List of columns to group by</p>
 </details>      <p>Returns: Combined dataframe with the results of all queries</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
@@ -692,7 +792,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: None</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
@@ -756,7 +856,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: A dataframe with the results and duplicate names removed.</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -850,7 +950,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: results["source_documents"] (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
@@ -954,7 +1054,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: output_df (pd.DataFrame)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
@@ -1032,7 +1132,7 @@ See: https://arxiv.org/abs//2307.03172</p>
 <p>Returns: reorder results (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
@@ -1082,7 +1182,7 @@ See: https://arxiv.org/abs//2307.03172</p>
       <p>Description: Make the URL clickable in the dataframe.</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
@@ -1114,7 +1214,7 @@ See: https://arxiv.org/abs//2307.03172</p>
 <p>Returns: dict_results (dict)</p>
 
             <details class="quote">
-              <summary>Source code in <code>modules/results_gen.py</code></summary>
+              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>

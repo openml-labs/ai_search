@@ -3,14 +3,14 @@ import chromadb
 import sys
 import os
 
-from serving.modules.llm import *
-from serving.modules.utils import *
+from backend.modules.llm import *
+from backend.modules.utils import *
 
-config = load_config_and_device("./serving/config.json", training=False)
+config = load_config_and_device("./backend/config.json", training=False)
 
 # change directory for tests
-config["data_dir"] = "./serving/data/"
-config["persist_dir"]= "./serving/data/chroma_db"
+config["data_dir"] = "./backend/data/"
+config["persist_dir"]= "./backend/data/chroma_db"
 
 class TestConfig(unittest.TestCase):
     def __init__(self, *args, **kwargs):

@@ -1,15 +1,39 @@
-# version: '0.1'
 services:
-  fastapi:
-    build: serving/
+  ollama:
+    # build: ollama/
+    image: ollama/ollama:latest
     ports: 
-      - 8000:8000
-      - 8501:8501
+      - 11434:11434
     networks:
       - deploy_network
-    container_name: ai_module
-    # command: sh -c "streamlit run main.py& && uvicorn backend:app --host 0.0.0.0 --port 8000 --reload"
-    # command: ["sh", "-c", "streamlit run main.py&", "&&", "uvicorn" ,"backend:app" ,"--host", "0.0.0.0"]
+    # restart: always
+    # tty: true
+    container_name: ollama
+    restart: unless-stopped
+    # volumes:
+      # - ./get_ollama.sh:/get_ollama.sh
+    # entrypoint: ["/bin/bash", "/get_ollama.sh"]
+
+  fastapi:
+    build: backend/
+    ports: 
+      - 8000:8000
+    networks:
+      - deploy_network
+    depends_on:
+      - ollama
+    container_name: fastapi
+
+  streamlit:
+    build: frontend/
+    depends_on:
+      - fastapi
+      - ollama
+    ports: 
+        - 8501:8501
+    networks:
+      - deploy_network
+    container_name: streamlit
 
 networks:
   deploy_network:

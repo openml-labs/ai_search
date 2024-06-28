@@ -21,7 +21,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [serving/modules]
+          paths: [backend/modules, tests/]
           load_external_modules: true
           show_source: true
           options:
