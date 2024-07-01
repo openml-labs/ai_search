@@ -17,6 +17,8 @@ markdown_extensions:
       permalink: true
 plugins:
   - search
+  - mknotebooks:
+      execute: false
   - mkdocstrings:
       default_handler: python
       handlers:

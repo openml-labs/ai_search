@@ -189,7 +189,7 @@ def get_result_from_query(query, qa, type_of_query, config) -> Tuple[pd.DataFram
 
 
 def aggregate_multiple_queries_and_count(
-    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query"
+    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query", count = True
 ) -> pd.DataFrame:
     """
     Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results
@@ -202,17 +202,19 @@ def aggregate_multiple_queries_and_count(
     """
     combined_df = pd.DataFrame()
     for query in tqdm(queries, total=len(queries)):
-        result_data_frame = get_result_from_query(
+        result_data_frame, _ = get_result_from_query(
             query=query, qa=qa_dataset, type_of_query="dataset", config=config
         )
         result_data_frame = result_data_frame[group_cols]
         # Concat with combined_df with a column to store the query
         result_data_frame["query"] = query
         combined_df = pd.concat([combined_df, result_data_frame])
-    combined_df = (
+    if count:
+        combined_df = (
         combined_df.groupby(group_cols)
         .count()
         .reset_index()
         .sort_values(by=sort_by, ascending=False)
     )
+
     return combined_df

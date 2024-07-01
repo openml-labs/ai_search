@@ -294,14 +294,18 @@ def get_llm_chain(config: dict, local:bool =False) -> LLMChain|bool:
     # return LLMChain(llm=llm, prompt=map_prompt)
     return map_prompt | llm | StrOutputParser()
 
-def get_llm_result(docs: Sequence[Document], config:dict):
-    try:
-        llm_chain = get_llm_chain(config=config, local=False)
-        return llm_chain.invoke({"docs": docs})
-    except Exception as e:
-        # print(e)
-        llm_chain = get_llm_chain(config=config, local=True)
-        return llm_chain.invoke({"docs": docs})
+def get_llm_result_from_string(llm_chain, string):
+    return llm_chain.invoke({"docs": string})
+    # return llm_chain.stream({"docs": string})
+
+# def get_llm_result(docs: Sequence[Document], config:dict):
+#     try:
+#         llm_chain = get_llm_chain(config=config, local=False)
+#         return llm_chain.invoke({"docs": docs})
+#     except Exception as e:
+#         # print(e)
+#         llm_chain = get_llm_chain(config=config, local=True)
+#         return llm_chain.invoke({"docs": docs})
         # return "LLM model failed to generate a summary at the moment, please try again later."
     # llm_chain = get_llm_chain(config=config, local=True)
     # return llm_chain.invoke({"docs": docs})
