@@ -1,0 +1,1150 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../get%20an%20llm%20summary/">
+      
+      
+        <link rel="next" href="../run%20multiple%20queries%20and%20aggregate/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.20">
+    
+    
+      
+        <title>Load vectordb and get results - OpenML RAG Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#just-get-documents" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="OpenML RAG Documentation" class="md-header__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OpenML RAG Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Load vectordb and get results
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="OpenML RAG Documentation" class="md-nav__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    OpenML RAG Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RAG pipeline for OpenML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker container
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../inference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Developer tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../change%20model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../create%20vectordb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create vectordb
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get%20an%20llm%20summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Get an llm summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Load vectordb and get results
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Load vectordb and get results
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#just-get-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just get documents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-the-results-and-return-a-dataframe-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process the results and return a dataframe instead
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run%20multiple%20queries%20and%20aggregate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Modules
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Modules
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/general_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    General utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/llm_module/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Llm module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/metadata_module/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metadata module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../modules/result_gen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Result gen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#just-get-documents" class="md-nav__link">
+    <span class="md-ellipsis">
+      Just get documents
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process-the-results-and-return-a-dataframe-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      Process the results and return a dataframe instead
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Load vectordb and get results</h1>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
+
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
+
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
+
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
+
+    jupyterWidgetsScript.src = widgetRendererSrc;
+
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
+
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">langchain.globals</span> <span class="kn">import</span> <span class="n">set_llm_cache</span>
+<span class="kn">from</span> <span class="nn">langchain_community.cache</span> <span class="kn">import</span> <span class="n">SQLiteCache</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">chromadb</span>
+<span class="c1"># change the path to the backend directory</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span> <span class="s1">&#39;../../backend/&#39;</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kn">from</span> <span class="nn">modules.utils</span> <span class="kn">import</span> <span class="n">load_config_and_device</span>
+<span class="kn">from</span> <span class="nn">modules.llm</span> <span class="kn">import</span> <span class="n">setup_vector_db_and_qa</span>
+<span class="kn">from</span> <span class="nn">modules.results_gen</span> <span class="kn">import</span> <span class="n">get_result_from_query</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Config and DB</span>
+
+<span class="c1"># load the configuration and device</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">load_config_and_device</span><span class="p">(</span><span class="s2">&quot;../../backend/config.json&quot;</span><span class="p">)</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../../backend/data/chroma_db/&quot;</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../../backend/data/&quot;</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>[INFO] Finding device.
+[INFO] Device found: cpu
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># load the persistent database using ChromaDB</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">])</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Setup llm chain, initialize the retriever and llm, and setup Retrieval QA</span>
+<span class="n">qa_dataset</span> <span class="o">=</span> <span class="n">setup_vector_db_and_qa</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>[INFO] Loading metadata from file.
+[INFO] Loading model...
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>
+<code>/Users/eragon/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>[INFO] Model loaded.
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="just-get-documents">Just get documents<a class="headerlink" href="#just-get-documents" title="Permanent link">&para;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;give me datasets about mushrooms&quot;</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">res</span> <span class="o">=</span> <span class="n">qa_dataset</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="nb">input</span> <span class="o">=</span> <span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">res</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea">
+<pre>
+<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
+</pre>
+</div>
+</div>
+<div class="output_area">
+<div class="output_text output_subarea output_execute_result">
+<pre>
+<code>[Document(page_content='### **Dataset Details**\n![](https://meta-album.github.io/assets/img/samples/FNG.png)\n\n**Meta Album ID**: PLT.FNG  \n**Meta Album URL**: [https://meta-album.github.io/datasets/FNG.html](https://meta-album.github.io/datasets/FNG.html)  \n**Domain ID**: PLT  \n**Domain Name**: Plants  \n**Dataset ID**: FNG  \n**Dataset Name**: Fungi  \n**Short Description**: Fungi dataset from Denmark  \n**\\# Classes**: 25  \n**\\# Images**: 15122  \n**Keywords**: fungi, ecology, plants  \n**Data Format**: images  \n**Image size**: 128x128  \n\n**License (original data release)**: BSD-3-Clause License  \n**License URL(original data release)**: https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE\n \n**License (Meta-Album data release)**: BSD-3-Clause License  \n**License URL (Meta-Album data release)**: [https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE](https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE)', metadata={'did': 44335, 'name': 'Meta_Album_FNG_Extended'}),
+ Document(page_content='### **Dataset Details**\n![](https://meta-album.github.io/assets/img/samples/FNG.png)\n\n**Meta Album ID**: PLT.FNG  \n**Meta Album URL**: [https://meta-album.github.io/datasets/FNG.html](https://meta-album.github.io/datasets/FNG.html)  \n**Domain ID**: PLT  \n**Domain Name**: Plants  \n**Dataset ID**: FNG  \n**Dataset Name**: Fungi  \n**Short Description**: Fungi dataset from Denmark  \n**\\# Classes**: 25  \n**\\# Images**: 1000  \n**Keywords**: fungi, ecology, plants  \n**Data Format**: images  \n**Image size**: 128x128  \n\n**License (original data release)**: BSD-3-Clause License  \n**License URL(original data release)**: https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE\n \n**License (Meta-Album data release)**: BSD-3-Clause License  \n**License URL (Meta-Album data release)**: [https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE](https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE)', metadata={'did': 44302, 'name': 'Meta_Album_FNG_Mini'}),
+ Document(page_content="### Description\n\nThis dataset describes mushrooms in terms of their physical characteristics. They are classified into: poisonous or edible.\n\n### Source\n```\n(a) Origin: \nMushroom records are drawn from The Audubon Society Field Guide to North American Mushrooms (1981). G. H. Lincoff (Pres.), New York: Alfred A. Knopf \n\n(b) Donor: \nJeff Schlimmer (Jeffrey.Schlimmer '@' a.gp.cs.cmu.edu)\n```\n\n### Dataset description\n\nThis dataset includes descriptions of hypothetical samples corresponding to 23 species of gilled mushrooms in the Agaricus and Lepiota Family. Each species is identified as definitely edible, definitely poisonous, or of unknown edibility and not recommended. This latter class was combined with the poisonous one. The Guide clearly states that there is no simple rule for determining the edibility of a mushroom; no rule like ``leaflets three, let it be'' for Poisonous Oak and Ivy.", metadata={'did': 24, 'name': 'mushroom'}),
+ Document(page_content='### **Dataset Details**\n![](https://meta-album.github.io/assets/img/samples/FNG.png)\n\n**Meta Album ID**: PLT.FNG  \n**Meta Album URL**: [https://meta-album.github.io/datasets/FNG.html](https://meta-album.github.io/datasets/FNG.html)  \n**Domain ID**: PLT  \n**Domain Name**: Plants  \n**Dataset ID**: FNG  \n**Dataset Name**: Fungi  \n**Short Description**: Fungi dataset from Denmark  \n**\\# Classes**: 20  \n**\\# Images**: 800  \n**Keywords**: fungi, ecology, plants  \n**Data Format**: images  \n**Image size**: 128x128  \n\n**License (original data release)**: BSD-3-Clause License  \n**License URL(original data release)**: https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE\n \n**License (Meta-Album data release)**: BSD-3-Clause License  \n**License URL (Meta-Album data release)**: [https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE](https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE)', metadata={'did': 44272, 'name': 'Meta_Album_FNG_Micro'}),
+ Document(page_content='**Source**: Danish Fungi Dataset  \n**Source URL**: https://sites.google.com/view/danish-fungi-dataset  \n  \n**Original Author**: Lukas Picek, Milan Sulc, Jiri Matas, Jacob Heilmann-Clausen, Thomas S. Jeppesen, Thomas Laessoe, Tobias Froslev  \n**Original contact**: lukaspicek@gmail.com  \n\n**Meta Album author**: Felix Herron  \n**Created Date**: 01 March 2022  \n**Contact Name**: Ihsan Ullah  \n**Contact Email**: meta-album@chalearn.org  \n**Contact URL**: [https://meta-album.github.io/](https://meta-album.github.io/)  \n\n\n\n### **Cite this dataset**\n```\n@article{picek2021danish,\n    title={Danish Fungi 2020 - Not Just Another Image Recognition Dataset},\n    author={Lukas Picek and Milan Sulc and Jiri Matas and Jacob Heilmann-Clausen and Thomas S. Jeppesen and Thomas Laessoe and Tobias Froslev},\n    year={2021},\n    eprint={2103.10107},\n    archivePrefix={arXiv},\n    primaryClass={cs.CV}\n}\n```', metadata={'did': 44272, 'name': 'Meta_Album_FNG_Micro'}),
+ Document(page_content='did - 24, name - mushroom, version - 1, uploader - 1, status - active, format - ARFF, MajorityClassSize - 4208.0, MaxNominalAttDistinctValues - 12.0, MinorityClassSize - 3916.0, NumberOfClasses - 2.0, NumberOfFeatures - 23.0, NumberOfInstances - 8124.0, NumberOfInstancesWithMissingValues - 2480.0, NumberOfMissingValues - 2480.0, NumberOfNumericFeatures - 0.0, NumberOfSymbolicFeatures - 23.0, description - **Author**: [Jeff Schlimmer](Jeffrey.Schlimmer@a.gp.cs.cmu.edu)  \n**Source**: [UCI](https://archive.ics.uci.edu/ml/datasets/mushroom) - 1981     \n**Please cite**:  The Audubon Society Field Guide to North American Mushrooms (1981). G. H. Lincoff (Pres.), New York: Alfred A. Knopf \n\n\n### Description\n\nThis dataset describes mushrooms in terms of their physical characteristics. They are classified into: poisonous or edible.', metadata={'did': 24, 'name': 'mushroom'}),
+ Document(page_content='Meta-Album Fungi dataset is created by sampling the Danish Fungi 2020 dataset(https://arxiv.org/abs/2103.10107), itself a sampling of the Atlas of Danish Fungi repository. The images and labels which enter this database are sourced by a group consisting of 3 300 citizen botanists, then verified by their peers using a ranking of each person reliability, then finally verified by experts working at the Atlas. Of the 128 classes in the original Danish Fungi 2020 dataset, FNG retains the 25 most populous classes, belonging to six genera, for a total of 15 122 images total, with min 372, and max 1 221 images per class. Each image contains a colored 128x128 image of a fungus or a piece of a fungus from the corresponding class. Because the initial data were of widely varying sizes, we needed to crop a significant portion of the images, which we implemented by taking the largest possible square with center at the middle of the initial image. We then scaled each squared image to the 128x128', metadata={'did': 44272, 'name': 'Meta_Album_FNG_Micro'}),
+ Document(page_content='did - 44272, name - Meta_Album_FNG_Micro, version - 1, uploader - 30980, status - active, format - arff, MajorityClassSize - 40.0, MaxNominalAttDistinctValues - nan, MinorityClassSize - 40.0, NumberOfClasses - 20.0, NumberOfFeatures - 3.0, NumberOfInstances - 800.0, NumberOfInstancesWithMissingValues - 0.0, NumberOfMissingValues - 0.0, NumberOfNumericFeatures - 0.0, NumberOfSymbolicFeatures - 0.0, description - ## **Meta-Album Fungi Dataset (Micro)**\n***', metadata={'did': 44272, 'name': 'Meta_Album_FNG_Micro'}),
+ Document(page_content='did - 44335, name - Meta_Album_FNG_Extended, version - 1, uploader - 30980, status - active, format - arff, MajorityClassSize - 1221.0, MaxNominalAttDistinctValues - nan, MinorityClassSize - 372.0, NumberOfClasses - 25.0, NumberOfFeatures - 3.0, NumberOfInstances - 15122.0, NumberOfInstancesWithMissingValues - 0.0, NumberOfMissingValues - 0.0, NumberOfNumericFeatures - 0.0, NumberOfSymbolicFeatures - 0.0, description - ## **Meta-Album Fungi Dataset (Extended)**\n***', metadata={'did': 44335, 'name': 'Meta_Album_FNG_Extended'}),
+ Document(page_content='did - 43922, name - mushroom, version - 3, uploader - 30861, status - active, format - ARFF, MajorityClassSize - 4208.0, MaxNominalAttDistinctValues - nan, MinorityClassSize - 3916.0, NumberOfClasses - 2.0, NumberOfFeatures - 23.0, NumberOfInstances - 8124.0, NumberOfInstancesWithMissingValues - 0.0, NumberOfMissingValues - 0.0, NumberOfNumericFeatures - 0.0, NumberOfSymbolicFeatures - 23.0, description - Mushroom records drawn from The Audubon Society Field Guide to North American Mushrooms (1981). G. H. Lincoff (Pres.), New York: Alfred A. Knopf, qualities - AutoCorrelation : 0.726332635725717, Dimensionality : 0.002831117676021664, MajorityClassPercentage : 51.7971442639094, MajorityClassSize : 4208.0, MinorityClassPercentage : 48.20285573609059, MinorityClassSize : 3916.0, NumberOfBinaryFeatures : 6.0, NumberOfClasses : 2.0, NumberOfFeatures : 23.0, NumberOfInstances : 8124.0, NumberOfInstancesWithMissingValues : 0.0, NumberOfMissingValues : 0.0, NumberOfNumericFeatures : 0.0,', metadata={'did': 43922, 'name': 'mushroom'})]</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">metadata</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea">
+<pre>
+<code>{'did': 44335, 'name': 'Meta_Album_FNG_Extended'}</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">page_content</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>### **Dataset Details**
+![](https://meta-album.github.io/assets/img/samples/FNG.png)
+
+**Meta Album ID**: PLT.FNG  
+**Meta Album URL**: [https://meta-album.github.io/datasets/FNG.html](https://meta-album.github.io/datasets/FNG.html)  
+**Domain ID**: PLT  
+**Domain Name**: Plants  
+**Dataset ID**: FNG  
+**Dataset Name**: Fungi  
+**Short Description**: Fungi dataset from Denmark  
+**\# Classes**: 25  
+**\# Images**: 15122  
+**Keywords**: fungi, ecology, plants  
+**Data Format**: images  
+**Image size**: 128x128  
+
+**License (original data release)**: BSD-3-Clause License  
+**License URL(original data release)**: https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE
+
+**License (Meta-Album data release)**: BSD-3-Clause License  
+**License URL (Meta-Album data release)**: [https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE](https://github.com/picekl/DanishFungiDataset/blob/main/LICENSE)
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="process-the-results-and-return-a-dataframe-instead">Process the results and return a dataframe instead<a class="headerlink" href="#process-the-results-and-return-a-dataframe-instead" title="Permanent link">&para;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Fetch the result data frame based on the query</span>
+<span class="n">result_data_frame</span><span class="p">,</span> <span class="n">result_documents</span> <span class="o">=</span> <span class="n">get_result_from_query</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">qa</span><span class="o">=</span><span class="n">qa_dataset</span><span class="p">,</span> <span class="n">type_of_query</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_text output_subarea">
+<pre>
+<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">result_data_frame</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>id</th>
+<th>name</th>
+<th>command</th>
+<th>OpenML URL</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>44335</td>
+<td>Meta_Album_FNG_Extended</td>
+<td>dataset = openml.datasets.get_dataset(44335)</td>
+<td>&lt;a href="https://www.openml.org/search?type=da...</td>
+<td>did - 44335, name - Meta_Album_FNG_Extended, v...</td>
+</tr>
+<tr>
+<th>1</th>
+<td>44302</td>
+<td>Meta_Album_FNG_Mini</td>
+<td>dataset = openml.datasets.get_dataset(44302)</td>
+<td>&lt;a href="https://www.openml.org/search?type=da...</td>
+<td>### **Dataset Details**\n![](https://meta-albu...</td>
+</tr>
+<tr>
+<th>2</th>
+<td>24</td>
+<td>mushroom</td>
+<td>dataset = openml.datasets.get_dataset(24)</td>
+<td>&lt;a href="https://www.openml.org/search?type=da...</td>
+<td>did - 24, name - mushroom, version - 1, upload...</td>
+</tr>
+<tr>
+<th>3</th>
+<td>44272</td>
+<td>Meta_Album_FNG_Micro</td>
+<td>dataset = openml.datasets.get_dataset(44272)</td>
+<td>&lt;a href="https://www.openml.org/search?type=da...</td>
+<td>did - 44272, name - Meta_Album_FNG_Micro, vers...</td>
+</tr>
+<tr>
+<th>10</th>
+<td>1558</td>
+<td>bank-marketing</td>
+<td>dataset = openml.datasets.get_dataset(1558)</td>
+<td>&lt;a href="https://www.openml.org/search?type=da...</td>
+<td>* Dataset:</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.dd8806f2.min.js"></script>
+      
+    
+  </body>
+</html>
