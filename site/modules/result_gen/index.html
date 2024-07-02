@@ -43,6 +43,12 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
@@ -308,6 +314,174 @@
       
   
   
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Developer tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Developer tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/change%20model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/create%20vectordb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create vectordb
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/get%20an%20llm%20summary/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Get an llm summary
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/load%20vectordb%20and%20get%20results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load vectordb and get results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/run%20multiple%20queries%20and%20aggregate/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -320,10 +494,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -334,8 +508,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Modules
           </label>
@@ -694,7 +868,7 @@
 
 
 <h2 id="results_gen.aggregate_multiple_queries_and_count" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">aggregate_multiple_queries_and_count</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">qa_dataset</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">group_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">aggregate_multiple_queries_and_count</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">qa_dataset</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">group_cols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">sort_by</span><span class="o">=</span><span class="s1">&#39;query&#39;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 <a href="#results_gen.aggregate_multiple_queries_and_count" class="headerlink" title="Permanent link">&para;</a></h2>
 
@@ -711,7 +885,7 @@ group_cols: List of columns to group by</p>
 </details>      <p>Returns: Combined dataframe with the results of all queries</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span>
@@ -739,8 +913,10 @@ group_cols: List of columns to group by</p>
 <span class="normal">215</span>
 <span class="normal">216</span>
 <span class="normal">217</span>
-<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">aggregate_multiple_queries_and_count</span><span class="p">(</span>
-    <span class="n">queries</span><span class="p">,</span> <span class="n">qa_dataset</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">group_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;query&quot;</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">aggregate_multiple_queries_and_count</span><span class="p">(</span>
+    <span class="n">queries</span><span class="p">,</span> <span class="n">qa_dataset</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">group_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results</span>
@@ -753,19 +929,21 @@ group_cols: List of columns to group by</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">query</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)):</span>
-        <span class="n">result_data_frame</span> <span class="o">=</span> <span class="n">get_result_from_query</span><span class="p">(</span>
+        <span class="n">result_data_frame</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_result_from_query</span><span class="p">(</span>
             <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">qa</span><span class="o">=</span><span class="n">qa_dataset</span><span class="p">,</span> <span class="n">type_of_query</span><span class="o">=</span><span class="s2">&quot;dataset&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
         <span class="p">)</span>
         <span class="n">result_data_frame</span> <span class="o">=</span> <span class="n">result_data_frame</span><span class="p">[</span><span class="n">group_cols</span><span class="p">]</span>
         <span class="c1"># Concat with combined_df with a column to store the query</span>
         <span class="n">result_data_frame</span><span class="p">[</span><span class="s2">&quot;query&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query</span>
         <span class="n">combined_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">combined_df</span><span class="p">,</span> <span class="n">result_data_frame</span><span class="p">])</span>
-    <span class="n">combined_df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+        <span class="n">combined_df</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">combined_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">group_cols</span><span class="p">)</span>
         <span class="o">.</span><span class="n">count</span><span class="p">()</span>
         <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">sort_by</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">combined_df</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -792,7 +970,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: None</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
@@ -856,7 +1034,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: A dataframe with the results and duplicate names removed.</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
@@ -950,7 +1128,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: results["source_documents"] (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
@@ -1054,7 +1232,7 @@ group_cols: List of columns to group by</p>
 <p>Returns: output_df (pd.DataFrame)</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
@@ -1132,7 +1310,7 @@ See: https://arxiv.org/abs//2307.03172</p>
 <p>Returns: reorder results (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
@@ -1182,7 +1360,7 @@ See: https://arxiv.org/abs//2307.03172</p>
       <p>Description: Make the URL clickable in the dataframe.</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
@@ -1214,7 +1392,7 @@ See: https://arxiv.org/abs//2307.03172</p>
 <p>Returns: dict_results (dict)</p>
 
             <details class="quote">
-              <summary>Source code in <code>serving/modules/results_gen.py</code></summary>
+              <summary>Source code in <code>backend/modules/results_gen.py</code></summary>
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>

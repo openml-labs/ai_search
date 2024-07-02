@@ -136,8 +136,8 @@ def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[i
 
         # subset the data for testing
         if config["test_subset_2000"] == True:
-            print("[INFO] Subsetting the data to 2000 rows.")
-            all_objects = all_objects[:2000]
+            print("[INFO] Subsetting the data to 100 rows.")
+            all_objects = all_objects[:100]
 
         data_id = [int(all_objects.iloc[i]["did"]) for i in range(len(all_objects))]
 

@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../../developer%20tutorials/run%20multiple%20queries%20and%20aggregate/">
+        <link rel="prev" href="../change%20model/">
       
       
-        <link rel="next" href="../llm_module/">
+        <link rel="next" href="../get%20an%20llm%20summary/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>General utils - OpenML RAG Documentation</title>
+        <title>Create vectordb - OpenML RAG Documentation</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#general_utils" class="md-skip">
+        <a href="#manually" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              General utils
+              Create vectordb
             
           </span>
         </div>
@@ -316,17 +316,19 @@
       
   
   
+    
   
   
+  
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -340,7 +342,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             Developer tutorials
@@ -354,7 +356,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer%20tutorials/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -375,7 +377,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer%20tutorials/change%20model/" class="md-nav__link">
+      <a href="../change%20model/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -393,10 +395,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../developer%20tutorials/create%20vectordb/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Create vectordb
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -405,6 +425,42 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manually
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      API
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -417,7 +473,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer%20tutorials/get%20an%20llm%20summary/" class="md-nav__link">
+      <a href="../get%20an%20llm%20summary/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -438,7 +494,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer%20tutorials/load%20vectordb%20and%20get%20results/" class="md-nav__link">
+      <a href="../load%20vectordb%20and%20get%20results/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -459,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../developer%20tutorials/run%20multiple%20queries%20and%20aggregate/" class="md-nav__link">
+      <a href="../run%20multiple%20queries%20and%20aggregate/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -484,19 +540,17 @@
       
   
   
-    
   
   
-  
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
           <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
@@ -510,7 +564,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Modules
@@ -521,28 +575,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    General utils
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../modules/general_utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -551,51 +587,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#general_utils" class="md-nav__link">
-    <span class="md-ellipsis">
-      general_utils
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general_utils.find_device" class="md-nav__link">
-    <span class="md-ellipsis">
-      find_device
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general_utils.load_config_and_device" class="md-nav__link">
-    <span class="md-ellipsis">
-      load_config_and_device
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -608,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../llm_module/" class="md-nav__link">
+      <a href="../../modules/llm_module/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -629,7 +620,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metadata_module/" class="md-nav__link">
+      <a href="../../modules/metadata_module/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -650,7 +641,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../result_gen/" class="md-nav__link">
+      <a href="../../modules/result_gen/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -696,27 +687,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#general_utils" class="md-nav__link">
+  <a href="#manually" class="md-nav__link">
     <span class="md-ellipsis">
-      general_utils
+      Manually
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#general_utils.find_device" class="md-nav__link">
+  <a href="#api" class="md-nav__link">
     <span class="md-ellipsis">
-      find_device
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#general_utils.load_config_and_device" class="md-nav__link">
-    <span class="md-ellipsis">
-      load_config_and_device
+      API
     </span>
   </a>
   
@@ -737,152 +719,163 @@
                   
 
 
-  <h1>General utils</h1>
+  <h1>Create vectordb</h1>
 
-<div class="doc doc-object doc-module">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script>
+(function() {
+  function addWidgetsRenderer() {
+    var requireJsScript = document.createElement('script');
+    requireJsScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js';
 
+    var mimeElement = document.querySelector('script[type="application/vnd.jupyter.widget-view+json"]');
+    var jupyterWidgetsScript = document.createElement('script');
+    var widgetRendererSrc = 'https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js';
+    var widgetState;
 
+    // Fallback for older version:
+    try {
+      widgetState = mimeElement && JSON.parse(mimeElement.innerHTML);
 
-<a id="general_utils"></a>
-    <div class="doc doc-contents first">
+      if (widgetState && (widgetState.version_major < 2 || !widgetState.version_major)) {
+        widgetRendererSrc = 'jupyter-js-widgets@*/dist/embed.js';
+      }
+    } catch(e) {}
 
+    jupyterWidgetsScript.src = widgetRendererSrc;
 
+    document.body.appendChild(requireJsScript);
+    document.body.appendChild(jupyterWidgetsScript);
+  }
 
-  <div class="doc doc-children">
+  document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
+}());
+</script>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">langchain.globals</span> <span class="kn">import</span> <span class="n">set_llm_cache</span>
+<span class="kn">from</span> <span class="nn">langchain_community.cache</span> <span class="kn">import</span> <span class="n">SQLiteCache</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">chromadb</span>
+<span class="c1"># change the path to the backend directory</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span> <span class="s1">&#39;../../backend/&#39;</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
 
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="kn">from</span> <span class="nn">modules.utils</span> <span class="kn">import</span> <span class="n">get_all_metadata_from_openml</span><span class="p">,</span> <span class="n">create_metadata_dataframe</span><span class="p">,</span> <span class="n">load_config_and_device</span>
+<span class="kn">from</span> <span class="nn">modules.llm</span> <span class="kn">import</span> <span class="n">load_document_and_create_vector_store</span><span class="p">,</span> <span class="n">setup_vector_db_and_qa</span>
+</code></pre></div></td></tr></table></div>
 
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">config</span> <span class="o">=</span> <span class="n">load_config_and_device</span><span class="p">(</span><span class="s2">&quot;../../backend/config.json&quot;</span><span class="p">)</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../backend/data/chroma_db/&quot;</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../backend/data/&quot;</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;type_of_data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dataset&quot;</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;training&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
+<span class="c1"># load the persistent database using ChromaDB</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
 
+</div>
+<div class="output_wrapper">
+<div class="output">
+<div class="output_area">
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+<code>[INFO] Finding device.
+[INFO] Device found: cpu
+{'rqa_prompt_template': 'This database is a list of metadata. Use the following pieces of context to find the relevant document. Answer only from the context given using the {question} given. If you do not know the answer, say you do not know. {context}', 'llm_prompt_template': 'The following is a set of documents {docs}. Based on these docs, please summarize the content concisely. Also give a list of main concepts found in the documents. Do not add any new information. Helpful Answer: ', 'num_return_documents': 50, 'embedding_model': 'BAAI/bge-large-en-v1.5', 'llm_model': 'qwen2:1.5b', 'num_documents_for_llm': 10, 'data_dir': '../backend/data/', 'persist_dir': '../backend/data/chroma_db/', 'testing_flag': False, 'ignore_downloading_data': False, 'test_subset_2000': False, 'data_download_n_jobs': 20, 'training': True, 'temperature': 0.95, 'top_p': 0.95, 'search_type': 'similarity', 'reranking': False, 'long_context_reorder': False, 'device': 'cpu', 'type_of_data': 'dataset'}
+</code>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="manually">Manually<a class="headerlink" href="#manually" title="Permanent link">&para;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-
-<div class="doc doc-object doc-function">
-
-
-<h2 id="general_utils.find_device" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">find_device</span><span class="p">(</span><span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-
-<a href="#general_utils.find_device" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents ">
-
-      <p>Description: Find the device to use for the pipeline. If cuda is available, use it. If not, check if MPS is available and use it. If not, use CPU.</p>
-<p>Input: training (bool) : Whether the pipeline is being used for training or not.</p>
-<p>Returns: device (str) : The device to use for the pipeline.</p>
-
-            <details class="quote">
-              <summary>Source code in <code>backend/modules/general_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span>
-<span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">find_device</span><span class="p">(</span><span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Find the device to use for the pipeline. If cuda is available, use it. If not, check if MPS is available and use it. If not, use CPU.</span>
-
-<span class="sd">    Input: training (bool) : Whether the pipeline is being used for training or not.</span>
-
-<span class="sd">    Returns: device (str) : The device to use for the pipeline.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Finding device.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-        <span class="k">return</span> <span class="s2">&quot;cuda&quot;</span>
-    <span class="k">elif</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">training</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-            <span class="c1"># loading metadata on mps for inference is quite slow. So disabling for now.</span>
-            <span class="k">return</span> <span class="s2">&quot;cpu&quot;</span>
-        <span class="k">return</span> <span class="s2">&quot;mps&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;cpu&quot;</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Download the data if it does not exist</span>
+<span class="n">openml_data_object</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">all_metadata</span> <span class="o">=</span> <span class="n">get_all_metadata_from_openml</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+<span class="c1"># Create the combined metadata dataframe</span>
+<span class="n">metadata_df</span><span class="p">,</span> <span class="n">all_metadata</span> <span class="o">=</span> <span class="n">create_metadata_dataframe</span><span class="p">(</span>
+    <span class="n">openml_data_object</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">all_metadata</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+<span class="p">)</span>
+<span class="c1"># Create the vector store</span>
+<span class="n">vectordb</span> <span class="o">=</span> <span class="n">load_document_and_create_vector_store</span><span class="p">(</span>
+    <span class="n">metadata_df</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">chroma_client</span><span class="o">=</span><span class="n">client</span>
+<span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-            </details>
-    </div>
 
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-<div class="doc doc-object doc-function">
-
-
-<h2 id="general_utils.load_config_and_device" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">load_config_and_device</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-
-<a href="#general_utils.load_config_and_device" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents ">
-
-      <p>Description: Load the config file and find the device to use for the pipeline.</p>
-<p>Input: config_file (str) : The path to the config file.
-training (bool) : Whether the pipeline is being used for training or not.</p>
-<p>Returns: config (dict) : The config dictionary + device (str) : The device to use for the pipeline.</p>
-
-            <details class="quote">
-              <summary>Source code in <code>backend/modules/general_utils.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_config_and_device</span><span class="p">(</span><span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Description: Load the config file and find the device to use for the pipeline.</span>
-
-<span class="sd">    Input: config_file (str) : The path to the config file.</span>
-<span class="sd">    training (bool) : Whether the pipeline is being used for training or not.</span>
-
-<span class="sd">    Returns: config (dict) : The config dictionary + device (str) : The device to use for the pipeline.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Check if the config file exists and load it</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Config file does not exist.&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-
-    <span class="c1"># Find device and set it in the config between cpu and cuda and mps if available</span>
-    <span class="n">config</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_device</span><span class="p">(</span><span class="n">training</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Device found: </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;device&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">config</span>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">qa</span> <span class="o">=</span> <span class="n">setup_vector_db_and_qa</span><span class="p">(</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;type_of_data&quot;</span><span class="p">],</span> <span class="n">client</span><span class="o">=</span><span class="n">client</span>
+    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-            </details>
-    </div>
 
 </div>
-
-
-
-  </div>
-
-    </div>
-
 </div>
 
 
