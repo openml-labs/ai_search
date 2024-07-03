@@ -6,5 +6,5 @@ while [ "$(ollama list | grep 'NAME')" == "" ]; do
   sleep 1
 done
 
-ollama run qwen2:1.5b
+ollama run llama3
 

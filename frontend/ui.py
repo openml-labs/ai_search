@@ -9,7 +9,8 @@ import os
 st.title("OpenML AI Search")
 
 query_type = st.selectbox("Select Query Type", ["Dataset", "Flow"])
-query = st.chat_input("Enter your query")
+# query = st ("Enter your query")
+query = st.text_input("Enter your query")
 
 st.session_state["query"] = query
 

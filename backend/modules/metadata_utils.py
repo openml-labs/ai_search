@@ -221,7 +221,7 @@ def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[i
         # subset the data for testing
         if config["test_subset_2000"] == True:
             print("[INFO] Subsetting the data to 100 rows.")
-            all_objects = all_objects[:100]
+            all_objects = all_objects[:500]
 
         data_id = [int(all_objects.iloc[i]["did"]) for i in range(len(all_objects))]
 
@@ -232,7 +232,7 @@ def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[i
         openml_data_object = handler.get_metadata(data_id)
 
         print("[INFO] Saving metadata to file.")
-        save_metadata_to_file((openml_data_object, data_id, all_objects), save_filename)
+        save_metadata_to_file((openml_data_object, data_id, all_objects, handler), save_filename)
 
         return openml_data_object, data_id, all_objects, handler
 
