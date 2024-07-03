@@ -1,4 +1,3 @@
-from functools import partial
 import streamlit as st
 from streamlit_feedback import streamlit_feedback
 from streamlit import session_state as ss
@@ -10,7 +9,7 @@ import os
 st.title("OpenML AI Search")
 
 query_type = st.selectbox("Select Query Type", ["Dataset", "Flow"])
-query = st.text_input("Enter your query")
+query = st.chat_input("Enter your query")
 
 st.session_state["query"] = query
 
@@ -33,21 +32,6 @@ def feedback_cb():
     with open(file_path, "w") as file:
         json.dump(data, file, indent=4)
 
-# def _submit_feedback(user_response:str):
-#     st.toast(f"Feedback submitted: {user_response}")
-
-# def feedback_cb():
-#     """Processes feedback."""
-#     # ss.fbdata = {'feedback_thumb': ss.fbthuk, 'feedback_star': ss.fbstark, 'feedback_comment': ss.fbcomk}
-
-#     # Save to message history
-#     # ss.msg.append({"role": "user", "content": ss.fbdata})
-#     # write to file
-#     with open("feedback.csv", "a+") as f:
-#         fb_k = ss.fb_k
-#         f.write(f"{fb_k['type']},{fb_k['score']},{fb_k['text']},{ss.llm_summary}\n")
-
-    
 if st.button("Submit"):
     if query_type == "Dataset":
         with st.spinner("waiting for results..."):

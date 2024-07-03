@@ -358,7 +358,7 @@
         
   
   <span class="md-ellipsis">
-    Index
+    Developer Tutorials
   </span>
   
 
@@ -464,6 +464,27 @@
   
   <span class="md-ellipsis">
     Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/train%20and%20evaluate%20models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Train and evaluate models
   </span>
   
 
@@ -1485,8 +1506,8 @@ If training is set to False, it loads the metadata from the files. If training i
 
         <span class="c1"># subset the data for testing</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_subset_2000&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Subsetting the data to 2000 rows.&quot;</span><span class="p">)</span>
-            <span class="n">all_objects</span> <span class="o">=</span> <span class="n">all_objects</span><span class="p">[:</span><span class="mi">2000</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Subsetting the data to 100 rows.&quot;</span><span class="p">)</span>
+            <span class="n">all_objects</span> <span class="o">=</span> <span class="n">all_objects</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
 
         <span class="n">data_id</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">all_objects</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;did&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_objects</span><span class="p">))]</span>
 

@@ -358,7 +358,7 @@
         
   
   <span class="md-ellipsis">
-    Index
+    Developer Tutorials
   </span>
   
 
@@ -464,6 +464,27 @@
   
   <span class="md-ellipsis">
     Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer%20tutorials/train%20and%20evaluate%20models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Train and evaluate models
   </span>
   
 
@@ -1049,8 +1070,8 @@
     <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;testing_flag&quot;</span><span class="p">]:</span>
         <span class="c1"># subset the data for testing</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_subset_2000&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Subsetting the data to 2000 rows.&quot;</span><span class="p">)</span>
-            <span class="n">documents</span> <span class="o">=</span> <span class="n">documents</span><span class="p">[:</span><span class="mi">2000</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Subsetting the data to 100 rows.&quot;</span><span class="p">)</span>
+            <span class="n">documents</span> <span class="o">=</span> <span class="n">documents</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span>
     <span class="n">unique_docs</span><span class="p">,</span> <span class="n">unique_ids</span> <span class="o">=</span> <span class="n">generate_unique_documents</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 
     <span class="nb">print</span><span class="p">(</span>

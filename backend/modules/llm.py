@@ -256,13 +256,14 @@ def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> la
     """
 
     config["type_of_data"] = data_type
+
     # Download the data if it does not exist
-    openml_data_object, data_id, all_metadata = get_all_metadata_from_openml(
+    openml_data_object, data_id, all_metadata, handler = get_all_metadata_from_openml(
         config=config
     )
     # Create the combined metadata dataframe
     metadata_df, all_metadata = create_metadata_dataframe(
-        openml_data_object, data_id, all_metadata, config=config
+        handler, openml_data_object, data_id, all_metadata, config=config
     )
     # Create the vector store
     vectordb = load_document_and_create_vector_store(
@@ -297,15 +298,3 @@ def get_llm_chain(config: dict, local:bool =False) -> LLMChain|bool:
 def get_llm_result_from_string(llm_chain, string):
     return llm_chain.invoke({"docs": string})
     # return llm_chain.stream({"docs": string})
-
-# def get_llm_result(docs: Sequence[Document], config:dict):
-#     try:
-#         llm_chain = get_llm_chain(config=config, local=False)
-#         return llm_chain.invoke({"docs": docs})
-#     except Exception as e:
-#         # print(e)
-#         llm_chain = get_llm_chain(config=config, local=True)
-#         return llm_chain.invoke({"docs": docs})
-        # return "LLM model failed to generate a summary at the moment, please try again later."
-    # llm_chain = get_llm_chain(config=config, local=True)
-    # return llm_chain.invoke({"docs": docs})

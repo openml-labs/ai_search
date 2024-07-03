@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#embedding-model" class="md-skip">
+        <a href="#tutorial-on-changing-models" class="md-skip">
           Skip to content
         </a>
       
@@ -360,7 +360,7 @@
         
   
   <span class="md-ellipsis">
-    Index
+    Developer Tutorials
   </span>
   
 
@@ -382,6 +382,8 @@
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
+      
+        
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
@@ -411,12 +413,23 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initial-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial config
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#embedding-model" class="md-nav__link">
@@ -431,15 +444,6 @@
   <a href="#llm-model" class="md-nav__link">
     <span class="md-ellipsis">
       LLM model
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#important" class="md-nav__link">
-    <span class="md-ellipsis">
-      IMPORTANT
     </span>
   </a>
   
@@ -529,6 +533,27 @@
   
   <span class="md-ellipsis">
     Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../train%20and%20evaluate%20models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Train and evaluate models
   </span>
   
 
@@ -688,12 +713,23 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#initial-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      Initial config
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#embedding-model" class="md-nav__link">
@@ -708,15 +744,6 @@
   <a href="#llm-model" class="md-nav__link">
     <span class="md-ellipsis">
       LLM model
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#important" class="md-nav__link">
-    <span class="md-ellipsis">
-      IMPORTANT
     </span>
   </a>
   
@@ -767,6 +794,16 @@
   document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
 }());
 </script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="tutorial-on-changing-models">Tutorial on changing models<a class="headerlink" href="#tutorial-on-changing-models" title="Permanent link">&para;</a></h1>
+<ul>
+<li>How would you use a different embedding and llm model?</li>
+</ul>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
@@ -795,6 +832,13 @@
 <span class="kn">from</span> <span class="nn">modules.llm</span> <span class="kn">import</span> <span class="n">setup_vector_db_and_qa</span>
 </code></pre></div></td></tr></table></div>
 
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="initial-config">Initial config<a class="headerlink" href="#initial-config" title="Permanent link">&para;</a></h2>
+</div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
@@ -893,7 +937,7 @@
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="important">IMPORTANT<a class="headerlink" href="#important" title="Permanent link">&para;</a></h1>
 <ul>
-<li>Do NOT forget to add the models to ollama/get_ollama.sh</li>
+<li>Do NOT forget to change the model to the best model in ollama/get_ollama.sh</li>
 </ul>
 </div>
 </div>

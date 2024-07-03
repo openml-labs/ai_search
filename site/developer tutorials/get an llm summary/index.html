@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#get-llm-summary-of-a-string" class="md-skip">
+        <a href="#getting-an-llm-summary-using-the-api" class="md-skip">
           Skip to content
         </a>
       
@@ -360,7 +360,7 @@
         
   
   <span class="md-ellipsis">
-    Index
+    Developer Tutorials
   </span>
   
 
@@ -476,6 +476,27 @@
   
   <span class="md-ellipsis">
     Run multiple queries and aggregate
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../train%20and%20evaluate%20models/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Train and evaluate models
   </span>
   
 
@@ -681,6 +702,16 @@
   document.addEventListener('DOMContentLoaded', addWidgetsRenderer);
 }());
 </script>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="getting-an-llm-summary-using-the-api">Getting an LLM summary using the API<a class="headerlink" href="#getting-an-llm-summary-using-the-api" title="Permanent link">&para;</a></h1>
+<ul>
+<li>How would you use the API and an LLM model + prompt to generate a summary of the results obtained from the RAG pipeline?</li>
+</ul>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
@@ -748,6 +779,7 @@
 <h1 id="get-llm-summary-of-a-string">Get LLM summary of a string<a class="headerlink" href="#get-llm-summary-of-a-string" title="Permanent link">&para;</a></h1>
 <ul>
 <li>Ensure that Ollama is running before this works <code>bash ollama/.get_ollama.sh</code> (or use the desktop Ollama app for testing)</li>
+<li>As you can tell, the data needs to be a string. To then get the results from a bunch of langchain documents, you must first concatenate the text you care about into a single string.</li>
 </ul>
 </div>
 </div>

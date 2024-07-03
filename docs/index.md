@@ -15,6 +15,10 @@
 - For a complete usage example refer to [pipeline usage](./developer%20tutorials/train%20and%20evaluate%20models.ipynb)
 - Enjoy :)
 
+## Example usage
+- Note that in this picture, I am using a very very tiny model for demonstration purposes. The actual results would be a lot better :)
+- ![Example usage](./images/search_ui.png)
+
 ## Where do I go from here?
 ### I am a developer and I want to contribute to the project
 - Hello! We are glad you are here. To get started, refer to the tutorials in the [developer tutorial](./developer%20tutorials/index.md) section.
