@@ -1,12 +1,15 @@
 # This file pertains to all the utility functions required for creating and managing the vector database
 
 from __future__ import annotations
+
 from collections import OrderedDict
 from typing import Sequence, Tuple
+
 import langchain
 import pandas as pd
 from flashrank import Ranker, RerankRequest
-from langchain_community.document_transformers.long_context_reorder import LongContextReorder
+from langchain_community.document_transformers.long_context_reorder import \
+    LongContextReorder
 from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
@@ -30,7 +33,12 @@ def long_context_reorder(results: Sequence[Document]) -> Sequence[Document]:
     return results
 
 
-def fetch_results(query: str, qa: langchain.chains.retrieval_qa.base.RetrievalQA, type_of_query: str, config: dict) -> Sequence[Document]:
+def fetch_results(
+    query: str,
+    qa: langchain.chains.retrieval_qa.base.RetrievalQA,
+    type_of_query: str,
+    config: dict,
+) -> Sequence[Document]:
     """
     Description: Fetch results for the query using the QA chain.
 
@@ -73,7 +81,7 @@ def fetch_results(query: str, qa: langchain.chains.retrieval_qa.base.RetrievalQA
         return results
 
 
-def process_documents(source_documents : Sequence[Document]) -> Tuple[OrderedDict, list]:
+def process_documents(source_documents: Sequence[Document]) -> Tuple[OrderedDict, list]:
     """
     Description: Process the source documents and create a dictionary with the key_name as the key and the name and page content as the values.
 
@@ -91,14 +99,16 @@ def process_documents(source_documents : Sequence[Document]) -> Tuple[OrderedDic
     return dict_results, ids
 
 
-def make_clickable(val : str) -> str:
+def make_clickable(val: str) -> str:
     """
     Description: Make the URL clickable in the dataframe.
     """
     return '<a href="{}">{}</a>'.format(val, val)
 
 
-def create_output_dataframe(dict_results: dict, type_of_data: str, ids_order: list) -> pd.DataFrame:
+def create_output_dataframe(
+    dict_results: dict, type_of_data: str, ids_order: list
+) -> pd.DataFrame:
     """
     Description: Create an output dataframe with the results. The URLs are API calls to the OpenML API for the specific type of data.
 
@@ -159,7 +169,9 @@ def check_query(query: str) -> str:
     return query
 
 
-def get_result_from_query(query, qa, type_of_query, config) -> Tuple[pd.DataFrame, Sequence[Document]]:
+def get_result_from_query(
+    query, qa, type_of_query, config
+) -> Tuple[pd.DataFrame, Sequence[Document]]:
     """
     Description: Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
 
@@ -185,11 +197,11 @@ def get_result_from_query(query, qa, type_of_query, config) -> Tuple[pd.DataFram
     dict_results, ids_order = process_documents(source_documents)
     output_df = create_output_dataframe(dict_results, type_of_query, ids_order)
 
-    return output_df, source_documents
+    return output_df, ids_order
 
 
 def aggregate_multiple_queries_and_count(
-    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query", count = True
+    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query", count=True
 ) -> pd.DataFrame:
     """
     Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results
@@ -211,10 +223,10 @@ def aggregate_multiple_queries_and_count(
         combined_df = pd.concat([combined_df, result_data_frame])
     if count:
         combined_df = (
-        combined_df.groupby(group_cols)
-        .count()
-        .reset_index()
-        .sort_values(by=sort_by, ascending=False)
-    )
+            combined_df.groupby(group_cols)
+            .count()
+            .reset_index()
+            .sort_values(by=sort_by, ascending=False)
+        )
 
     return combined_df

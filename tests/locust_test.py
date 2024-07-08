@@ -6,6 +6,7 @@ How to run:
 - Open the interface and configure the number of users and requests per second. Then, start the test.
 - The test will run for the specified time and show the results.
 """
+
 import random
 
 from locust import HttpUser, between, task
@@ -29,12 +30,12 @@ queries: list[str] = [
 ]
 
 
-def sample_random_query(queries : list[str]) -> str:
+def sample_random_query(queries: list[str]) -> str:
     """
     Description: Sample a random query from the list of queries
-    
+
     Input: queries (List[str])
-    
+
     Returns: query (str)
     """
     return random.choice(queries)

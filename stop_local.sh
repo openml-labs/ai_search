@@ -10,6 +10,9 @@ cd ../backend
 # uvicorn backend:app --host 0.0.0.0 --port 8000 &
 kill -9 $(cat $PID_FILE)
 
+cd ../llm_service
+kill -9 $(cat $PID_FILE)
+
 cd ../frontend
 # streamlit run ui.py &
 kill -9 $(cat $PID_FILE)

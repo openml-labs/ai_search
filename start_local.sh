@@ -9,6 +9,10 @@ cd ollama
 ./get_ollama.sh &
 echo $! > $PID_FILE
 
+cd ../llm_service
+uvicorn llm_service:app --host 0.0.0.0 --port 8081 &
+echo $! > $PID_FILE
+
 cd ../backend
 uvicorn backend:app --host 0.0.0.0 --port 8000 &
 echo $! >> $PID_FILE

@@ -1,66 +1,99 @@
+import json
+from pathlib import Path
+
+import pandas as pd
+import requests
 import streamlit as st
 from streamlit_feedback import streamlit_feedback
-from streamlit import session_state as ss
-import requests
-import json
-import os
+from utils import (feedback_cb, filter_initial_response, parse_llm_response,
+                   update_subset_cols)
+
+with open("../backend/config.json", "r") as file:
+    config = json.load(file)
+
+# Metadata paths
+data_metadata = Path(config["data_dir"]) / "all_dataset_description.csv"
+flow_metadata = Path(config["data_dir"]) / "all_flow_description.csv"
+
+# Load metadata
+data_metadata = pd.read_csv(data_metadata)
+flow_metadata = pd.read_csv(flow_metadata)
 
 # Main Streamlit App
 st.title("OpenML AI Search")
 
 query_type = st.selectbox("Select Query Type", ["Dataset", "Flow"])
-# query = st ("Enter your query")
 query = st.text_input("Enter your query")
 
 st.session_state["query"] = query
 
-def feedback_cb():
-    file_path = "feedback.json"
-
-    if os.path.exists(file_path):
-        with open(file_path, "r") as file:
-            try:
-                data = json.load(file)
-            except json.JSONDecodeError:
-                data = []
-    else:
-        data = []
-
-    # Append new feedback
-    data.append({"ss": ss.fb_k, "llm_summary": ss.llm_summary, "query": ss.query})
-
-    # Write updated content back to the file
-    with open(file_path, "w") as file:
-        json.dump(data, file, indent=4)
+response = {"initial_response": None}
 
 if st.button("Submit"):
-    if query_type == "Dataset":
-        with st.spinner("waiting for results..."):
-            try:
-                response = requests.get(f"http://fastapi:8000/dataset/{query}", json={"query": query, "type": "dataset"}).json()
-            except:
-                response = requests.get(f"http://0.0.0.0:8000/dataset/{query}", json={"query": query, "type": "dataset"}).json()
-    else:
-        with st.spinner("waiting for results..."):
-            try:
-                response = requests.get(f"http://fastapi:8000/flow/{query}", json={"query": query, "type": "flow"}).json()
-            except:
-                response = requests.get(f"http://0.0.0.0:8000/flow/{query}", json={"query": query, "type": "flow"}).json()
-    # print(response)
+    with st.spinner("Waiting for results..."):
+        try:
+            response = requests.get(
+                f"http://fastapi:8000/{query_type.lower()}/{query}",
+                json={"query": query, "type": query_type.lower()},
+            ).json()
+        except:
+            response = requests.get(
+                f"http://0.0.0.0:8000/{query_type.lower()}/{query}",
+                json={"query": query, "type": query_type.lower()},
+            ).json()
 
-    # response = {"initial_response": "dummy", "llm_summary": "dummy"}
-    
     if response["initial_response"] is not None:
         st.write("Results:")
-        # st.write(response["initial_response"])
-        # show dataframe
-        st.dataframe(response["initial_response"])
-        
-        if response["llm_summary"] is not None:
-            st.write("Summary:")
-            st.write(response["llm_summary"])
 
-    with st.form('fb_form'):
-        st.session_state["llm_summary"] = response["llm_summary"]
-        streamlit_feedback(feedback_type="thumbs", align="flex-start", key='fb_k',optional_text_label="[Optional] Please provide an explanation", on_submit=feedback_cb)
-        # st.form_submit_button('Save feedback', on_click=feedback_cb)
+        # response is the ids, we need to get the metdata from the ids
+        if query_type == "Dataset":
+            initial_response = data_metadata[
+                data_metadata["did"].isin(response["initial_response"])
+            ]
+            # subset_cols = ["did", "name","OpenML URL","Description", "command"]
+        else:
+            initial_response = flow_metadata[
+                flow_metadata["id"].isin(response["initial_response"])
+            ]
+
+        # def process query using results from port 8001/llmquery/{query}
+        with st.spinner("Using an LLM to find the most relevent information..."):
+            if query_type == "Dataset":
+                try:
+                    llm_response = requests.get(
+                        f"http://fastapi:8081/llmquery/{query}"
+                    ).json()
+                except:
+                    llm_response = requests.get(
+                        f"http://0.0.0.0:8081/llmquery/{query}"
+                    ).json()
+
+                subset_cols = ["did", "name"]
+                try:
+                    (
+                        dataset_size,
+                        dataset_missing,
+                        dataset_classification,
+                        dataset_sort,
+                    ) = parse_llm_response(llm_response)
+                    subset_cols = update_subset_cols(
+                        dataset_size, dataset_missing, dataset_classification
+                    )
+                    initial_response = filter_initial_response(
+                        initial_response, dataset_classification
+                    )
+                except Exception as e:
+                    st.error(f"Error processing LLM response: {e}")
+
+                initial_response = initial_response[subset_cols]
+              
+                st.dataframe(initial_response)
+
+    with st.form("fb_form"):
+        streamlit_feedback(
+            feedback_type="thumbs",
+            align="flex-start",
+            key="fb_k",
+            optional_text_label="[Optional] Please provide an explanation",
+        )
+        st.form_submit_button("Save feedback", on_click=feedback_cb)

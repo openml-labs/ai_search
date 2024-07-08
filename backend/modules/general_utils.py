@@ -1,13 +1,12 @@
 import json
 import os
-from pathlib import Path
 
 import torch
 
 # --- GENERAL UTILS ---
 
 
-def find_device(training: bool = False ) -> str:
+def find_device(training: bool = False) -> str:
     """
     Description: Find the device to use for the pipeline. If cuda is available, use it. If not, check if MPS is available and use it. If not, use CPU.
 

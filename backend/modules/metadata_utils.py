@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import os
 import pickle
 # from pqdm.processes import pqdm
@@ -11,7 +12,9 @@ from pqdm.threads import pqdm
 # -- DOWNLOAD METADATA --
 
 
-def load_metadata_from_file(save_filename: str) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame]:
+def load_metadata_from_file(
+    save_filename: str,
+) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame]:
     """
     Load metadata from a file.
     """
@@ -26,72 +29,80 @@ def save_metadata_to_file(data, save_filename: str):
     with open(save_filename, "wb") as f:
         pickle.dump(data, f)
 
+
 class OpenMLObjectHandler:
     """
     Description: The base class for handling OpenML objects.
     """
+
     def __init__(self, config):
         self.config = config
         self.collection_name = ""
-    
+
     def get_description(self, data_id: int):
         """
         Description: Get the description of the OpenML object.
-        
+
         Input: data_id (int) : The data id
-        
+
         Returns: The OpenML object.
         """
         raise NotImplementedError
-    
+
     def get_openml_objects(self):
         """
         Description: Get the OpenML objects.
-        
+
         Input: None
-        
+
         Returns: The OpenML objects.
         """
         raise NotImplementedError
-    
+
     def initialize_cache(self, data_id: Sequence[int]) -> None:
         """
         Description: Initialize the cache for the OpenML objects.
-        
+
         Input: data_id (list) : The list of data ids
-        
+
         Returns: None
         """
         self.get_description(data_id[0])
-    
+
     def get_metadata(self, data_id: Sequence[int]):
         """
         Description: Get metadata from OpenML using parallel processing.
-        
+
         Input: data_id (list) : The list of data ids
-        
+
         Returns: The OpenML objects.
         """
         return pqdm(
             data_id, self.get_description, n_jobs=self.config["data_download_n_jobs"]
         )
-    
-    def process_metadata(self, openml_data_object, data_id: Sequence[int], all_dataset_metadata:pd.DataFrame, file_path: str):
+
+    def process_metadata(
+        self,
+        openml_data_object,
+        data_id: Sequence[int],
+        all_dataset_metadata: pd.DataFrame,
+        file_path: str,
+    ):
         """
         Description: Process the metadata.
-        
+
         Input: openml_data_object (list) : The list of OpenML objects, data_id (list) : The list of data ids, all_dataset_metadata (pd.DataFrame) : The metadata table, file_path (str) : The file path
-        
+
         Returns: The combined metadata dataframe and the updated metadata table.
         """
         raise NotImplementedError
-    
+
     def load_metadata(self, file_path: str):
         """
         Description: Load metadata from a file.
-        
+
         Input: file_path (str) : The file path
-        
+
         Returns: The metadata dataframe.
         """
         try:
@@ -100,6 +111,7 @@ class OpenMLObjectHandler:
             raise Exception(
                 "Metadata files do not exist. Please run the training pipeline first."
             )
+
 
 class OpenMLDatasetHandler(OpenMLObjectHandler):
     """
@@ -117,14 +129,22 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
     def get_openml_objects(self):
         return openml.datasets.list_datasets(output_format="dataframe")
 
-    def process_metadata(self, openml_data_object: Sequence[openml.datasets.dataset.OpenMLDataset], data_id: Sequence[int], all_dataset_metadata: pd.DataFrame, file_path: str):
+    def process_metadata(
+        self,
+        openml_data_object: Sequence[openml.datasets.dataset.OpenMLDataset],
+        data_id: Sequence[int],
+        all_dataset_metadata: pd.DataFrame,
+        file_path: str,
+    ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
         ]
         joined_qualities = [
             join_attributes(attr, "qualities") for attr in openml_data_object
         ]
-        joined_features = [join_attributes(attr, "features") for attr in openml_data_object]
+        joined_features = [
+            join_attributes(attr, "features") for attr in openml_data_object
+        ]
 
         all_data_description_df = create_combined_information_df(
             data_id, descriptions, joined_qualities, joined_features
@@ -139,19 +159,27 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
             all_dataset_metadata[["did", "name", "Combined_information"]],
             all_dataset_metadata,
         )
-    
+
+
 class OpenMLFlowHandler(OpenMLObjectHandler):
     """
     Description: The class for handling OpenML flow objects.
     """
+
     def get_description(self, data_id: int):
         return openml.flows.get_flow(flow_id=data_id)
 
     def get_openml_objects(self):
         all_objects = openml.flows.list_flows(output_format="dataframe")
         return all_objects.rename(columns={"id": "did"})
-    
-    def process_metadata(self, openml_data_object: Sequence[openml.flows.flow.OpenMLFlow], data_id: Sequence[int], all_dataset_metadata: pd.DataFrame, file_path: str):
+
+    def process_metadata(
+        self,
+        openml_data_object: Sequence[openml.flows.flow.OpenMLFlow],
+        data_id: Sequence[int],
+        all_dataset_metadata: pd.DataFrame,
+        file_path: str,
+    ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
         ]
@@ -176,10 +204,13 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
             all_data_description_df[["did", "name", "Combined_information"]],
             all_data_description_df,
         )
-    
+
+
 # install the package oslo.concurrency to ensure thread safety
 # def get_all_metadata_from_openml(config) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame]:
-def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame] | None:
+def get_all_metadata_from_openml(
+    config: dict,
+) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame] | None:
     """
     Description: Gets all the metadata from OpenML for the type of data specified in the config.
     If training is set to False, it loads the metadata from the files. If training is set to True, it gets the metadata from OpenML.
@@ -214,7 +245,11 @@ def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[i
     if config["training"] == True:
         print("[INFO] Training is set to True.")
         # Gather all OpenML objects of the type of data
-        handler = OpenMLDatasetHandler(config) if config["type_of_data"] == "dataset" else OpenMLFlowHandler(config)
+        handler = (
+            OpenMLDatasetHandler(config)
+            if config["type_of_data"] == "dataset"
+            else OpenMLFlowHandler(config)
+        )
 
         all_objects = handler.get_openml_objects()
 
@@ -232,7 +267,9 @@ def get_all_metadata_from_openml(config: dict) -> Tuple[pd.DataFrame, Sequence[i
         openml_data_object = handler.get_metadata(data_id)
 
         print("[INFO] Saving metadata to file.")
-        save_metadata_to_file((openml_data_object, data_id, all_objects, handler), save_filename)
+        save_metadata_to_file(
+            (openml_data_object, data_id, all_objects, handler), save_filename
+        )
 
         return openml_data_object, data_id, all_objects, handler
 
@@ -270,7 +307,10 @@ def join_attributes(attribute: object, attr_name: str) -> str:
 
 def create_combined_information_df(
     # data_id, descriptions, joined_qualities, joined_features
-    data_id: int| Sequence[int], descriptions: Sequence[str], joined_qualities: Sequence[str], joined_features: Sequence[str]
+    data_id: int | Sequence[int],
+    descriptions: Sequence[str],
+    joined_qualities: Sequence[str],
+    joined_features: Sequence[str],
 ) -> pd.DataFrame:
     """
     Description: Create a dataframe with the combined information of the OpenML object.
@@ -302,7 +342,9 @@ def merge_all_columns_to_string(row: pd.Series) -> str:
 
 
 # def combine_metadata(all_dataset_metadata, all_data_description_df):
-def combine_metadata(all_dataset_metadata: pd.DataFrame, all_data_description_df: pd.DataFrame) -> pd.DataFrame:
+def combine_metadata(
+    all_dataset_metadata: pd.DataFrame, all_data_description_df: pd.DataFrame
+) -> pd.DataFrame:
     """
     Description: Combine the descriptions with the metadata table.
 
@@ -326,7 +368,13 @@ def combine_metadata(all_dataset_metadata: pd.DataFrame, all_data_description_df
 
 def create_metadata_dataframe(
     # openml_data_object, data_id, all_dataset_metadata, config
-    handler: OpenMLObjectHandler, openml_data_object: Sequence[Union[openml.datasets.dataset.OpenMLDataset, openml.flows.flow.OpenMLFlow]], data_id: Sequence[int], all_dataset_metadata: pd.DataFrame, config: dict
+    handler: OpenMLObjectHandler,
+    openml_data_object: Sequence[
+        Union[openml.datasets.dataset.OpenMLDataset, openml.flows.flow.OpenMLFlow]
+    ],
+    data_id: Sequence[int],
+    all_dataset_metadata: pd.DataFrame,
+    config: dict,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Description: Creates a dataframe with all the metadata, joined columns with all information
@@ -352,5 +400,7 @@ def create_metadata_dataframe(
 
     if not config["training"]:
         return handler.load_metadata(file_path), all_dataset_metadata
-    
-    return handler.process_metadata(openml_data_object, data_id, all_dataset_metadata, file_path)
+
+    return handler.process_metadata(
+        openml_data_object, data_id, all_dataset_metadata, file_path
+    )

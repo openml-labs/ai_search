@@ -1,24 +1,22 @@
 # This file contains all the LLM related code - models, vector stores, and the retrieval QA chain etc.
 from __future__ import annotations
+
 import os
 import uuid
-from chromadb.api import ClientAPI
+from typing import Union
+
 import langchain
 import pandas as pd
-
-from langchain.retrievers import BM25Retriever, EnsembleRetriever
-from langchain_core.output_parsers import StrOutputParser
+from chromadb.api import ClientAPI
+from langchain import PromptTemplate
+from langchain.chains.llm import LLMChain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
-# from langchain_community.llms import HuggingFaceHub
-from langchain_community.vectorstores.chroma import Chroma
-from tqdm import tqdm
 from langchain_community.llms import Ollama
-from langchain import PromptTemplate
-from typing import Sequence
-from langchain_core.documents import Document
-from langchain.chains.llm import LLMChain
+from langchain_community.vectorstores.chroma import Chroma
+from langchain_core.output_parsers import StrOutputParser
+from tqdm import tqdm
 
 from .metadata_utils import (create_metadata_dataframe,
                              get_all_metadata_from_openml)
@@ -69,22 +67,24 @@ def generate_unique_documents(documents: list, db: Chroma) -> tuple:
 
     new_dids = new_document_ids - old_dids
     documents = [x for x in documents if str(x.metadata["did"]) in new_dids]
-    ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS,doc.page_content)) for doc in documents]
+    ids = [str(uuid.uuid5(uuid.NAMESPACE_DNS, doc.page_content)) for doc in documents]
 
     # Remove duplicates based on document content (from new documents)
     unique_ids = list(set(ids))
     seen_ids = set()
     unique_docs = [
-            doc
-            for doc, id in zip(documents, ids)
-            if id not in seen_ids and (seen_ids.add(id) or True)
-        ]
+        doc
+        for doc, id in zip(documents, ids)
+        if id not in seen_ids and (seen_ids.add(id) or True)
+    ]
 
     return unique_docs, unique_ids
 
 
 # def load_document_and_create_vector_store(metadata_df, chroma_client, config) -> Chroma:
-def load_document_and_create_vector_store(metadata_df: pd.DataFrame, chroma_client:ClientAPI , config: dict) -> Chroma:
+def load_document_and_create_vector_store(
+    metadata_df: pd.DataFrame, chroma_client: ClientAPI, config: dict
+) -> Chroma:
     """
     Loads the documents and creates the vector store. If the training flag is set to True,
     the documents are added to the vector store. If the training flag is set to False,
@@ -112,9 +112,9 @@ def load_document_and_create_vector_store(metadata_df: pd.DataFrame, chroma_clie
 def load_model(config: dict) -> HuggingFaceEmbeddings | None:
     """
     Description: Load the model using HuggingFaceEmbeddings.
-    
+
     Input: config (dict)
-    
+
     Returns: HuggingFaceEmbeddings
     """
     print("[INFO] Loading model...")
@@ -124,7 +124,7 @@ def load_model(config: dict) -> HuggingFaceEmbeddings | None:
         model_name=config["embedding_model"],
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
-        show_progress = True,
+        show_progress=True,
         # trust_remote_code=True
     )
     print("[INFO] Model loaded.")
@@ -134,9 +134,9 @@ def load_model(config: dict) -> HuggingFaceEmbeddings | None:
 def get_collection_name(config: dict) -> str:
     """
     Description: Get the collection name based on the type of data provided in the config.
-    
+
     Input: config (dict)
-    
+
     Returns: str
     """
     return {"dataset": "datasets", "flow": "flows"}.get(
@@ -144,12 +144,17 @@ def get_collection_name(config: dict) -> str:
     )
 
 
-def load_vector_store(chroma_client: ClientAPI, config: dict, embeddings: HuggingFaceEmbeddings, collection_name: str) -> Chroma:
+def load_vector_store(
+    chroma_client: ClientAPI,
+    config: dict,
+    embeddings: HuggingFaceEmbeddings,
+    collection_name: str,
+) -> Chroma:
     """
     Description: Load the vector store from the persist directory.
-    
+
     Input: chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
-    
+
     Returns: Chroma
     """
     if not os.path.exists(config["persist_dir"]):
@@ -163,6 +168,7 @@ def load_vector_store(chroma_client: ClientAPI, config: dict, embeddings: Huggin
         embedding_function=embeddings,
         collection_name=collection_name,
     )
+
 
 def add_documents_to_db(db, unique_docs, unique_ids):
     """
@@ -184,13 +190,17 @@ def add_documents_to_db(db, unique_docs, unique_ids):
 #     metadata_df, chroma_client, config, embeddings, collection_name
 # ):
 def create_vector_store(
-    metadata_df: pd.DataFrame, chroma_client:ClientAPI, config: dict, embeddings: HuggingFaceEmbeddings, collection_name: str 
+    metadata_df: pd.DataFrame,
+    chroma_client: ClientAPI,
+    config: dict,
+    embeddings: HuggingFaceEmbeddings,
+    collection_name: str,
 ) -> Chroma:
     """
     Description: Create the vector store using Chroma db. The documents are loaded and processed, unique documents are generated, and the documents are added to the vector store.
-    
+
     Input: metadata_df (pd.DataFrame), chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
-    
+
     Returns: db (Chroma)
     """
 
@@ -228,8 +238,7 @@ def create_vector_store(
 
 
 def initialize_llm_chain(
-    vectordb: Chroma,
-    config : dict
+    vectordb: Chroma, config: dict
 ) -> langchain.chains.retrieval_qa.base.RetrievalQA:
     """
     Description: Initialize the LLM chain and setup Retrieval QA with the specified configuration.
@@ -245,7 +254,9 @@ def initialize_llm_chain(
     )
 
 
-def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> langchain.chains.retrieval_qa.base.RetrievalQA:
+def setup_vector_db_and_qa(
+    config: dict, data_type: str, client: ClientAPI
+) -> Union[langchain.chains.retrieval_qa.base.RetrievalQA, pd.DataFrame]:
     """
     Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
     This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.
@@ -271,23 +282,21 @@ def setup_vector_db_and_qa(config: dict, data_type: str, client:ClientAPI) -> la
     )
     # Initialize the LLM chain and setup Retrieval QA
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
-    return qa
+    return qa, all_metadata
 
 
-def get_llm_chain(config: dict, local:bool =False) -> LLMChain|bool:
+def get_llm_chain(config: dict, local: bool = False) -> LLMChain | bool:
     """
     Description: Get the LLM chain with the specified model and prompt template.
-    
+
     Input: config (dict)
-    
+
     Returns: LLMChain
     """
     base_url = "http://127.0.0.1:11434" if local else "http://ollama:11434"
-    llm = Ollama(
-        model = config["llm_model"] , base_url = base_url
-    )  
+    llm = Ollama(model=config["llm_model"], base_url=base_url)
     # llm = Ollama(
-        # model = config["llm_model"]
+    # model = config["llm_model"]
     # )
     # print(llm)
     map_template = config["llm_prompt_template"]
@@ -295,6 +304,3 @@ def get_llm_chain(config: dict, local:bool =False) -> LLMChain|bool:
     # return LLMChain(llm=llm, prompt=map_prompt)
     return map_prompt | llm | StrOutputParser()
 
-def get_llm_result_from_string(llm_chain, string):
-    return llm_chain.invoke({"docs": string})
-    # return llm_chain.stream({"docs": string})
