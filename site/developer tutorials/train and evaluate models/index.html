@@ -279,6 +279,26 @@
   
   
     <li class="md-nav__item">
+      <a href="../../query_llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Query parsing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../testing/" class="md-nav__link">
         
   
@@ -328,10 +348,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -342,8 +362,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Developer tutorials
           </label>
@@ -602,10 +622,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -616,8 +636,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             Modules
           </label>
@@ -905,27 +925,6 @@
 </code></pre></div></td></tr></table></div>
 
 </div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Finding device.
-[INFO] Device found: mps
-</code>
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">config</span><span class="p">[</span><span class="s2">&quot;device&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span> <span class="c1"># for testing</span>
-</code></pre></div></td></tr></table></div>
-
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
@@ -942,7 +941,9 @@
 <div class="input">
 
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
-<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="n">list_of_embedding_models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BAAI/bge-small-en-v1.5&quot;</span><span class="p">]</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># list_of_embedding_models = [&quot;BAAI/bge-small-en-v1.5&quot;, &quot;Alibaba-NLP/gte-Qwen2-1.5B-instruct&quot;]</span>
+<span class="n">list_of_embedding_models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GritLM/GritLM-7B&quot;</span><span class="p">]</span>
 <span class="n">list_of_llm_models</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;qwen2:1.5b&quot;</span><span class="p">,</span> <span class="s2">&quot;phi3&quot;</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
 
@@ -1045,47 +1046,6 @@
 </code></pre></div></td></tr></table></div>
 
 </div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>Waiting for Ollama server to be active...
-NAME            ID              SIZE    MODIFIED       
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>Error: listen tcp 127.0.0.1:11434: bind: address already in use
-pulling manifest ⠋ pulling manifest ⠙ pulling manifest ⠹ pulling manifest ⠸ pulling manifest ⠼ pulling manifest ⠴ pulling manifest 
-pulling 405b56374e02... 100% ▕████████████████▏ 934 MB                         
-pulling 62fbfd9ed093... 100% ▕████████████████▏  182 B                         
-pulling c156170b718e... 100% ▕████████████████▏  11 KB                         
-pulling f02dd72bb242... 100% ▕████████████████▏   59 B                         
-pulling c9f5e9ffbc5f... 100% ▕████████████████▏  485 B                         
-verifying sha256 digest 
-writing manifest 
-removing any unused layers 
-success 
-pulling manifest ⠋ pulling manifest ⠙ pulling manifest ⠹ pulling manifest ⠸ pulling manifest ⠼ pulling manifest 
-pulling b26e6713dc74... 100% ▕████████████████▏ 2.4 GB                         
-pulling fa8235e5b48f... 100% ▕████████████████▏ 1.1 KB                         
-pulling 542b217f179c... 100% ▕████████████████▏  148 B                         
-pulling 8dde1baf1db0... 100% ▕████████████████▏   78 B                         
-pulling f91db7a2deb9... 100% ▕████████████████▏  485 B                         
-verifying sha256 digest 
-writing manifest 
-removing any unused layers 
-success 
-</code>
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
@@ -1149,7 +1109,9 @@ success
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
-<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">for</span> <span class="n">embedding_model</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">list_of_embedding_models</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Embedding Models&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_embedding_models</span><span class="p">)):</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">for</span> <span class="n">embedding_model</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">list_of_embedding_models</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Embedding Models&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_embedding_models</span><span class="p">)):</span>
     <span class="k">for</span> <span class="n">llm_model</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">list_of_llm_models</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;LLM Models&quot;</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">list_of_llm_models</span><span class="p">)):</span>
         <span class="c1"># update the config with the new embedding and llm models</span>
         <span class="n">config</span><span class="p">[</span><span class="s2">&quot;embedding_model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">embedding_model</span>
@@ -1183,519 +1145,19 @@ success
         <span class="c1"># TODO : Replace this evaluation with a more meaningful one</span>
         <span class="n">combined_df</span> <span class="o">=</span> <span class="n">aggregate_multiple_queries_and_count</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span><span class="n">qa_dataset</span><span class="o">=</span><span class="n">qa_dataset</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">group_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;query&quot;</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
+        <span class="c1"># TODO : ADD LLM evaluation here when the function is ready</span>
+
         <span class="n">combined_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">experiment_path</span> <span class="o">/</span> <span class="s2">&quot;results.csv&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
 
 </div>
-<div class="output_wrapper">
-<div class="output">
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>Embedding Models:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
 </div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Training is set to True.
-[INFO] Subsetting the data to 100 rows.
-[INFO] Initializing cache.
-[INFO] Getting dataset metadata from OpenML.
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>QUEUEING TASKS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>PROCESSING TASKS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>COLLECTING RESULTS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Saving metadata to file.
-[INFO] Loading model...
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>/Users/eragon/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
-  warnings.warn(
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Model loaded.
-[INFO] Generating unique documents. Total documents: 992
-Number of unique documents: 967 vs Total documents: 992
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/16 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/15 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-100%|██████████| 2/2 [03:06&lt;00:00, 93.04s/it]
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/1 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-100%|██████████| 5/5 [00:00&lt;00:00,  8.16it/s]
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Training is set to True.
-[INFO] Subsetting the data to 100 rows.
-[INFO] Initializing cache.
-[INFO] Getting dataset metadata from OpenML.
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>QUEUEING TASKS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>PROCESSING TASKS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>COLLECTING RESULTS | :   0%|          | 0/100 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Saving metadata to file.
-[INFO] Loading model...
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>/Users/eragon/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/huggingface_hub/file_download.py:1132: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
-  warnings.warn(
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>
-<code>[INFO] Model loaded.
-[INFO] Generating unique documents. Total documents: 992
-Number of unique documents: 967 vs Total documents: 992
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_text output_subarea">
-<pre>
-<code>Batches:   0%|          | 0/16 [00:00&lt;?, ?it/s]</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>
-<code>  0%|          | 0/2 [00:43&lt;?, ?it/s]
-LLM Models:  50%|█████     | 1/2 [04:37&lt;04:37, 277.59s/it]
-Embedding Models:   0%|          | 0/1 [04:37&lt;?, ?it/s]
-</code>
-</pre>
-</div>
-</div>
-<div class="output_area">
-<div class="output_subarea output_text output_error">
-<pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
-Cell <span class="ansi-green-fg">In[11], line 27</span>
-<span class="ansi-green-intense-fg ansi-bold">     24</span> client <span style="color: rgb(98,98,98)">=</span> chromadb<span style="color: rgb(98,98,98)">.</span>PersistentClient(path<span style="color: rgb(98,98,98)">=</span>config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">persist_dir</span><span style="color: rgb(175,0,0)">"</span>])
-<span class="ansi-green-intense-fg ansi-bold">     26</span> <span style="color: rgb(95,135,135)"># Run "training"</span>
-<span class="ansi-green-fg">---&gt; 27</span> qa_dataset <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">setup_vector_db_and_qa</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">     28</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">data_type</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">"</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">type_of_data</span><span class="ansi-yellow-bg" style="color: rgb(175,0,0)">"</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">client</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">client</span>
-<span class="ansi-green-intense-fg ansi-bold">     29</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     31</span> <span style="color: rgb(95,135,135)"># Run an evaluation by aggregating multiple queries and counting the results</span>
-<span class="ansi-green-intense-fg ansi-bold">     32</span> <span style="color: rgb(95,135,135)"># TODO : Replace this evaluation with a more meaningful one</span>
-<span class="ansi-green-intense-fg ansi-bold">     33</span> combined_df <span style="color: rgb(98,98,98)">=</span> aggregate_multiple_queries_and_count(queries,qa_dataset<span style="color: rgb(98,98,98)">=</span>qa_dataset, config<span style="color: rgb(98,98,98)">=</span>config, group_cols <span style="color: rgb(98,98,98)">=</span> [<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">id</span><span style="color: rgb(175,0,0)">"</span>, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">name</span><span style="color: rgb(175,0,0)">"</span>], sort_by<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">query</span><span style="color: rgb(175,0,0)">"</span>, count <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>
+</code></pre></div></td></tr></table></div>
 
-File <span class="ansi-green-fg">~/Documents/CODE/Github/ai_search/docs/developer tutorials/../../backend/modules/llm.py:268</span>, in <span class="ansi-cyan-fg">setup_vector_db_and_qa</span><span class="ansi-blue-fg">(config, data_type, client)</span>
-<span class="ansi-green-intense-fg ansi-bold">    264</span> metadata_df, all_metadata <span style="color: rgb(98,98,98)">=</span> create_metadata_dataframe(
-<span class="ansi-green-intense-fg ansi-bold">    265</span>     openml_data_object, data_id, all_metadata, config<span style="color: rgb(98,98,98)">=</span>config
-<span class="ansi-green-intense-fg ansi-bold">    266</span> )
-<span class="ansi-green-intense-fg ansi-bold">    267</span> <span style="color: rgb(95,135,135)"># Create the vector store</span>
-<span class="ansi-green-fg">--&gt; 268</span> vectordb <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">load_document_and_create_vector_store</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">    269</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">metadata_df</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">chroma_client</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">client</span>
-<span class="ansi-green-intense-fg ansi-bold">    270</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    271</span> <span style="color: rgb(95,135,135)"># Initialize the LLM chain and setup Retrieval QA</span>
-<span class="ansi-green-intense-fg ansi-bold">    272</span> qa <span style="color: rgb(98,98,98)">=</span> initialize_llm_chain(vectordb<span style="color: rgb(98,98,98)">=</span>vectordb, config<span style="color: rgb(98,98,98)">=</span>config)
-
-File <span class="ansi-green-fg">~/Documents/CODE/Github/ai_search/docs/developer tutorials/../../backend/modules/llm.py:107</span>, in <span class="ansi-cyan-fg">load_document_and_create_vector_store</span><span class="ansi-blue-fg">(metadata_df, chroma_client, config)</span>
-<span class="ansi-green-intense-fg ansi-bold">    104</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> config[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">training</span><span style="color: rgb(175,0,0)">"</span>]:
-<span class="ansi-green-intense-fg ansi-bold">    105</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> load_vector_store(chroma_client, config, embeddings, collection_name)
-<span class="ansi-green-fg">--&gt; 107</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">create_vector_store</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">    108</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">metadata_df</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">chroma_client</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">config</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">embeddings</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">collection_name</span>
-<span class="ansi-green-intense-fg ansi-bold">    109</span> <span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/Documents/CODE/Github/ai_search/docs/developer tutorials/../../backend/modules/llm.py:222</span>, in <span class="ansi-cyan-fg">create_vector_store</span><span class="ansi-blue-fg">(metadata_df, chroma_client, config, embeddings, collection_name)</span>
-<span class="ansi-green-intense-fg ansi-bold">    219</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> db
-<span class="ansi-green-intense-fg ansi-bold">    220</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-intense-fg ansi-bold">    221</span>     <span style="color: rgb(95,135,135)"># db.add_documents(unique_docs, ids=unique_ids)</span>
-<span class="ansi-green-fg">--&gt; 222</span>     <span class="ansi-yellow-bg">add_documents_to_db</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">db</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">unique_docs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">unique_ids</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    224</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> db
-
-File <span class="ansi-green-fg">~/Documents/CODE/Github/ai_search/docs/developer tutorials/../../backend/modules/llm.py:180</span>, in <span class="ansi-cyan-fg">add_documents_to_db</span><span class="ansi-blue-fg">(db, unique_docs, unique_ids)</span>
-<span class="ansi-green-intense-fg ansi-bold">    178</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-intense-fg ansi-bold">    179</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> i <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> tqdm(<span style="color: rgb(0,135,0)">range</span>(<span style="color: rgb(98,98,98)">0</span>, <span style="color: rgb(0,135,0)">len</span>(unique_docs), bs)):
-<span class="ansi-green-fg">--&gt; 180</span>         <span class="ansi-yellow-bg">db</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">add_documents</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">unique_docs</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">i</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">i</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">+</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">bs</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ids</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">unique_ids</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">i</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">i</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">+</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">bs</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/langchain_core/vectorstores.py:147</span>, in <span class="ansi-cyan-fg">VectorStore.add_documents</span><span class="ansi-blue-fg">(self, documents, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    145</span> texts <span style="color: rgb(98,98,98)">=</span> [doc<span style="color: rgb(98,98,98)">.</span>page_content <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> doc <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> documents]
-<span class="ansi-green-intense-fg ansi-bold">    146</span> metadatas <span style="color: rgb(98,98,98)">=</span> [doc<span style="color: rgb(98,98,98)">.</span>metadata <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> doc <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> documents]
-<span class="ansi-green-fg">--&gt; 147</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">add_texts</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">texts</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">metadatas</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/langchain_community/vectorstores/chroma.py:276</span>, in <span class="ansi-cyan-fg">Chroma.add_texts</span><span class="ansi-blue-fg">(self, texts, metadatas, ids, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">    274</span> texts <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">list</span>(texts)
-<span class="ansi-green-intense-fg ansi-bold">    275</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_embedding_function <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
-<span class="ansi-green-fg">--&gt; 276</span>     embeddings <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_embedding_function</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">embed_documents</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">texts</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    277</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> metadatas:
-<span class="ansi-green-intense-fg ansi-bold">    278</span>     <span style="color: rgb(95,135,135)"># fill metadatas with empty dicts if somebody</span>
-<span class="ansi-green-intense-fg ansi-bold">    279</span>     <span style="color: rgb(95,135,135)"># did not specify metadata for all texts</span>
-<span class="ansi-green-intense-fg ansi-bold">    280</span>     length_diff <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">len</span>(texts) <span style="color: rgb(98,98,98)">-</span> <span style="color: rgb(0,135,0)">len</span>(metadatas)
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/langchain_community/embeddings/huggingface.py:98</span>, in <span class="ansi-cyan-fg">HuggingFaceEmbeddings.embed_documents</span><span class="ansi-blue-fg">(self, texts)</span>
-<span class="ansi-green-intense-fg ansi-bold">     96</span>     sentence_transformers<span style="color: rgb(98,98,98)">.</span>SentenceTransformer<span style="color: rgb(98,98,98)">.</span>stop_multi_process_pool(pool)
-<span class="ansi-green-intense-fg ansi-bold">     97</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">---&gt; 98</span>     embeddings <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">client</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">encode</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">texts</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">show_progress_bar</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">show_progress</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">encode_kwargs</span>
-<span class="ansi-green-intense-fg ansi-bold">    100</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    102</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> embeddings<span style="color: rgb(98,98,98)">.</span>tolist()
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/sentence_transformers/SentenceTransformer.py:371</span>, in <span class="ansi-cyan-fg">SentenceTransformer.encode</span><span class="ansi-blue-fg">(self, sentences, prompt_name, prompt, batch_size, show_progress_bar, output_value, precision, convert_to_numpy, convert_to_tensor, device, normalize_embeddings)</span>
-<span class="ansi-green-intense-fg ansi-bold">    368</span> features<span style="color: rgb(98,98,98)">.</span>update(extra_features)
-<span class="ansi-green-intense-fg ansi-bold">    370</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> torch<span style="color: rgb(98,98,98)">.</span>no_grad():
-<span class="ansi-green-fg">--&gt; 371</span>     out_features <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">forward</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">features</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    372</span>     out_features[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">sentence_embedding</span><span style="color: rgb(175,0,0)">"</span>] <span style="color: rgb(98,98,98)">=</span> truncate_embeddings(
-<span class="ansi-green-intense-fg ansi-bold">    373</span>         out_features[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">sentence_embedding</span><span style="color: rgb(175,0,0)">"</span>], <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>truncate_dim
-<span class="ansi-green-intense-fg ansi-bold">    374</span>     )
-<span class="ansi-green-intense-fg ansi-bold">    376</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> output_value <span style="color: rgb(98,98,98)">==</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">token_embeddings</span><span style="color: rgb(175,0,0)">"</span>:
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/container.py:217</span>, in <span class="ansi-cyan-fg">Sequential.forward</span><span class="ansi-blue-fg">(self, input)</span>
-<span class="ansi-green-intense-fg ansi-bold">    215</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">forward</span>(<span style="color: rgb(0,135,0)">self</span>, <span style="color: rgb(0,135,0)">input</span>):
-<span class="ansi-green-intense-fg ansi-bold">    216</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> module <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span>:
-<span class="ansi-green-fg">--&gt; 217</span>         <span style="color: rgb(0,135,0)">input</span> <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">module</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">input</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    218</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">input</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/sentence_transformers/models/Transformer.py:98</span>, in <span class="ansi-cyan-fg">Transformer.forward</span><span class="ansi-blue-fg">(self, features)</span>
-<span class="ansi-green-intense-fg ansi-bold">     95</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">token_type_ids</span><span style="color: rgb(175,0,0)">"</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> features:
-<span class="ansi-green-intense-fg ansi-bold">     96</span>     trans_features[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">token_type_ids</span><span style="color: rgb(175,0,0)">"</span>] <span style="color: rgb(98,98,98)">=</span> features[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">token_type_ids</span><span style="color: rgb(175,0,0)">"</span>]
-<span class="ansi-green-fg">---&gt; 98</span> output_states <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">auto_model</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">trans_features</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">return_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">     99</span> output_tokens <span style="color: rgb(98,98,98)">=</span> output_states[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    101</span> features<span style="color: rgb(98,98,98)">.</span>update({<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">token_embeddings</span><span style="color: rgb(175,0,0)">"</span>: output_tokens, <span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">attention_mask</span><span style="color: rgb(175,0,0)">"</span>: features[<span style="color: rgb(175,0,0)">"</span><span style="color: rgb(175,0,0)">attention_mask</span><span style="color: rgb(175,0,0)">"</span>]})
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/models/bert/modeling_bert.py:1137</span>, in <span class="ansi-cyan-fg">BertModel.forward</span><span class="ansi-blue-fg">(self, input_ids, attention_mask, token_type_ids, position_ids, head_mask, inputs_embeds, encoder_hidden_states, encoder_attention_mask, past_key_values, use_cache, output_attentions, output_hidden_states, return_dict)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1130</span> <span style="color: rgb(95,135,135)"># Prepare head mask if needed</span>
-<span class="ansi-green-intense-fg ansi-bold">   1131</span> <span style="color: rgb(95,135,135)"># 1.0 in head_mask indicate we keep the head</span>
-<span class="ansi-green-intense-fg ansi-bold">   1132</span> <span style="color: rgb(95,135,135)"># attention_probs has shape bsz x n_heads x N x N</span>
-<span class="ansi-green-intense-fg ansi-bold">   1133</span> <span style="color: rgb(95,135,135)"># input head_mask has shape [num_heads] or [num_hidden_layers x num_heads]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1134</span> <span style="color: rgb(95,135,135)"># and head_mask is converted to shape [num_hidden_layers x batch x num_heads x seq_length x seq_length]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1135</span> head_mask <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>get_head_mask(head_mask, <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>config<span style="color: rgb(98,98,98)">.</span>num_hidden_layers)
-<span class="ansi-green-fg">-&gt; 1137</span> encoder_outputs <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">encoder</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">   1138</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">embedding_output</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1139</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">attention_mask</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">extended_attention_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1140</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">head_mask</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">head_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1141</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">encoder_hidden_states</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">encoder_hidden_states</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1142</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">encoder_attention_mask</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">encoder_extended_attention_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1143</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">past_key_values</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">past_key_values</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1144</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">use_cache</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">use_cache</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1145</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">output_attentions</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">output_attentions</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1146</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">output_hidden_states</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">output_hidden_states</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1147</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">return_dict</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">=</span><span class="ansi-yellow-bg">return_dict</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">   1148</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1149</span> sequence_output <span style="color: rgb(98,98,98)">=</span> encoder_outputs[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">   1150</span> pooled_output <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>pooler(sequence_output) <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>pooler <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/models/bert/modeling_bert.py:690</span>, in <span class="ansi-cyan-fg">BertEncoder.forward</span><span class="ansi-blue-fg">(self, hidden_states, attention_mask, head_mask, encoder_hidden_states, encoder_attention_mask, past_key_values, use_cache, output_attentions, output_hidden_states, return_dict)</span>
-<span class="ansi-green-intense-fg ansi-bold">    679</span>     layer_outputs <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_gradient_checkpointing_func(
-<span class="ansi-green-intense-fg ansi-bold">    680</span>         layer_module<span style="color: rgb(98,98,98)">.</span><span style="color: rgb(0,0,255)">__call__</span>,
-<span class="ansi-green-intense-fg ansi-bold">    681</span>         hidden_states,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">    687</span>         output_attentions,
-<span class="ansi-green-intense-fg ansi-bold">    688</span>     )
-<span class="ansi-green-intense-fg ansi-bold">    689</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">--&gt; 690</span>     layer_outputs <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">layer_module</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">    691</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">hidden_states</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    692</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">attention_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    693</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">layer_head_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    694</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">encoder_hidden_states</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    695</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">encoder_attention_mask</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    696</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">past_key_value</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    697</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">output_attentions</span><span class="ansi-yellow-bg">,</span>
-<span class="ansi-green-intense-fg ansi-bold">    698</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    700</span> hidden_states <span style="color: rgb(98,98,98)">=</span> layer_outputs[<span style="color: rgb(98,98,98)">0</span>]
-<span class="ansi-green-intense-fg ansi-bold">    701</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> use_cache:
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/models/bert/modeling_bert.py:622</span>, in <span class="ansi-cyan-fg">BertLayer.forward</span><span class="ansi-blue-fg">(self, hidden_states, attention_mask, head_mask, encoder_hidden_states, encoder_attention_mask, past_key_value, output_attentions)</span>
-<span class="ansi-green-intense-fg ansi-bold">    619</span>     cross_attn_present_key_value <span style="color: rgb(98,98,98)">=</span> cross_attention_outputs[<span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">1</span>]
-<span class="ansi-green-intense-fg ansi-bold">    620</span>     present_key_value <span style="color: rgb(98,98,98)">=</span> present_key_value <span style="color: rgb(98,98,98)">+</span> cross_attn_present_key_value
-<span class="ansi-green-fg">--&gt; 622</span> layer_output <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">apply_chunking_to_forward</span><span class="ansi-yellow-bg">(</span>
-<span class="ansi-green-intense-fg ansi-bold">    623</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">feed_forward_chunk</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">chunk_size_feed_forward</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">seq_len_dim</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">attention_output</span>
-<span class="ansi-green-intense-fg ansi-bold">    624</span> <span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    625</span> outputs <span style="color: rgb(98,98,98)">=</span> (layer_output,) <span style="color: rgb(98,98,98)">+</span> outputs
-<span class="ansi-green-intense-fg ansi-bold">    627</span> <span style="color: rgb(95,135,135)"># if decoder, return the attn key/values as the last output</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/pytorch_utils.py:238</span>, in <span class="ansi-cyan-fg">apply_chunking_to_forward</span><span class="ansi-blue-fg">(forward_fn, chunk_size, chunk_dim, *input_tensors)</span>
-<span class="ansi-green-intense-fg ansi-bold">    235</span>     <span style="color: rgb(95,135,135)"># concatenate output at same dimension</span>
-<span class="ansi-green-intense-fg ansi-bold">    236</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> torch<span style="color: rgb(98,98,98)">.</span>cat(output_chunks, dim<span style="color: rgb(98,98,98)">=</span>chunk_dim)
-<span class="ansi-green-fg">--&gt; 238</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_fn</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">input_tensors</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/models/bert/modeling_bert.py:635</span>, in <span class="ansi-cyan-fg">BertLayer.feed_forward_chunk</span><span class="ansi-blue-fg">(self, attention_output)</span>
-<span class="ansi-green-intense-fg ansi-bold">    633</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">feed_forward_chunk</span>(<span style="color: rgb(0,135,0)">self</span>, attention_output):
-<span class="ansi-green-intense-fg ansi-bold">    634</span>     intermediate_output <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>intermediate(attention_output)
-<span class="ansi-green-fg">--&gt; 635</span>     layer_output <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">output</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">intermediate_output</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">attention_output</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    636</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> layer_output
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/transformers/models/bert/modeling_bert.py:547</span>, in <span class="ansi-cyan-fg">BertOutput.forward</span><span class="ansi-blue-fg">(self, hidden_states, input_tensor)</span>
-<span class="ansi-green-intense-fg ansi-bold">    546</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">forward</span>(<span style="color: rgb(0,135,0)">self</span>, hidden_states: torch<span style="color: rgb(98,98,98)">.</span>Tensor, input_tensor: torch<span style="color: rgb(98,98,98)">.</span>Tensor) <span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">&gt;</span> torch<span style="color: rgb(98,98,98)">.</span>Tensor:
-<span class="ansi-green-fg">--&gt; 547</span>     hidden_states <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">dense</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">hidden_states</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">    548</span>     hidden_states <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>dropout(hidden_states)
-<span class="ansi-green-intense-fg ansi-bold">    549</span>     hidden_states <span style="color: rgb(98,98,98)">=</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>LayerNorm(hidden_states <span style="color: rgb(98,98,98)">+</span> input_tensor)
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1532</span>, in <span class="ansi-cyan-fg">Module._wrapped_call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1530</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_compiled_call_impl(<span style="color: rgb(98,98,98)">*</span>args, <span style="color: rgb(98,98,98)">*</span><span style="color: rgb(98,98,98)">*</span>kwargs)  <span style="color: rgb(95,135,135)"># type: ignore[misc]</span>
-<span class="ansi-green-intense-fg ansi-bold">   1531</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-fg">-&gt; 1532</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">_call_impl</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/module.py:1541</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1536</span> <span style="color: rgb(95,135,135)"># If we don't have any hooks, we want to skip the rest of the logic in</span>
-<span class="ansi-green-intense-fg ansi-bold">   1537</span> <span style="color: rgb(95,135,135)"># this function, and just call forward.</span>
-<span class="ansi-green-intense-fg ansi-bold">   1538</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> (<span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span style="color: rgb(0,135,0)">self</span><span style="color: rgb(98,98,98)">.</span>_forward_pre_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1539</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_pre_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1540</span>         <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_hooks <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1541</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">forward_call</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1543</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
-<span class="ansi-green-intense-fg ansi-bold">   1544</span>     result <span style="color: rgb(98,98,98)">=</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
-
-File <span class="ansi-green-fg">~/.pyenv/versions/3.9.19/envs/openml/lib/python3.9/site-packages/torch/nn/modules/linear.py:116</span>, in <span class="ansi-cyan-fg">Linear.forward</span><span class="ansi-blue-fg">(self, input)</span>
-<span class="ansi-green-intense-fg ansi-bold">    115</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">forward</span>(<span style="color: rgb(0,135,0)">self</span>, <span style="color: rgb(0,135,0)">input</span>: Tensor) <span style="color: rgb(98,98,98)">-</span><span style="color: rgb(98,98,98)">&gt;</span> Tensor:
-<span class="ansi-green-fg">--&gt; 116</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">F</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">linear</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">input</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">weight</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">bias</span><span class="ansi-yellow-bg">)</span>
-
-<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
-</div>
-</div>
-</div>
 </div>
 </div>
 

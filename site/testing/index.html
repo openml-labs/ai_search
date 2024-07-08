@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../inference/">
+        <link rel="prev" href="../query_llm/">
       
       
         <link rel="next" href="../training/">
@@ -276,6 +276,26 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../query_llm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Query parsing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -438,10 +458,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -452,8 +472,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             Developer tutorials
           </label>
@@ -627,10 +647,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
         
           
-          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -641,8 +661,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_8">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
             <span class="md-nav__icon md-icon"></span>
             Modules
           </label>
@@ -882,9 +902,7 @@
 
               <details class="quote">
                 <summary>Source code in <code>tests/unit_testing.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
 <span class="normal">20</span>
@@ -924,16 +942,56 @@
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TestConfig</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TestConfig</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">chromadb</span><span class="o">.</span><span class="n">PersistentClient</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;persist_dir&quot;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config_keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;rqa_prompt_template&quot;</span><span class="p">,</span> <span class="s2">&quot;llm_prompt_template&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;num_return_documents&quot;</span><span class="p">,</span> <span class="s2">&quot;embedding_model&quot;</span><span class="p">,</span> <span class="s2">&quot;llm_model&quot;</span><span class="p">,</span> <span class="s2">&quot;num_documents_for_llm&quot;</span><span class="p">,</span> <span class="s2">&quot;data_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;persist_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;testing_flag&quot;</span><span class="p">,</span> <span class="s2">&quot;ignore_downloading_data&quot;</span><span class="p">,</span> <span class="s2">&quot;test_subset_2000&quot;</span><span class="p">,</span> <span class="s2">&quot;data_download_n_jobs&quot;</span><span class="p">,</span> <span class="s2">&quot;training&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;top_p&quot;</span><span class="p">,</span> <span class="s2">&quot;search_type&quot;</span><span class="p">,</span> <span class="s2">&quot;reranking&quot;</span><span class="p">,</span> <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_keys</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;rqa_prompt_template&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;llm_prompt_template&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_return_documents&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;embedding_model&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;llm_model&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_documents_for_llm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_dir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;persist_dir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;testing_flag&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ignore_downloading_data&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_subset_2000&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_download_n_jobs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;training&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;temperature&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;top_p&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;search_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;reranking&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;long_context_reorder&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query_test_dict</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;dataset&quot;</span><span class="p">:</span> <span class="s2">&quot;Find me a dataset about flowers that has a high number of instances.&quot;</span><span class="p">,</span>
             <span class="s2">&quot;flow&quot;</span><span class="p">:</span> <span class="s2">&quot;Find me a flow that uses the RandomForestClassifier.&quot;</span><span class="p">,</span>
         <span class="p">}</span>
+
     <span class="k">def</span> <span class="nf">test_check_data_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Description: Check if the data directory exists.</span>
@@ -998,13 +1056,13 @@ Returns: None</p>
 
             <details class="quote">
               <summary>Source code in <code>tests/unit_testing.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_check_data_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_check_data_dirs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Check if the data directory exists.</span>
 <span class="sd">    Returns: None</span>
@@ -1033,13 +1091,13 @@ Returns: None</p>
 
             <details class="quote">
               <summary>Source code in <code>tests/unit_testing.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Check if the config has the required keys.</span>
 <span class="sd">    Returns: None</span>
@@ -1068,23 +1126,23 @@ Returns: None</p>
 
             <details class="quote">
               <summary>Source code in <code>tests/unit_testing.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_setup_vector_db_and_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">test_setup_vector_db_and_qa</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Check if the setup_vector_db_and_qa function works as expected.</span>
 <span class="sd">    Returns: None</span>

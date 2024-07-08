@@ -2,7 +2,7 @@ import regex as re
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from httpx import ConnectTimeout
-from langchain_community.chat_models import ChatOllama
+from langchain_community.chat_models.ollama import ChatOllama
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
@@ -16,36 +16,50 @@ If it seems like the user wants a classification dataset, is it binary/multi-cla
 
 
 def create_chain(prompt, model="llama3", temperature=0):
+    """
+    Description: Create a chain with the given prompt and model
+    
+    Input: prompt (str), model (str), temperature (float)
+    
+    Returns: chain (Chain)
+    """
     llm = ChatOllama(model=model, temperature=temperature)
     prompt = ChatPromptTemplate.from_template(prompt)
 
-    # using LangChain Expressive Language chain syntax
-    # learn more about the LCEL on
-    # /docs/concepts/#langchain-expression-language-lcel
     return prompt | llm | StrOutputParser()
 
 
 def parse_answers_initial(response):
-    # for each line in the response, split by ? and check if the response is Yes/No or a comma separated string of Yes/No or ascending/descending using regex
+    """
+    Description: Parse the answers from the initial response
+    
+    Input: response (str)
+    
+    Returns: answers (list)
+    """
+    patterns = [
+        r"^(yes|no|none)",
+        r"^(ascending|descending)",
+        r"(multi-class|binary|multi-label)"
+    ]
+    
     answers = []
-    for line in response.lower().split("\n"):
+    lines = response.lower().split("\n")
+    
+    for line in lines:
         if "?" in line:
-            response = line.split("?")[1].strip()
-            if response in ["yes", "no", "none"]:
-                answers.append(response)
-            # elif re.match(r"^(Yes|No),\s?(Yes|No)$", response):
-            # match for Yes/No or ascending/descending and full stop
-            elif re.match(r"^(yes|no)", response):
-                answers.append(response)
-            elif re.match(r"^(ascending|descending)", response):
-                answers.append(response)
-            elif re.match(r"(multi-class|binary|multi-label)", response):
-                answers.append(response)
-        # if any of the words are in the line, append the line to the answers
-        elif any(word in line for word in ["yes", "no", "none", "ascending", "descending", "multi-class", "binary", "multi-label"]):
-            answers.append(line.strip())
+            # Extract the part of the line after the question mark
+            potential_answer = line.split("?")[1].strip()
+        else:
+            potential_answer = line.strip()
+        
+        # Check if the potential answer matches any of the patterns
+        for pattern in patterns:
+            if re.match(pattern, potential_answer):
+                answers.append(potential_answer)
+                break  # Stop checking other patterns if a match is found
+    
     return answers
-
 
 chain = create_chain(prompt)
 
@@ -58,6 +72,5 @@ app = FastAPI()
 async def get_llm_query(query: str):
     query = query.replace("%20", " ")
     response = chain.invoke({"query": query})
-    print(response)
     answers = parse_answers_initial(response)
     return JSONResponse(content={"answers": answers})

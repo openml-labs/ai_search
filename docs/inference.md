@@ -10,3 +10,5 @@
 
 ## Errors
 - If you get an error about file permissions, run `chmod +x start_local.sh` and `chmod +x stop_local.sh` to make them executable.
+
+:::ui_utils

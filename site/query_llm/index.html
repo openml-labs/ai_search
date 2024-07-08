@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../configuration/">
+        <link rel="prev" href="../inference/">
       
       
-        <link rel="next" href="../inference/">
+        <link rel="next" href="../testing/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Docker container - OpenML RAG Documentation</title>
+        <title>LLM Query parsing - OpenML RAG Documentation</title>
       
     
     
@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#docker-container" class="md-skip">
+        <a href="#llm-query-parsing" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Docker container
+              LLM Query parsing
             
           </span>
         </div>
@@ -236,30 +236,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Docker container
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -268,62 +248,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#building" class="md-nav__link">
-    <span class="md-ellipsis">
-      Building
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
-    <span class="md-ellipsis">
-      Running
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stopping" class="md-nav__link">
-    <span class="md-ellipsis">
-      Stopping
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#potential-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Potential Errors
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -352,10 +276,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../query_llm/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    LLM Query parsing
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -364,6 +308,53 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service" class="md-nav__link">
+    <span class="md-ellipsis">
+      llm_service
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service.create_chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_chain
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service.parse_answers_initial" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse_answers_initial
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -750,36 +741,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#building" class="md-nav__link">
+  <a href="#llm_service" class="md-nav__link">
     <span class="md-ellipsis">
-      Building
+      llm_service
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#running" class="md-nav__link">
+  <a href="#llm_service.create_chain" class="md-nav__link">
     <span class="md-ellipsis">
-      Running
+      create_chain
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#stopping" class="md-nav__link">
+  <a href="#llm_service.parse_answers_initial" class="md-nav__link">
     <span class="md-ellipsis">
-      Stopping
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#potential-errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      Potential Errors
+      parse_answers_initial
     </span>
   </a>
   
@@ -800,27 +782,169 @@
                   
 
 
-<h1 id="docker-container">Docker container<a class="headerlink" href="#docker-container" title="Permanent link">&para;</a></h1>
-<h2 id="building">Building<a class="headerlink" href="#building" title="Permanent link">&para;</a></h2>
+<h1 id="llm-query-parsing">LLM Query parsing<a class="headerlink" href="#llm-query-parsing" title="Permanent link">&para;</a></h1>
 <ul>
-<li>Run <code>docker compose build --progress=plain</code></li>
+<li>The LLM reads the query and parses it into a list of filters based on a prompt
+</li>
 </ul>
-<h2 id="running">Running<a class="headerlink" href="#running" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Run <code>./start_docker.sh</code></li>
-<li>This uses the docker compose file to run the docker process in the background.</li>
-<li>The required LLM model is also pulled from the docker hub and the container is started.</li>
-</ul>
-<h2 id="stopping">Stopping<a class="headerlink" href="#stopping" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Run <code>./stop_docker.sh</code></li>
-</ul>
-<h2 id="potential-errors">Potential Errors<a class="headerlink" href="#potential-errors" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Permission errors : Run <code>chmod +x *.sh</code></li>
-<li>If you get a memory error you can run <code>docker system prune</code>. Please be careful with this command as it will remove all stopped containers, all dangling images, and all unused networks. So ensure you have no important data in any of the containers before running this command.</li>
-<li>On docker desktop for Mac, increase memory limits to as much as your system can handle.</li>
-</ul>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="llm_service"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="llm_service.create_chain" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create_chain</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;llama3&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+<a href="#llm_service.create_chain" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Create a chain with the given prompt and model</p>
+<p>Input: prompt (str), model (str), temperature (float)</p>
+<p>Returns: chain (Chain)</p>
+
+            <details class="quote">
+              <summary>Source code in <code>llm_service/llm_service.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_chain</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Create a chain with the given prompt and model</span>
+
+<span class="sd">    Input: prompt (str), model (str), temperature (float)</span>
+
+<span class="sd">    Returns: chain (Chain)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">)</span>
+    <span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span> <span class="o">|</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="llm_service.parse_answers_initial" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></code>
+
+<a href="#llm_service.parse_answers_initial" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Parse the answers from the initial response</p>
+<p>Input: response (str)</p>
+<p>Returns: answers (list)</p>
+
+            <details class="quote">
+              <summary>Source code in <code>llm_service/llm_service.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Parse the answers from the initial response</span>
+
+<span class="sd">    Input: response (str)</span>
+
+<span class="sd">    Returns: answers (list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">r</span><span class="s2">&quot;^(yes|no|none)&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;^(ascending|descending)&quot;</span><span class="p">,</span>
+        <span class="sa">r</span><span class="s2">&quot;(multi-class|binary|multi-label)&quot;</span>
+    <span class="p">]</span>
+
+    <span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;?&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="c1"># Extract the part of the line after the question mark</span>
+            <span class="n">potential_answer</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">potential_answer</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c1"># Check if the potential answer matches any of the patterns</span>
+        <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">potential_answer</span><span class="p">):</span>
+                <span class="n">answers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential_answer</span><span class="p">)</span>
+                <span class="k">break</span>  <span class="c1"># Stop checking other patterns if a match is found</span>
+
+    <span class="k">return</span> <span class="n">answers</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 
