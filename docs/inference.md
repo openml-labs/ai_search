@@ -9,7 +9,7 @@
 
 ## Starting individual services
 
-# Start processes and save their PIDs
+# Start processes 
 ## Ollama
 cd ollama
 ./get_ollama.sh &
