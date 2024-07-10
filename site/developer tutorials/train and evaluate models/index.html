@@ -1057,7 +1057,7 @@
 <li>Download openml data for each dataset and format into a string</li>
 <li>Create vectorb and embed the data</li>
 <li>Get the predictions for each model for a list of queries and evaluate the performance</li>
-<li>(note) At the moment, this runs for a very small subset of the entire data. To disable this behavior and run on the entire data, set <code>config["test_subset_2000"] = False</code></li>
+<li>(note) At the moment, this runs for a very small subset of the entire data. To disable this behavior and run on the entire data, set <code>config["test_subset"] = False</code></li>
 </ul>
 </div>
 </div>
@@ -1067,7 +1067,7 @@
 
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># use a tiny subset of the data for testing</span>
-<span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_subset_2000&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">config</span><span class="p">[</span><span class="s2">&quot;test_subset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 </code></pre></div></td></tr></table></div>
 
 </div>

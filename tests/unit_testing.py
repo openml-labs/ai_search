@@ -29,7 +29,7 @@ class TestConfig(unittest.TestCase):
             "persist_dir",
             "testing_flag",
             "ignore_downloading_data",
-            "test_subset_2000",
+            "test_subset",
             "data_download_n_jobs",
             "training",
             "temperature",

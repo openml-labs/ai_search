@@ -254,8 +254,8 @@ def get_all_metadata_from_openml(
         all_objects = handler.get_openml_objects()
 
         # subset the data for testing
-        if config["test_subset_2000"] == True:
-            print("[INFO] Subsetting the data to 100 rows.")
+        if config["test_subset"] == True:
+            print("[INFO] Subsetting the data.")
             all_objects = all_objects[:500]
 
         data_id = [int(all_objects.iloc[i]["did"]) for i in range(len(all_objects))]

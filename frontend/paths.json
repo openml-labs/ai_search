@@ -1,0 +1,10 @@
+{
+    "rag_response" : {
+        "docker" : "http://fastapi:8000/",
+        "local" : "http://0.0.0.0:8000/"
+    },
+    "llm_response" : {
+        "docker" : "http://fastapi:8081/llmquery/",
+        "local" : "http://0.0.0.0:8081/llmquery/"
+    }
+}
