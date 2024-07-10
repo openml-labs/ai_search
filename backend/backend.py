@@ -15,7 +15,7 @@ app = FastAPI()
 config = load_config_and_device("config.json")
 if config["testing_flag"] == True:
     config["persist_dir"] = "./data/chroma_db_testing/"
-    config["test_subset_2000"] = True
+    config["test_subset"] = True
     config["data_dir"] = "./data/testing_data/"
 # load the persistent database using ChromaDB
 client = chromadb.PersistentClient(path=config["persist_dir"])

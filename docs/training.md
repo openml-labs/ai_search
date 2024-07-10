@@ -8,7 +8,7 @@
 - If `testing_flag` is set to True, the script will use a subset of the data for quick debugging
   - testing_flag is set to True
   - persist_dir is set to ./data/chroma_db_testing
-  - test_subset_2000 is set to True
+  - test_subset is set to True
   - data_dir is set to ./data/testing_data/
 - If `testing_flag` is set to False, the script will use the entire dataset
 - For all datasets in the OpenML dataset list:

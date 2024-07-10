@@ -216,8 +216,8 @@ def create_vector_store(
     )
     if config["testing_flag"]:
         # subset the data for testing
-        if config["test_subset_2000"] == True:
-            print("[INFO] Subsetting the data to 100 rows.")
+        if config["test_subset"] == True:
+            print("[INFO] Subsetting the data.")
             documents = documents[:500]
     unique_docs, unique_ids = generate_unique_documents(documents, db)
 

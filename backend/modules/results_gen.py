@@ -220,6 +220,8 @@ def aggregate_multiple_queries_and_count(
         result_data_frame = result_data_frame[group_cols]
         # Concat with combined_df with a column to store the query
         result_data_frame["query"] = query
+        result_data_frame["llm_model"] = config["llm_model"]
+        result_data_frame["embedding_model"] = config["embedding_model"]
         combined_df = pd.concat([combined_df, result_data_frame])
     if count:
         combined_df = (

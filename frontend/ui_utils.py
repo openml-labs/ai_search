@@ -2,9 +2,12 @@ import json
 import os
 
 from streamlit import session_state as ss
-from streamlit_feedback import streamlit_feedback
 import requests
 import streamlit as st
+
+# load paths from paths.json
+with open("paths.json", "r") as file:
+    paths = json.load(file)
 
 def feedback_cb():
     """
@@ -41,12 +44,17 @@ def parse_llm_response(response):
     
     Returns: size (str), missing (str), classification (str), sort (str)
     """
-    size, missing, classification = response["answers"]
+    size, missing, classification, uploader = response["answers"]
+    # Split size and sort if there is a comma
     size, sort = size.split(",") if "," in size else (size, None)
-    return size, missing, classification, sort
+
+    # split uploader by = to get the name
+    if uploader != "none":
+        uploader = uploader.split("=")[1].strip()
+    return size, missing, classification, sort, uploader
 
 
-def update_subset_cols(size, missing, classification):
+def update_subset_cols(size, missing, classification, uploader):
     """
     Description: Update the subset columns based on LLM's response
     
@@ -61,10 +69,12 @@ def update_subset_cols(size, missing, classification):
         cols.append("NumberOfMissingValues")
     if classification != "none":
         cols.append("NumberOfClasses")
+    if uploader != "none":
+        cols.append("uploader")
     return cols
 
 
-def filter_initial_response(response, classification):
+def filter_initial_response(response, classification, uploader):
     """
     Description: Filter the initial response based on the classification
     
@@ -77,6 +87,12 @@ def filter_initial_response(response, classification):
             response = response[response["NumberOfClasses"] > 2]
         elif "binary" in classification:
             response = response[response["NumberOfClasses"] == 2]
+    if uploader != "none":
+        try:
+            uploader = int(uploader)
+            response = response[response["uploader"] == uploader]
+        except:
+            pass
     return response
 
 
@@ -88,14 +104,15 @@ def fetch_response(query_type, query):
     
     Returns: response (dict)
     """
+    rag_response_path = paths["rag_response"]
     try:
         response = requests.get(
-            f"http://fastapi:8000/{query_type.lower()}/{query}",
+            f"{rag_response_path['docker']}{query_type.lower()}/{query}",
             json={"query": query, "type": query_type.lower()},
         ).json()
     except:
         response = requests.get(
-            f"http://0.0.0.0:8000/{query_type.lower()}/{query}",
+            f"{rag_response_path['local']}{query_type.lower()}/{query}",
             json={"query": query, "type": query_type.lower()},
         ).json()
     return response
@@ -108,10 +125,11 @@ def fetch_llm_response(query):
     
     Returns: llm_response (dict)
     """
+    llm_response_path = paths["llm_response"]
     try:
-        llm_response = requests.get(f"http://fastapi:8081/llmquery/{query}").json()
+        llm_response = requests.get(f"{llm_response_path['docker']}{query}").json()
     except:
-        llm_response = requests.get(f"http://0.0.0.0:8081/llmquery/{query}").json()
+        llm_response = requests.get(f"{llm_response_path['local']}{query}").json()
     return llm_response
 
 def parse_and_update_response(query_type, response, llm_response, data_metadata, flow_metadata):
@@ -126,9 +144,9 @@ def parse_and_update_response(query_type, response, llm_response, data_metadata,
         initial_response = data_metadata[data_metadata["did"].isin(response["initial_response"])]
         subset_cols = ["did", "name"]
         try:
-            dataset_size, dataset_missing, dataset_classification, dataset_sort = parse_llm_response(llm_response)
-            subset_cols = update_subset_cols(dataset_size, dataset_missing, dataset_classification)
-            initial_response = filter_initial_response(initial_response, dataset_classification)
+            dataset_size, dataset_missing, dataset_classification, dataset_sort, uploader = parse_llm_response(llm_response)
+            subset_cols = update_subset_cols(dataset_size, dataset_missing, dataset_classification, uploader)
+            initial_response = filter_initial_response(initial_response, dataset_classification, uploader)
         except Exception as e:
             st.error(f"Error processing LLM response: {e}")
         initial_response = initial_response[subset_cols]
@@ -146,39 +164,3 @@ def display_results(initial_response):
     """
     st.write("Results:")
     st.dataframe(initial_response)
-
-def run_streamlit():
-    """
-    Description: Run the Streamlit app
-    
-    Input: None
-    
-    Returns: None
-    """
-    if st.button("Submit"):
-        with st.spinner("Waiting for results..."):
-            query_type = st.session_state['query_type']
-            query = st.session_state['query']
-            data_metadata = st.session_state['data_metadata']
-            flow_metadata = st.session_state['flow_metadata']
-            
-            response = fetch_response(query_type, query)
-
-        if response["initial_response"] is not None:
-            if query_type == "Dataset":
-                with st.spinner("Using an LLM to find the most relevant information..."):
-                    llm_response = fetch_llm_response(query)
-                    initial_response = parse_and_update_response(query_type, response, llm_response, data_metadata, flow_metadata)
-            else:
-                initial_response = parse_and_update_response(query_type, response, None, data_metadata, flow_metadata)
-
-            display_results(initial_response)
-
-        with st.form("fb_form"):
-            streamlit_feedback(
-                feedback_type="thumbs",
-                align="flex-start",
-                key="fb_k",
-                optional_text_label="[Optional] Please provide an explanation",
-            )
-            st.form_submit_button("Save feedback", on_click=feedback_cb)

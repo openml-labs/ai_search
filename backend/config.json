@@ -9,7 +9,7 @@
     "persist_dir": "../data/chroma_db",
     "testing_flag": false,
     "ignore_downloading_data": false,
-    "test_subset_2000" : false,
+    "test_subset" : false,
     "data_download_n_jobs" : 20,
     "training" : false,
     "temperature" : 0.95,
