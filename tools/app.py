@@ -6,12 +6,13 @@ streamlit run app.py
 
 Expects the metadata csv and the topic csv in the `data` directory.
 """
+
 import json
 from collections import defaultdict
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from pathlib import Path
 
 LOADED_DATA = "label_data"
 UNSAVED_DATA = "unsaved_data"
@@ -25,7 +26,7 @@ def load_csv(file: Path, *args, **kwargs) -> pd.DataFrame:
 
 
 def save_label_data() -> None:
-    with open(SAVE_FILE, 'w') as fh:
+    with open(SAVE_FILE, "w") as fh:
         json.dump(st.session_state[UNSAVED_DATA], fh)
     st.session_state[LOADED_DATA] = load_label_data()
 
@@ -33,7 +34,7 @@ def save_label_data() -> None:
 def load_label_data() -> dict[int, list[str]]:
     if not SAVE_FILE.exists():
         return defaultdict(list)
-    with open(SAVE_FILE, 'r') as fh:
+    with open(SAVE_FILE, "r") as fh:
         loaded_data = json.load(fh)
     # JSON keys need to be strings, so we need to deserialize
     loaded_data = {int(key): data for key, data in loaded_data.items()}
@@ -66,11 +67,15 @@ dataset = metadata.loc[did]
 
 st.write(f"# {dataset['name']}")
 with st.expander(label="description", expanded=True):
-    st.write(dataset['description'])
+    st.write(dataset["description"])
 
 with st.expander(label="meta-features", expanded=True):
     meta_left, meta_right = st.columns(spec=2)
-    feature_columns = ["NumberOfFeatures", "NumberOfNumericFeatures", "NumberOfSymbolicFeatures"]
+    feature_columns = [
+        "NumberOfFeatures",
+        "NumberOfNumericFeatures",
+        "NumberOfSymbolicFeatures",
+    ]
     other_columns = ["NumberOfClasses", "NumberOfInstances", "NumberOfMissingValues"]
 
     with meta_left:
@@ -81,8 +86,9 @@ with st.expander(label="meta-features", expanded=True):
 
 
 topic_queries = load_csv("data/LLM Evaluation - Topic Queries.csv")
-topics = topic_queries['Topic'].tolist()
+topics = topic_queries["Topic"].tolist()
 st.write("## For each query, is this dataset relevant?")
+
 
 def update_relevancy(var, topic):
     if st.session_state[var] and topic not in st.session_state[UNSAVED_DATA][did]:
@@ -93,6 +99,7 @@ def update_relevancy(var, topic):
 
 with st.container(height=400):
     for i, topic in enumerate(topics):
+
         def update_this_relevancy(var_, topic_):
             """Helper function to bind the variables to scope."""
             return lambda: update_relevancy(f"q{var_}", topic_)
@@ -108,7 +115,9 @@ with st.container(height=400):
         )
 
 
-unsaved_changes = (st.session_state[UNSAVED_DATA] != st.session_state[LOADED_DATA])
+unsaved_changes = st.session_state[UNSAVED_DATA] != st.session_state[LOADED_DATA]
 button_type = "primary" if unsaved_changes else "secondary"
 with save_right:
-    st.button("Save me!", use_container_width=True, type=button_type, on_click=save_label_data)
+    st.button(
+        "Save me!", use_container_width=True, type=button_type, on_click=save_label_data
+    )

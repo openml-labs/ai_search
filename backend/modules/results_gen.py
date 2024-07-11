@@ -140,9 +140,19 @@ def create_output_dataframe(
         )
     output_df = output_df.drop_duplicates(subset=["name"])
     # order the columns
-    output_df = output_df[["index", "name", "command", "urls", "page_content"]].rename(
-        columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"}
-    )
+    # output_df = output_df[["index", "name", "command", "urls", "page_content"]].rename(
+        # columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"}
+    # )
+    replace_dict = {
+        "index": "id",
+        "command": "Command",
+        "urls": "OpenML URL",
+        "page_content": "Description",
+    }
+    for col in ["index", "command", "urls", "page_content"]:
+        if col in output_df.columns:
+            output_df = output_df.rename(columns={col: replace_dict[col]})
+            
     return output_df
 
 
