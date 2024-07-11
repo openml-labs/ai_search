@@ -334,7 +334,25 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm_service.create_chain" class="md-nav__link">
+  <a href="#llm_service.get_llm_query" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_llm_query
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      llm_service_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service_utils.create_chain" class="md-nav__link">
     <span class="md-ellipsis">
       create_chain
     </span>
@@ -343,7 +361,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm_service.parse_answers_initial" class="md-nav__link">
+  <a href="#llm_service_utils.parse_answers_initial" class="md-nav__link">
     <span class="md-ellipsis">
       parse_answers_initial
     </span>
@@ -750,7 +768,25 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm_service.create_chain" class="md-nav__link">
+  <a href="#llm_service.get_llm_query" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_llm_query
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      llm_service_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm_service_utils.create_chain" class="md-nav__link">
     <span class="md-ellipsis">
       create_chain
     </span>
@@ -759,7 +795,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm_service.parse_answers_initial" class="md-nav__link">
+  <a href="#llm_service_utils.parse_answers_initial" class="md-nav__link">
     <span class="md-ellipsis">
       parse_answers_initial
     </span>
@@ -811,10 +847,91 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="llm_service.create_chain" class="doc doc-heading">
+<h2 id="llm_service.get_llm_query" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_llm_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></code>
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#llm_service.get_llm_query" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt</p>
+<p>Input: query: str</p>
+<p>Returns: JSONResponse: answers</p>
+
+            <details class="quote">
+              <summary>Source code in <code>llm_service/llm_service.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/llmquery/</span><span class="si">{query}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_class</span><span class="o">=</span><span class="n">JSONResponse</span><span class="p">)</span>
+<span class="nd">@retry</span><span class="p">(</span><span class="n">stop</span><span class="o">=</span><span class="n">stop_after_attempt</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">retry</span><span class="o">=</span><span class="n">retry_if_exception_type</span><span class="p">(</span><span class="n">ConnectTimeout</span><span class="p">))</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">get_llm_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt</span>
+
+<span class="sd">    Input: query: str</span>
+
+<span class="sd">    Returns: JSONResponse: answers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;%20&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">})</span>
+    <span class="n">answers</span> <span class="o">=</span> <span class="n">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">patterns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JSONResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;answers&quot;</span><span class="p">:</span> <span class="n">answers</span><span class="p">})</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="llm_service_utils"></a>
+    <div class="doc doc-contents first">
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="llm_service_utils.create_chain" class="doc doc-heading">
             <code class="highlight language-python"><span class="n">create_chain</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s1">&#39;llama3&#39;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
 
-<a href="#llm_service.create_chain" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#llm_service_utils.create_chain" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents ">
@@ -824,19 +941,19 @@
 <p>Returns: chain (Chain)</p>
 
             <details class="quote">
-              <summary>Source code in <code>llm_service/llm_service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_chain</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+              <summary>Source code in <code>llm_service/llm_service_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_chain</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;llama3&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Create a chain with the given prompt and model</span>
 
@@ -857,21 +974,32 @@
 <div class="doc doc-object doc-function">
 
 
-<h2 id="llm_service.parse_answers_initial" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></code>
+<h2 id="llm_service_utils.parse_answers_initial" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">patterns</span><span class="p">)</span></code>
 
-<a href="#llm_service.parse_answers_initial" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#llm_service_utils.parse_answers_initial" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents ">
 
       <p>Description: Parse the answers from the initial response</p>
-<p>Input: response (str)</p>
+<p>Input: response (str), patterns (list)</p>
 <p>Returns: answers (list)</p>
 
             <details class="quote">
-              <summary>Source code in <code>llm_service/llm_service.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+              <summary>Source code in <code>llm_service/llm_service_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
@@ -890,33 +1018,22 @@
 <span class="normal">48</span>
 <span class="normal">49</span>
 <span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_answers_initial</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">patterns</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Description: Parse the answers from the initial response</span>
 
-<span class="sd">    Input: response (str)</span>
+<span class="sd">    Input: response (str), patterns (list)</span>
 
 <span class="sd">    Returns: answers (list)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="sa">r</span><span class="s2">&quot;^(yes|no|none)&quot;</span><span class="p">,</span>
-        <span class="sa">r</span><span class="s2">&quot;^(ascending|descending)&quot;</span><span class="p">,</span>
-        <span class="sa">r</span><span class="s2">&quot;(multi-class|binary|multi-label)&quot;</span>
-    <span class="p">]</span>
 
     <span class="n">answers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># if the response contains a ? and a new line then join the next line with it (sometimes the LLM adds a new line after the ? instead of just printing it on the same line)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;?</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+
+    <span class="c1"># convert the response to lowercase and split it into lines</span>
     <span class="n">lines</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
         <span class="k">if</span> <span class="s2">&quot;?&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>

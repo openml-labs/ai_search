@@ -12,5 +12,13 @@
         },
         "llm_summary": "The doc you provided discusses various topics related to astronomy and physics, such as gravitational waves, dark matter, black holes, and cosmic inflation. The main concepts discussed include:\n\n- Gravitational waves: These ripples in spacetime caused by the passage of a massive object and are detected by ground-based detectors.\n  \n- Dark matter: A mysterious form of matter that makes up about 85% of all matter and energy known to exist. It does not emit or absorb light, but gravity is still affected by it.\n\n- Black holes: Large dense objects where the gravitational pull is so strong even light can't escape. They can be produced by supernovae explosions, stellar collisions, or the collapse of massive stars.\n\n- Cosmic inflation: A period in the early universe after its big bang that caused the expansion to accelerate, allowing galaxies to form and eventually reach their current state.",
         "query": "beep"
+    },
+    {
+        "ss": {
+            "type": "thumbs",
+            "score": "\ud83d\udc4d",
+            "text": "pretty good"
+        },
+        "query": "find me a mushroom dataset with multiple classes"
     }
 ]
