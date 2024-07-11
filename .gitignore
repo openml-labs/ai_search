@@ -15,3 +15,5 @@ tools/data/*
 **/*.ipynb_checkpoints/
 *checkpoint*
 *.pid
+tools/data/
+tools/data/*
