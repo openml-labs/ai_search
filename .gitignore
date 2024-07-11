@@ -5,7 +5,7 @@ chroma_db/
 *.sqlite3
 *.pkl
 *.pyc
-*.DS_store
+*.DS_Store
 *.ipynb_checkpoints
 *.csv
 serving/data/
