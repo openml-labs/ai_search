@@ -82,7 +82,6 @@ with st.expander(label="meta-features", expanded=True):
 
 topic_queries = load_csv("data/LLM Evaluation - Topic Queries.csv")
 topics = topic_queries['Topic']
-print(topics)
 
 title_left, title_right = st.columns(spec=2, gap="medium")
 with title_left:
