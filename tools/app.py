@@ -81,19 +81,10 @@ with st.expander(label="meta-features", expanded=True):
 
 
 topic_queries = load_csv("data/LLM Evaluation - Topic Queries.csv")
-topics = topic_queries['Topic']
-print(topics)
-
-title_left, title_right = st.columns(spec=2, gap="medium")
-with title_left:
-    st.write("## Query")
-
-with title_right:
-    st.write("## Is it relevant?")
-
+topics = topic_queries['Topic'].tolist()
+st.write("## For each query, is this dataset relevant?")
 
 def update_relevancy(var, topic):
-    print(st.session_state[var], topic)
     if st.session_state[var] and topic not in st.session_state[UNSAVED_DATA][did]:
         st.session_state[UNSAVED_DATA][did].append(topic)
     if not st.session_state[var] and topic in st.session_state[UNSAVED_DATA][did]:
@@ -101,28 +92,20 @@ def update_relevancy(var, topic):
 
 
 with st.container(height=400):
-    query_left, relevant_right = st.columns(spec=2)
+    for i, topic in enumerate(topics):
+        def update_this_relevancy(var_, topic_):
+            """Helper function to bind the variables to scope."""
+            return lambda: update_relevancy(f"q{var_}", topic_)
 
-    with query_left:
-        for topic in topics:
-            st.write(topic)
-
-    with relevant_right:
-        for i, topic in enumerate(topics):
-            def update_this_relevancy(var_, topic_):
-                """Helper function to bind the variables to scope."""
-                return lambda: update_relevancy(f"q{var_}", topic_)
-
-            # We need to use the on_change callbacks instead of the regular
-            # return values, because state needs to be up-to-date *before*
-            # the next render pass.
-            st.checkbox(
-                label=f"q{i}",
-                label_visibility="hidden",
-                value=(topic in st.session_state[UNSAVED_DATA][did]),
-                key=f"q{i}",
-                on_change=update_this_relevancy(i, topic),
-            )
+        # We need to use the on_change callbacks instead of the regular
+        # return values, because state needs to be up-to-date *before*
+        # the next render pass.
+        st.checkbox(
+            label=topic,
+            value=(topic in st.session_state[UNSAVED_DATA][did]),
+            key=f"q{i}",
+            on_change=update_this_relevancy(i, topic),
+        )
 
 
 unsaved_changes = (st.session_state[UNSAVED_DATA] != st.session_state[LOADED_DATA])
