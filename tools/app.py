@@ -10,6 +10,7 @@ Expects the metadata csv and the topic csv in the `data` directory.
 import json
 from collections import defaultdict
 from pathlib import Path
+import re
 
 import pandas as pd
 import streamlit as st
@@ -68,6 +69,13 @@ dataset = metadata.loc[did]
 st.write(f"# {dataset['name']}")
 with st.expander(label="description", expanded=True):
     st.write(dataset["description"])
+
+
+FEATURE_PATTERN = re.compile(r"\d+ : \[\d+ - ([^ ]+) \((\w+)\)]")
+with st.expander(label="features", expanded=True):
+    features = [match.groups() for match in FEATURE_PATTERN.finditer(dataset["features"])]
+    st.write(pd.DataFrame(features, columns=["name", "type"]))
+
 
 with st.expander(label="meta-features", expanded=True):
     meta_left, meta_right = st.columns(spec=2)
