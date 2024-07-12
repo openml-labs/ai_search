@@ -27,23 +27,20 @@ query = st.text_input("Enter your query")
 st.session_state["query"] = query
 st.session_state["query_type"] = query_type
 
-response = {"initial_response": None}
 
 # Submit button logic
 if st.button("Submit"):
-    with st.spinner("Waiting for results..."):
-        
-        response = fetch_response(query_type, query)
-
-    if response["initial_response"] is not None:
-        if query_type == "Dataset":
-            with st.spinner("Using an LLM to find the most relevant information..."):
-                llm_response = fetch_llm_response(query)
-                initial_response = parse_and_update_response(query_type, response, llm_response, data_metadata, flow_metadata)
-        else:
-            initial_response = parse_and_update_response(query_type, response, None, data_metadata, flow_metadata)
-
-        display_results(initial_response)
+    response_parser = ResponseParser(query_type)
+    if query_type == "Dataset":
+        with st.spinner("Waiting for results..."):
+            # get rag response
+            response_parser.fetch_rag_response(query_type, query)
+            # get llm response
+            response_parser.fetch_llm_response(query)
+            # get updated columns based on llm response
+            results = response_parser.parse_and_update_response(data_metadata)
+            # display results in a table
+            display_results(results)
 
     with st.form("fb_form"):
         streamlit_feedback(

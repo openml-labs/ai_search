@@ -43,5 +43,5 @@ async def get_llm_query(query: str):
     """
     query = query.replace("%20", " ")
     response = chain.invoke({"query": query})
-    answers = parse_answers_initial(response, patterns)
-    return JSONResponse(content={"answers": answers})
+    answers = parse_answers_initial(response, patterns, prompt_dict)
+    return JSONResponse(content=answers)

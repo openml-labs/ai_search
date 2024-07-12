@@ -18,7 +18,7 @@ def create_chain(prompt, model="llama3", temperature=0):
     return prompt | llm | StrOutputParser()
 
 
-def parse_answers_initial(response, patterns):
+def parse_answers_initial(response, patterns, prompt_dict):
     """
     Description: Parse the answers from the initial response
     
@@ -48,4 +48,9 @@ def parse_answers_initial(response, patterns):
                 answers.append(potential_answer)
                 break  # Stop checking other patterns if a match is found
     
-    return answers
+    # return answers as a dict using the prompt_dict keys
+    answers_dict = {}
+    for i, key in enumerate(prompt_dict.keys()):
+        answers_dict[key] = answers[i]
+    
+    return answers_dict
