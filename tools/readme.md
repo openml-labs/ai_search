@@ -9,7 +9,7 @@ The app only requires streamlit:
 ```
 python -m venv venv
 source venv/bin/activate
-python -m pip install streamlit
+python -m pip install -r requirements.txt 
 ```
 
 ## Data
@@ -18,6 +18,7 @@ The app requires some data to operate, specifically it expects:
  - `data/all_dataset_description.csv`: any file with openml metadata with the following columns (e.g., the one Subha shared):
     - did
     - description
+    - features
     - NumberOfFeatures
     - NumberOfNumericFeatures
     - NumberOfSymbolicFeatures
