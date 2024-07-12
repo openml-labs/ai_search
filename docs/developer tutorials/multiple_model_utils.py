@@ -5,39 +5,51 @@
 
 # %%
 from __future__ import annotations
+
 import os
 import sys
-import chromadb
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import chromadb
 import pandas as pd
+import json
+
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), '../../backend/'))
+sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
+
 
 # %%
 from modules.llm import *
 from modules.results_gen import get_result_from_query
+
+# add modules from ui_utils 
+sys.path.append(os.path.join(os.path.dirname("."), "../../frontend/"))
+from ui_utils import *
 from tqdm import tqdm
 
-def process_embedding_model_name_hf(name : str) -> str:
+
+def process_embedding_model_name_hf(name: str) -> str:
     """
     Description: This function processes the name of the embedding model from Hugging Face to use as experiment name.
-    
+
     Input: name (str) - name of the embedding model from Hugging Face.
-    
+
     Returns: name (str) - processed name of the embedding model.
     """
     return name.replace("/", "_")
 
-def process_llm_model_name_ollama(name : str) -> str:
+
+def process_llm_model_name_ollama(name: str) -> str:
     """
     Description: This function processes the name of the llm model from Ollama to use as experiment name.
-    
+
     Input: name (str) - name of the llm model from Ollama.
 
     Returns: name (str) - processed name of the llm model.
     """
     return name.replace(":", "_")
+
 
 # %% [markdown]
 # ## Downloading the models
@@ -48,45 +60,76 @@ def process_llm_model_name_ollama(name : str) -> str:
 
 # os.system("curl -fsSL https://ollama.com/install.sh | sh")
 
+
 def ollama_setup(list_of_llm_models: list):
     os.system("ollama serve&")
-    print("Waiting for Ollama server to be active...")  
+    print("Waiting for Ollama server to be active...")
     while os.system("ollama list | grep 'NAME'") == "":
         pass
 
     for llm_model in list_of_llm_models:
         os.system(f"ollama pull {llm_model}")
 
-# %% [markdown]
-# ## Running the steps
-# - Create an experiment directory
-# - Save a config file with the models and the queries in the experiment directory
-# - Download openml data for each dataset and format into a string
-# - Create vectorb and embed the data
-# - Get the predictions for each model for a list of queries and evaluate the performance
-# - (note) At the moment, this runs for a very small subset of the entire data. To disable this behavior and run on the entire data, set ```config["test_subset_2000"] = False```
+# overloading response parser
 
-## Aggregate multiple queries, count and save the results
-# - This is part of the library already but is repeated here for clarity
+class ResponseParser(ResponseParser):
+    def load_paths(self):
+        """
+        Description: Load paths from paths.json
+        """
+        with open("../../frontend/paths.json", "r") as file:
+            return json.load(file)
+    def parse_and_update_response(self, metadata):
+        """
+        Description: Parse the response from the RAG and LLM services and update the metadata based on the response
+        """
+        if self.rag_response is not None and self.llm_response is not None:
+            if self.apply_llm_before_rag == False:
+                filtered_metadata = metadata[
+                    metadata["did"].isin(self.rag_response["initial_response"])
+                ]
+                llm_parser = LLMResponseParser(self.llm_response)
+                llm_parser.subset_cols = ["did", "name"]
+
+                if self.query_type.lower() == "dataset":
+                    llm_parser.get_attributes_from_response()
+                    return llm_parser.update_subset_cols(filtered_metadata)
+
+            elif self.apply_llm_before_rag == True:
+                llm_parser = LLMResponseParser(self.llm_response)
+                llm_parser.subset_cols = ["did", "name"]
+                llm_parser.get_attributes_from_response()
+                filtered_metadata = llm_parser.update_subset_cols(metadata)
+
+                return filtered_metadata[
+                    filtered_metadata["did"].isin(self.rag_response["initial_response"])
+                ]
+            
+            elif self.apply_llm_before_rag == None:
+                # if no llm response is required, return the initial response 
+                return metadata
+        else:
+            return metadata
+        
 def aggregate_multiple_queries_and_count(
-    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query", count=True
+    queries, qa_dataset, config, data_metadata,group_cols=["did", "name"], sort_by="query", count=True, apply_llm_before_rag = False
 ) -> pd.DataFrame:
     """
     Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results
-
-    Input:
-        queries: List of queries
-        group_cols: List of columns to group by
-
-    Returns: Combined dataframe with the results of all queries
     """
     combined_df = pd.DataFrame()
-    for query in queries:
+    for query in tqdm(queries, total=len(queries)):
+
+        response_parser = ResponseParser(query_type = config["type_of_data"], apply_llm_before_rag = apply_llm_before_rag)
+        
         result_data_frame, _ = get_result_from_query(
             query=query, qa=qa_dataset, type_of_query="dataset", config=config
         )
-        result_data_frame = result_data_frame[group_cols]
-        # Concat with combined_df with a column to store the query
+        response_parser.rag_response = {"initial_response": list(result_data_frame["id"].values)}
+
+        response_parser.fetch_llm_response(query)
+        result_data_frame = response_parser.parse_and_update_response(data_metadata)
+
         result_data_frame["query"] = query
         result_data_frame["llm_model"] = config["llm_model"]
         result_data_frame["embedding_model"] = config["embedding_model"]
@@ -101,71 +144,73 @@ def aggregate_multiple_queries_and_count(
 
     return combined_df
 
-# %%
-## Override the original script to take a list of IDs as input
-# - The original script creates a subset of the dataset for testing, but here we want to give it a list of dataset IDs to test on. 
-# - So, we also disable the test_subset behavior and use a modified `setup_vector_db_and_qa` function
-def setup_vector_db_and_qa(
-    config: dict, data_type: str, client: ClientAPI, subset_ids: list = None
+# %% [markdown]
+# ## Running the steps
+# - Create an experiment directory
+# - Save a config file with the models and the queries in the experiment directory
+# - Download openml data for each dataset and format into a string
+# - Create vectorb and embed the data
+# - Get the predictions for each model for a list of queries and evaluate the performance
+# - (note) At the moment, this runs for a very small subset of the entire data. To disable this behavior and run on the entire data, set ```config["test_subset_2000"] = False```
+
+def run_experiments(
+    config,
+    new_path,
+    queries,
+    list_of_embedding_models,
+    list_of_llm_models,
+    subset_ids,
+    use_cached_experiment=False,
+    enable_llm_results=False,
+    apply_llm_before_rag = False
 ):
-    """
-    Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
-    This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.
-
-    Input: config (dict), data_type (str), client (chromadb.PersistentClient)
-
-    Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
-    """
-
-    config["type_of_data"] = data_type
-
-    # Download the data if it does not exist
-    openml_data_object, data_id, all_metadata, handler = get_all_metadata_from_openml(
-        config=config
-    )
-    # Create the combined metadata dataframe
-    metadata_df, all_metadata = create_metadata_dataframe(
-        handler, openml_data_object, data_id, all_metadata, config=config
-    )
-
-    # subset the metadata if subset_ids is not None
-    subset_ids = [int(x) for x in subset_ids]
-    if subset_ids is not None:
-        metadata_df = metadata_df[metadata_df["did"].isin(subset_ids)]
-
-    # Create the vector store
-    vectordb = load_document_and_create_vector_store(
-        metadata_df, config=config, chroma_client=client
-    )
-    # Initialize the LLM chain and setup Retrieval QA
-    qa = initialize_llm_chain(vectordb=vectordb, config=config)
-    return qa, all_metadata
-
-def run_experiments(config, new_path, queries,list_of_embedding_models,list_of_llm_models, subset_ids, use_cached_experiment = False, enable_llm_results = False):
-    for embedding_model in tqdm(list_of_embedding_models, desc="Embedding Models", total=len(list_of_embedding_models)):
-        for llm_model in tqdm(list_of_llm_models, desc="LLM Models", total=len(list_of_llm_models)):
+    for embedding_model in tqdm(
+        list_of_embedding_models,
+        desc="Embedding Models",
+        total=len(list_of_embedding_models),
+    ):
+        for llm_model in tqdm(
+            list_of_llm_models, desc="LLM Models", total=len(list_of_llm_models)
+        ):
             # update the config with the new embedding and llm models
             config["embedding_model"] = embedding_model
             config["llm_model"] = llm_model
 
             # create a new experiment directory using a combination of the embedding model and llm model names
-            experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
-            experiment_path = new_path/Path(f"../data/experiments/{experiment_name}")
+            if enable_llm_results == True:
+                experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
+
+                if apply_llm_before_rag == True:
+                    experiment_name += "_llm_before_rag"
+                
+                elif apply_llm_before_rag == False:
+                    experiment_name += "_llm_after_rag"
+
+                elif apply_llm_before_rag == None:
+                    experiment_name += "_llm_none"
+            else:
+                # create a new experiment directory using the embedding model name
+                experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_llm_none"
+
             
-            if use_cached_experiment and os.path.exists(experiment_path):
-                print(f"Experiment {experiment_name} already exists. Skipping... To disable this behavior, set use_cached_experiment = False")
+            experiment_path = new_path / Path(f"../data/experiments/{experiment_name}")
+
+            if use_cached_experiment and os.path.exists(experiment_path/"results.csv"):
+                print(
+                    f"Experiment {experiment_name} already exists. Skipping... To disable this behavior, set use_cached_experiment = False"
+                )
                 continue
             else:
                 # create the experiment directory if it does not exist
                 os.makedirs(experiment_path, exist_ok=True)
-            
+
                 # update the config with the new experiment directories
                 config["data_dir"] = str(experiment_path)
                 config["persist_dir"] = str(experiment_path / "chroma_db")
 
                 # save training details and config in a dataframe
-                config_df = pd.DataFrame.from_dict(config, orient='index').reset_index()
-                config_df.columns = ['Hyperparameter', 'Value']
+                config_df = pd.DataFrame.from_dict(config, orient="index").reset_index()
+                config_df.columns = ["Hyperparameter", "Value"]
                 config_df.to_csv(experiment_path / "config.csv", index=False)
 
                 # load the persistent database using ChromaDB
@@ -173,10 +218,25 @@ def run_experiments(config, new_path, queries,list_of_embedding_models,list_of_l
 
                 # Run "training"
                 qa_dataset, _ = setup_vector_db_and_qa(
-                    config=config, data_type=config["type_of_data"], client=client, subset_ids= subset_ids
+                    config=config,
+                    data_type=config["type_of_data"],
+                    client=client,
+                    subset_ids=subset_ids,
                 )
-                combined_df = aggregate_multiple_queries_and_count(queries,qa_dataset=qa_dataset, config=config, group_cols = ["id", "name"], sort_by="query", count = False)
+                data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
+                data_metadata = pd.read_csv(data_metadata_path)
+                combined_df = aggregate_multiple_queries_and_count(
+                    queries,
+                    qa_dataset=qa_dataset,
+                    config=config,
+                    data_metadata=data_metadata,
+                    group_cols=["id", "name"],
+                    sort_by="query",
+                    count=False,
+                    apply_llm_before_rag = apply_llm_before_rag
+                )
                 combined_df.to_csv(experiment_path / "results.csv")
+
 
 def get_dataset_queries(subset_ids, query_templates, merged_labels):
     # get the dataset ids we want out evaluation to be based on
@@ -191,6 +251,7 @@ def get_dataset_queries(subset_ids, query_templates, merged_labels):
 
     return pd.DataFrame({"query": X_val, "id": y_val}).sample(frac=1)
 
+
 def create_results_dict(csv_files, df_queries):
     # create a dictionary to store the results
     results_dict = {}
@@ -198,13 +259,13 @@ def create_results_dict(csv_files, df_queries):
         folder_name = Path(exp_path).parent.name
         exp = pd.read_csv(exp_path)
         # create y_pred
-        exp["y_pred"] = exp["id"].astype(str)
+        exp["y_pred"] = exp["did"].astype(str)
 
         # for each row, get the true label from the df_queries dataframe
         for i, row in exp.iterrows():
             res = df_queries[df_queries["query"] == row["query"]].values[0][1]
             exp.at[i, "y_true"] = res
-        
+
         # get unique queries
         all_queries = exp["query"].unique()
 

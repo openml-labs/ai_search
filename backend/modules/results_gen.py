@@ -141,7 +141,7 @@ def create_output_dataframe(
     output_df = output_df.drop_duplicates(subset=["name"])
     # order the columns
     # output_df = output_df[["index", "name", "command", "urls", "page_content"]].rename(
-        # columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"}
+    # columns={"index": "id", "urls": "OpenML URL", "page_content": "Description"}
     # )
     replace_dict = {
         "index": "id",
@@ -152,7 +152,7 @@ def create_output_dataframe(
     for col in ["index", "command", "urls", "page_content"]:
         if col in output_df.columns:
             output_df = output_df.rename(columns={col: replace_dict[col]})
-            
+
     return output_df
 
 
@@ -209,36 +209,3 @@ def get_result_from_query(
 
     return output_df, ids_order
 
-
-def aggregate_multiple_queries_and_count(
-    queries, qa_dataset, config, group_cols=["id", "name"], sort_by="query", count=True
-) -> pd.DataFrame:
-    """
-    Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results
-
-    Input:
-        queries: List of queries
-        group_cols: List of columns to group by
-
-    Returns: Combined dataframe with the results of all queries
-    """
-    combined_df = pd.DataFrame()
-    for query in tqdm(queries, total=len(queries)):
-        result_data_frame, _ = get_result_from_query(
-            query=query, qa=qa_dataset, type_of_query="dataset", config=config
-        )
-        result_data_frame = result_data_frame[group_cols]
-        # Concat with combined_df with a column to store the query
-        result_data_frame["query"] = query
-        result_data_frame["llm_model"] = config["llm_model"]
-        result_data_frame["embedding_model"] = config["embedding_model"]
-        combined_df = pd.concat([combined_df, result_data_frame])
-    if count:
-        combined_df = (
-            combined_df.groupby(group_cols)
-            .count()
-            .reset_index()
-            .sort_values(by=sort_by, ascending=False)
-        )
-
-    return combined_df

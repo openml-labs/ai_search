@@ -5,21 +5,23 @@
 
 # %%
 from __future__ import annotations
-from langchain_community.cache import SQLiteCache
+
 import os
 import sys
-import chromadb
 from pathlib import Path
+
+import chromadb
+import pandas as pd
+from langchain_community.cache import SQLiteCache
 from tqdm import tqdm
 
-import pandas as pd
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), '../../backend/'))
+sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
 
-# %%
-from modules.utils import load_config_and_device
 from modules.llm import *
 from modules.results_gen import aggregate_multiple_queries_and_count
+# %%
+from modules.utils import load_config_and_device
 
 # %% [markdown]
 # ## Setting the config
@@ -27,7 +29,7 @@ from modules.results_gen import aggregate_multiple_queries_and_count
 # %%
 new_path = Path("../../backend/")
 
-config = load_config_and_device(str(new_path / "config.json"), training = True)
+config = load_config_and_device(str(new_path / "config.json"), training=True)
 
 config["type_of_data"] = "dataset"
 config["training"] = True
@@ -42,33 +44,42 @@ config["training"] = True
 list_of_embedding_models = ["BAAI/bge-large-en-v1.5"]
 list_of_llm_models = ["qwen2:1.5b", "phi3", "llama3"]
 
+
 # %%
-def process_embedding_model_name_hf(name : str) -> str:
+def process_embedding_model_name_hf(name: str) -> str:
     """
     Description: This function processes the name of the embedding model from Hugging Face to use as experiment name.
-    
+
     Input: name (str) - name of the embedding model from Hugging Face.
-    
+
     Returns: name (str) - processed name of the embedding model.
     """
     return name.replace("/", "_")
 
-def process_llm_model_name_ollama(name : str) -> str:
+
+def process_llm_model_name_ollama(name: str) -> str:
     """
     Description: This function processes the name of the llm model from Ollama to use as experiment name.
-    
+
     Input: name (str) - name of the llm model from Ollama.
 
     Returns: name (str) - processed name of the llm model.
     """
     return name.replace(":", "_")
 
+
 # %% [markdown]
 # ## Defining the evaluation queries
 # - replace this with a proper dataframe for a more comprehensive evaluation
 
 # %%
-queries = ["Find datasets related to COVID-19", "Find datasets related to COVID-19 and India", "COVID-19 dataset", "COVID-19 dataset India", "Mexico historical covid"]
+queries = [
+    "Find datasets related to COVID-19",
+    "Find datasets related to COVID-19 and India",
+    "COVID-19 dataset",
+    "COVID-19 dataset India",
+    "Mexico historical covid",
+]
 
 # %% [markdown]
 # ## Downloading the models
@@ -79,7 +90,7 @@ queries = ["Find datasets related to COVID-19", "Find datasets related to COVID-
 
 # os.system("curl -fsSL https://ollama.com/install.sh | sh")
 os.system("ollama serve&")
-print("Waiting for Ollama server to be active...")  
+print("Waiting for Ollama server to be active...")
 while os.system("ollama list | grep 'NAME'") == "":
     pass
 
@@ -97,6 +108,7 @@ for llm_model in list_of_llm_models:
 
 # %% [markdown]
 # ### Override setup_vector_db_and_qa to use a list of IDs instead of all of them
+
 
 # %%
 def setup_vector_db_and_qa(
@@ -134,6 +146,7 @@ def setup_vector_db_and_qa(
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
     return qa, all_metadata
 
+
 # %%
 # use a tiny subset of the data for testing (no need for the edited subset)
 
@@ -146,26 +159,32 @@ if use_custom_data:
 else:
     config["test_subset"] = True
 
-for embedding_model in tqdm(list_of_embedding_models, desc="Embedding Models", total=len(list_of_embedding_models)):
-    for llm_model in tqdm(list_of_llm_models, desc="LLM Models", total=len(list_of_llm_models)):
+for embedding_model in tqdm(
+    list_of_embedding_models,
+    desc="Embedding Models",
+    total=len(list_of_embedding_models),
+):
+    for llm_model in tqdm(
+        list_of_llm_models, desc="LLM Models", total=len(list_of_llm_models)
+    ):
         # update the config with the new embedding and llm models
         config["embedding_model"] = embedding_model
         config["llm_model"] = llm_model
 
         # create a new experiment directory using a combination of the embedding model and llm model names
         experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
-        experiment_path = new_path/Path(f"../data/experiments/{experiment_name}")
+        experiment_path = new_path / Path(f"../data/experiments/{experiment_name}")
 
         # create the experiment directory if it does not exist
         os.makedirs(experiment_path, exist_ok=True)
-       
+
         # update the config with the new experiment directories
         config["data_dir"] = str(experiment_path)
         config["persist_dir"] = str(experiment_path / "chroma_db")
 
         # save training details and config in a dataframe
-        config_df = pd.DataFrame.from_dict(config, orient='index').reset_index()
-        config_df.columns = ['Hyperparameter', 'Value']
+        config_df = pd.DataFrame.from_dict(config, orient="index").reset_index()
+        config_df.columns = ["Hyperparameter", "Value"]
         config_df.to_csv(experiment_path / "config.csv", index=False)
 
         # load the persistent database using ChromaDB
@@ -175,16 +194,20 @@ for embedding_model in tqdm(list_of_embedding_models, desc="Embedding Models", t
         qa_dataset = setup_vector_db_and_qa(
             config=config, data_type=config["type_of_data"], client=client
         )
-        
+
         # # Run an evaluation by aggregating multiple queries and counting the results
         # # TODO : Replace this evaluation with a more meaningful one
-        combined_df = aggregate_multiple_queries_and_count(queries,qa_dataset=qa_dataset, config=config, group_cols = ["id", "name"], sort_by="query", count = False)
+        combined_df = aggregate_multiple_queries_and_count(
+            queries,
+            qa_dataset=qa_dataset,
+            config=config,
+            group_cols=["id", "name"],
+            sort_by="query",
+            count=False,
+        )
 
         # # TODO : ADD LLM evaluation here when the function is ready
 
         combined_df.to_csv(experiment_path / "results.csv")
 
 # %%
-
-
-

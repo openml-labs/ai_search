@@ -124,7 +124,7 @@ def load_model(config: dict) -> HuggingFaceEmbeddings | None:
         model_name=config["embedding_model"],
         model_kwargs=model_kwargs,
         encode_kwargs=encode_kwargs,
-        show_progress=True,
+        show_progress=False,
         # trust_remote_code=True
     )
     print("[INFO] Model loaded.")
@@ -182,7 +182,8 @@ def add_documents_to_db(db, unique_docs, unique_ids):
     if len(unique_docs) < bs:
         db.add_documents(unique_docs, ids=unique_ids)
     else:
-        for i in tqdm(range(0, len(unique_docs), bs)):
+        # for i in tqdm(range(0, len(unique_docs), bs)):
+        for i in range(0, len(unique_docs), bs):
             db.add_documents(unique_docs[i : i + bs], ids=unique_ids[i : i + bs])
 
 
@@ -253,17 +254,13 @@ def initialize_llm_chain(
         search_kwargs={"k": config["num_return_documents"]},
     )
 
-
 def setup_vector_db_and_qa(
-    config: dict, data_type: str, client: ClientAPI
-) -> Union[langchain.chains.retrieval_qa.base.RetrievalQA, pd.DataFrame]:
+    config: dict, data_type: str, client: ClientAPI, subset_ids: list = None
+):
     """
     Description: Create the vector database using Chroma db with each type of data in its own collection. Doing so allows us to have a single database with multiple collections, reducing the number of databases we need to manage.
     This also downloads the embedding model if it does not exist. The QA chain is then initialized with the vector store and the configuration.
-
-    Input: config (dict), data_type (str), client (chromadb.PersistentClient)
-
-    Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
+    If a list of subset_ids is provided, the metadata is subsetted based on these IDs.
     """
 
     config["type_of_data"] = data_type
@@ -276,6 +273,12 @@ def setup_vector_db_and_qa(
     metadata_df, all_metadata = create_metadata_dataframe(
         handler, openml_data_object, data_id, all_metadata, config=config
     )
+
+    # subset the metadata if subset_ids is not None
+    if subset_ids is not None:
+        subset_ids = [int(x) for x in subset_ids]
+        metadata_df = metadata_df[metadata_df["did"].isin(subset_ids)]
+
     # Create the vector store
     vectordb = load_document_and_create_vector_store(
         metadata_df, config=config, chroma_client=client
@@ -283,7 +286,6 @@ def setup_vector_db_and_qa(
     # Initialize the LLM chain and setup Retrieval QA
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
     return qa, all_metadata
-
 
 def get_llm_chain(config: dict, local: bool = False) -> LLMChain | bool:
     """
@@ -303,4 +305,3 @@ def get_llm_chain(config: dict, local: bool = False) -> LLMChain | bool:
     map_prompt = PromptTemplate.from_template(map_template)
     # return LLMChain(llm=llm, prompt=map_prompt)
     return map_prompt | llm | StrOutputParser()
-

@@ -26,9 +26,7 @@ print(config)
 qa_dataset, _ = setup_vector_db_and_qa(
     config=config, data_type="dataset", client=client
 )
-qa_flow, _ = setup_vector_db_and_qa(
-    config=config, data_type="flow", client=client
-)
+qa_flow, _ = setup_vector_db_and_qa(config=config, data_type="flow", client=client)
 
 # get the llm chain and set the cache
 llm_chain = get_llm_chain(config=config, local=True)

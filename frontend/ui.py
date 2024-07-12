@@ -1,22 +1,21 @@
 import json
 from pathlib import Path
 
-from streamlit_feedback import streamlit_feedback
 import pandas as pd
 import streamlit as st
+from streamlit_feedback import streamlit_feedback
 from ui_utils import *
-
 
 with open("../backend/config.json", "r") as file:
     config = json.load(file)
 
 # Metadata paths
-data_metadata = Path(config["data_dir"]) / "all_dataset_description.csv"
-flow_metadata = Path(config["data_dir"]) / "all_flow_description.csv"
+data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
+flow_metadata_path = Path(config["data_dir"]) / "all_flow_description.csv"
 
 # Load metadata
-data_metadata = pd.read_csv(data_metadata)
-flow_metadata = pd.read_csv(flow_metadata)
+data_metadata = pd.read_csv(data_metadata_path)
+flow_metadata = pd.read_csv(flow_metadata_path)
 
 # Main Streamlit App
 st.title("OpenML AI Search")
@@ -30,7 +29,7 @@ st.session_state["query_type"] = query_type
 
 # Submit button logic
 if st.button("Submit"):
-    response_parser = ResponseParser(query_type)
+    response_parser = ResponseParser(query_type, apply_llm_before_rag=True)
     if query_type == "Dataset":
         with st.spinner("Waiting for results..."):
             # get rag response

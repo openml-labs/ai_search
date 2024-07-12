@@ -1,18 +1,19 @@
 import json
+
 import numpy as np
-from sklearn.metrics import cohen_kappa_score
 import pandas as pd
+from sklearn.metrics import cohen_kappa_score
 
 # Get all category names
 topic_path = "data/LLM Evaluation - Topic Queries.csv"
 df = pd.read_csv(topic_path)
-CLS = df['Topic'].unique().tolist()
+CLS = df["Topic"].unique().tolist()
 CLS = [c.strip().lower() for c in CLS]
 
 # Read the JSON files
-with open('data/merged_labels_1.json', 'r') as f:
+with open("data/merged_labels_1.json", "r") as f:
     labels_1 = json.load(f)
-with open('data/merged_labels_2.json', 'r') as f:
+with open("data/merged_labels_2.json", "r") as f:
     labels_2 = json.load(f)
 
 

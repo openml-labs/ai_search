@@ -21,10 +21,10 @@ def read_query_csv_and_convert_to_json(file_path: str):
 
 
 def merge_dict_and_old_json_and_save(
-        dict1: dict,
-        file_path_2: str = "data/labels.json",
-        file_path_save: str = "data/merged_labels.json",
-        conflict: bool = False,
+    dict1: dict,
+    file_path_2: str = "data/labels.json",
+    file_path_save: str = "data/merged_labels.json",
+    conflict: bool = False,
 ):
     # json_dict = json.dumps(dict1)
     if os.path.exists(file_path_2):
@@ -53,9 +53,7 @@ def merge_dict_and_old_json_and_save(
 file = "data/LLM Evaluation - Topic Queries.csv"
 dict_ids = read_query_csv_and_convert_to_json(file)
 save_path = "data/merged_labels.json"
-dict1 = merge_dict_and_old_json_and_save(
-    dict_ids, file_path_save=save_path
-)
+dict1 = merge_dict_and_old_json_and_save(dict_ids, file_path_save=save_path)
 
 # More files to merge, handle conflicts
 file_paths = ["data/labels.json"]
