@@ -135,9 +135,7 @@ class ResponseParser:
         """
         Description: Fetch the response from the FastAPI service
 
-        Input: query_type (str), query (str)
 
-        Returns: response (dict)
         """
         rag_response_path = self.paths["rag_response"]
         try:

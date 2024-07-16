@@ -22,9 +22,7 @@ def long_context_reorder(results: Sequence[Document]) -> Sequence[Document]:
     middle of the list and more relevant elements at beginning / end.
     See: https://arxiv.org/abs//2307.03172
 
-    Input: results (list)
 
-    Returns: reorder results (list)
     """
     print("[INFO] Reordering results...")
     reordering = LongContextReorder()
@@ -42,9 +40,7 @@ def fetch_results(
     """
     Description: Fetch results for the query using the QA chain.
 
-    Input: query (str), qa (langchain.chains.retrieval_qa.base.RetrievalQA), type_of_query (str), config (dict)
 
-    Returns: results["source_documents"] (list)
     """
     results = qa.invoke(
         input=query,
@@ -85,9 +81,7 @@ def process_documents(source_documents: Sequence[Document]) -> Tuple[OrderedDict
     """
     Description: Process the source documents and create a dictionary with the key_name as the key and the name and page content as the values.
 
-    Input: source_documents (list), key_name (str)
 
-    Returns: dict_results (dict)
     """
     dict_results = OrderedDict()
     for result in source_documents:
@@ -112,9 +106,7 @@ def create_output_dataframe(
     """
     Description: Create an output dataframe with the results. The URLs are API calls to the OpenML API for the specific type of data.
 
-    Input: dict_results (dict), type_of_data (str)
 
-    Returns: A dataframe with the results and duplicate names removed.
     """
     output_df = pd.DataFrame(dict_results).T.reset_index()
     # order the rows based on the order of the ids
@@ -163,9 +155,7 @@ def check_query(query: str) -> str:
     - Removes leading and trailing spaces
     - Limits the query to 150 characters
 
-    Input: query (str)
 
-    Returns: None
     """
     if query == "":
         raise ValueError("Query cannot be empty.")
@@ -185,9 +175,7 @@ def get_result_from_query(
     """
     Description: Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
 
-    Input: query (str), qa (langchain.chains.retrieval_qa.base.RetrievalQA), type_of_query (str)
 
-    Returns: output_df (pd.DataFrame)
     """
     if type_of_query == "dataset":
         # Fixing the key_name for dataset because of the way the OpenML API returns the data

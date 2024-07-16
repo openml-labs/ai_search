@@ -8,9 +8,7 @@ def create_chain(prompt, model="llama3", temperature=0):
     """
     Description: Create a chain with the given prompt and model
 
-    Input: prompt (str), model (str), temperature (float)
 
-    Returns: chain (Chain)
     """
     llm = ChatOllama(model=model, temperature=temperature)
     prompt = ChatPromptTemplate.from_template(prompt)
@@ -22,9 +20,7 @@ def parse_answers_initial(response, patterns, prompt_dict):
     """
     Description: Parse the answers from the initial response
 
-    Input: response (str), patterns (list)
 
-    Returns: answers (list)
     """
 
     answers = []

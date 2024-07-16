@@ -43,9 +43,7 @@ class OpenMLObjectHandler:
         """
         Description: Get the description of the OpenML object.
 
-        Input: data_id (int) : The data id
 
-        Returns: The OpenML object.
         """
         raise NotImplementedError
 
@@ -53,9 +51,7 @@ class OpenMLObjectHandler:
         """
         Description: Get the OpenML objects.
 
-        Input: None
 
-        Returns: The OpenML objects.
         """
         raise NotImplementedError
 
@@ -63,9 +59,7 @@ class OpenMLObjectHandler:
         """
         Description: Initialize the cache for the OpenML objects.
 
-        Input: data_id (list) : The list of data ids
 
-        Returns: None
         """
         self.get_description(data_id[0])
 
@@ -73,9 +67,7 @@ class OpenMLObjectHandler:
         """
         Description: Get metadata from OpenML using parallel processing.
 
-        Input: data_id (list) : The list of data ids
 
-        Returns: The OpenML objects.
         """
         return pqdm(
             data_id, self.get_description, n_jobs=self.config["data_download_n_jobs"]
@@ -87,13 +79,12 @@ class OpenMLObjectHandler:
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
+        subset_ids = None
     ):
         """
         Description: Process the metadata.
 
-        Input: openml_data_object (list) : The list of OpenML objects, data_id (list) : The list of data ids, all_dataset_metadata (pd.DataFrame) : The metadata table, file_path (str) : The file path
 
-        Returns: The combined metadata dataframe and the updated metadata table.
         """
         raise NotImplementedError
 
@@ -101,9 +92,7 @@ class OpenMLObjectHandler:
         """
         Description: Load metadata from a file.
 
-        Input: file_path (str) : The file path
 
-        Returns: The metadata dataframe.
         """
         try:
             return pd.read_csv(file_path)
@@ -135,6 +124,7 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
+        subset_ids = None
     ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
@@ -152,6 +142,12 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         all_dataset_metadata = combine_metadata(
             all_dataset_metadata, all_data_description_df
         )
+
+        # subset the metadata if subset_ids is not None
+        if subset_ids is not None:
+            subset_ids = [int(x) for x in subset_ids]
+            all_dataset_metadata = all_dataset_metadata[all_dataset_metadata["did"].isin(subset_ids)]
+
 
         all_dataset_metadata.to_csv(file_path)
 
@@ -179,6 +175,7 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
+        subset_ids = None
     ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
@@ -198,6 +195,10 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         all_data_description_df["Combined_information"] = all_data_description_df.apply(
             merge_all_columns_to_string, axis=1
         )
+        # subset the metadata if subset_ids is not None
+        if subset_ids is not None:
+            subset_ids = [int(x) for x in subset_ids]
+            all_dataset_metadata = all_dataset_metadata[all_dataset_metadata["did"].isin(subset_ids)]
         all_data_description_df.to_csv(file_path)
 
         return (
@@ -218,9 +219,7 @@ def get_all_metadata_from_openml(
     This uses parallel threads (pqdm) and so to ensure thread safety, install the package oslo.concurrency.
 
 
-    Input: config (dict) : The config dictionary
 
-    Returns: all the data descriptions combined with data ids, data ids, and the raw openml objects in a dataframe.
     """
 
     # save_filename = f"./data/all_{config['type_of_data']}_metadata.pkl"
@@ -281,9 +280,7 @@ def extract_attribute(attribute: object, attr_name: str) -> str:
     """
     Description: Extract an attribute from the OpenML object.
 
-    Input: attribute (object) : The OpenML object
 
-    Returns: The attribute value if it exists, else an empty string.
     """
     return getattr(attribute, attr_name, "")
 
@@ -292,10 +289,7 @@ def join_attributes(attribute: object, attr_name: str) -> str:
     """
     Description: Join the attributes of the OpenML object.
 
-    Input: attribute (object) : The OpenML object
 
-    Returns: The joined attributes if they exist, else an empty string.
-    example: "column - value, column - value, ..."
     """
 
     return (
@@ -315,9 +309,7 @@ def create_combined_information_df(
     """
     Description: Create a dataframe with the combined information of the OpenML object.
 
-    Input: data_id (int) : The data id, descriptions (list) : The descriptions of the OpenML object, joined_qualities (list) : The joined qualities of the OpenML object, joined_features (list) : The joined features of the OpenML object
 
-    Returns: The dataframe with the combined information of the OpenML object.
     """
     return pd.DataFrame(
         {
@@ -333,9 +325,7 @@ def merge_all_columns_to_string(row: pd.Series) -> str:
     """
     Description: Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
 
-    Input: row (pd.Series) : The row of the dataframe
 
-    Returns: The combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
     """
 
     return " ".join([f"{col} - {val}," for col, val in zip(row.index, row.values)])
@@ -348,10 +338,7 @@ def combine_metadata(
     """
     Description: Combine the descriptions with the metadata table.
 
-    Input: all_dataset_metadata (pd.DataFrame) : The metadata table,
-    all_data_description_df (pd.DataFrame) : The descriptions
 
-    Returns: The combined metadata table.
     """
     # Combine the descriptions with the metadata table
     all_dataset_metadata = pd.merge(
@@ -375,6 +362,7 @@ def create_metadata_dataframe(
     data_id: Sequence[int],
     all_dataset_metadata: pd.DataFrame,
     config: dict,
+    subset_ids = None
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Description: Creates a dataframe with all the metadata, joined columns with all information
@@ -382,16 +370,6 @@ def create_metadata_dataframe(
     the dataframes are loaded from the files. If training is set to True, the
     dataframes are created and then saved to the files.
 
-    Input:
-        handler (OpenMLObjectHandler): The handler for the OpenML objects.
-        openml_data_object (list): The list of OpenML objects.
-        data_id (list): The list of data ids.
-        all_dataset_metadata (pd.DataFrame): The metadata table.
-        config (dict): The config dictionary.
-
-    Returns:
-        pd.DataFrame: The combined metadata dataframe.
-        pd.DataFrame: The updated metadata table.
     """
     # use os.path.join to ensure compatibility with different operating systems
     file_path = os.path.join(
@@ -402,5 +380,5 @@ def create_metadata_dataframe(
         return handler.load_metadata(file_path), all_dataset_metadata
 
     return handler.process_metadata(
-        openml_data_object, data_id, all_dataset_metadata, file_path
+        openml_data_object, data_id, all_dataset_metadata, file_path, subset_ids
     )

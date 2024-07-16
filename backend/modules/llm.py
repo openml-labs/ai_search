@@ -32,9 +32,7 @@ def load_and_process_data(metadata_df: pd.DataFrame, page_content_column: str) -
     """
     Description: Load and process the data for the vector store. Split the documents into chunks of 1000 characters.
 
-    Input: metadata_df (pd.DataFrame), page_content_column (str)
 
-    Returns: chunked documents (list)
     """
     # Load data
     loader = DataFrameLoader(metadata_df, page_content_column=page_content_column)
@@ -52,9 +50,7 @@ def generate_unique_documents(documents: list, db: Chroma) -> tuple:
     Description: Generate unique documents by removing duplicates. This is done by generating unique IDs for the documents and keeping only one of the duplicate IDs.
         Source: https://stackoverflow.com/questions/76265631/chromadb-add-single-document-only-if-it-doesnt-exist
 
-    Input: documents (list)
 
-    Returns: unique_docs (list), unique_ids (list)
     """
 
     # Remove duplicates based on ID (from database)
@@ -95,7 +91,6 @@ def load_document_and_create_vector_store(
         chroma_client (chromadb.PersistentClient): The Chroma client.
         config (dict): The configuration dictionary.
 
-    Returns:
         Chroma: The Chroma vector store.
     """
     embeddings = load_model(config)
@@ -113,9 +108,7 @@ def load_model(config: dict) -> HuggingFaceEmbeddings | None:
     """
     Description: Load the model using HuggingFaceEmbeddings.
 
-    Input: config (dict)
 
-    Returns: HuggingFaceEmbeddings
     """
     print("[INFO] Loading model...")
     model_kwargs = {"device": config["device"], "trust_remote_code": True}
@@ -135,9 +128,6 @@ def get_collection_name(config: dict) -> str:
     """
     Description: Get the collection name based on the type of data provided in the config.
 
-    Input: config (dict)
-
-    Returns: str
     """
     return {"dataset": "datasets", "flow": "flows"}.get(
         config["type_of_data"], "default"
@@ -152,10 +142,6 @@ def load_vector_store(
 ) -> Chroma:
     """
     Description: Load the vector store from the persist directory.
-
-    Input: chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
-
-    Returns: Chroma
     """
     if not os.path.exists(config["persist_dir"]):
         raise Exception(
@@ -174,9 +160,6 @@ def add_documents_to_db(db, unique_docs, unique_ids):
     """
     Description: Add documents to the vector store in batches of 200.
 
-    Input: db (Chroma), unique_docs (list), unique_ids (list)
-
-    Returns: None
     """
     bs = 512
     if len(unique_docs) < bs:
@@ -187,9 +170,6 @@ def add_documents_to_db(db, unique_docs, unique_ids):
             db.add_documents(unique_docs[i : i + bs], ids=unique_ids[i : i + bs])
 
 
-# def create_vector_store(
-#     metadata_df, chroma_client, config, embeddings, collection_name
-# ):
 def create_vector_store(
     metadata_df: pd.DataFrame,
     chroma_client: ClientAPI,
@@ -200,9 +180,6 @@ def create_vector_store(
     """
     Description: Create the vector store using Chroma db. The documents are loaded and processed, unique documents are generated, and the documents are added to the vector store.
 
-    Input: metadata_df (pd.DataFrame), chroma_client (chromadb.PersistentClient), config (dict), embeddings (HuggingFaceEmbeddings), collection_name (str)
-
-    Returns: db (Chroma)
     """
 
     db = Chroma(
@@ -244,9 +221,6 @@ def initialize_llm_chain(
     """
     Description: Initialize the LLM chain and setup Retrieval QA with the specified configuration.
 
-    Input: vectordb (Chroma), config (dict)
-
-    Returns: qa (langchain.chains.retrieval_qa.base.RetrievalQA)
     """
 
     return vectordb.as_retriever(
@@ -271,14 +245,10 @@ def setup_vector_db_and_qa(
     )
     # Create the combined metadata dataframe
     metadata_df, all_metadata = create_metadata_dataframe(
-        handler, openml_data_object, data_id, all_metadata, config=config
+        handler, openml_data_object, data_id, all_metadata, config=config, subset_ids = subset_ids
     )
 
-    # subset the metadata if subset_ids is not None
-    if subset_ids is not None:
-        subset_ids = [int(x) for x in subset_ids]
-        metadata_df = metadata_df[metadata_df["did"].isin(subset_ids)]
-
+    
     # Create the vector store
     vectordb = load_document_and_create_vector_store(
         metadata_df, config=config, chroma_client=client
@@ -291,9 +261,6 @@ def get_llm_chain(config: dict, local: bool = False) -> LLMChain | bool:
     """
     Description: Get the LLM chain with the specified model and prompt template.
 
-    Input: config (dict)
-
-    Returns: LLMChain
     """
     base_url = "http://127.0.0.1:11434" if local else "http://ollama:11434"
     llm = Ollama(model=config["llm_model"], base_url=base_url)
