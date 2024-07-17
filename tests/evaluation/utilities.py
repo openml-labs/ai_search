@@ -23,7 +23,7 @@ sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
 from modules.llm import *
 from modules.results_gen import get_result_from_query
 
-# add modules from ui_utils 
+# add modules from ui_utils
 sys.path.append(os.path.join(os.path.dirname("."), "../../frontend/"))
 from ui_utils import *
 from tqdm.auto import tqdm
@@ -70,7 +70,9 @@ def ollama_setup(list_of_llm_models: list):
     for llm_model in list_of_llm_models:
         os.system(f"ollama pull {llm_model}")
 
+
 # overloading response parser
+
 
 class ResponseParser(ResponseParser):
     def load_paths(self):
@@ -79,6 +81,7 @@ class ResponseParser(ResponseParser):
         """
         with open("../../frontend/paths.json", "r") as file:
             return json.load(file)
+
     def parse_and_update_response(self, metadata):
         """
         Description: Parse the response from the RAG and LLM services and update the metadata based on the response
@@ -104,16 +107,26 @@ class ResponseParser(ResponseParser):
                 return filtered_metadata[
                     filtered_metadata["did"].isin(self.rag_response["initial_response"])
                 ]
-            
+
             elif self.apply_llm_before_rag == None:
-                # if no llm response is required, return the initial response 
+                # if no llm response is required, return the initial response
                 return metadata
         else:
             return metadata
 
 
 class ExperimentRunner:
-    def __init__(self, config, eval_path, queries, list_of_embedding_models, list_of_llm_models, subset_ids, use_cached_experiment=False):
+    def __init__(
+        self,
+        config,
+        eval_path,
+        queries,
+        list_of_embedding_models,
+        list_of_llm_models,
+        subset_ids,
+        use_cached_experiment=False,
+        custom_name=None,
+    ):
         self.config = config
         self.eval_path = eval_path
         self.queries = queries
@@ -121,29 +134,42 @@ class ExperimentRunner:
         self.list_of_llm_models = list_of_llm_models
         self.subset_ids = subset_ids
         self.use_cached_experiment = use_cached_experiment
+        self.custom_name = custom_name
 
     def aggregate_multiple_queries(self, qa_dataset, data_metadata):
         """
         Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results.
         """
-        
+
         types_of_llm_apply = [True, False, None]
         combined_results = pd.DataFrame()
 
         # Initialize the ResponseParser once per query type
-        response_parsers = {apply_llm: ResponseParser(query_type=self.config["type_of_data"], apply_llm_before_rag=apply_llm) for apply_llm in types_of_llm_apply}
+        response_parsers = {
+            apply_llm: ResponseParser(
+                query_type=self.config["type_of_data"], apply_llm_before_rag=apply_llm
+            )
+            for apply_llm in types_of_llm_apply
+        }
 
         for query in tqdm(self.queries):
             for apply_llm_before_rag in tqdm(types_of_llm_apply):
                 response_parser = response_parsers[apply_llm_before_rag]
-                
+
                 result_data_frame, _ = get_result_from_query(
-                    query=query, qa=qa_dataset, type_of_query="dataset", config=self.config
+                    query=query,
+                    qa=qa_dataset,
+                    type_of_query="dataset",
+                    config=self.config,
                 )
-                response_parser.rag_response = {"initial_response": list(result_data_frame["id"].values)}
+                response_parser.rag_response = {
+                    "initial_response": list(result_data_frame["id"].values)
+                }
 
                 response_parser.fetch_llm_response(query)
-                result_data_frame = response_parser.parse_and_update_response(data_metadata).copy()[["did", "name"]]
+                result_data_frame = response_parser.parse_and_update_response(
+                    data_metadata
+                ).copy()[["did", "name"]]
 
                 result_data_frame["query"] = query
                 result_data_frame["llm_model"] = self.config["llm_model"]
@@ -151,13 +177,14 @@ class ExperimentRunner:
                 result_data_frame["llm_before_rag"] = apply_llm_before_rag
 
                 # combined_results.append(result_data_frame)
-                combined_results = pd.concat([combined_results, result_data_frame], ignore_index=True)
+                combined_results = pd.concat(
+                    [combined_results, result_data_frame], ignore_index=True
+                )
 
         # Concatenate all collected DataFrames at once
         # combined_df = pd.concat(combined_results, ignore_index=True)
 
         return combined_results
-
 
     def run_experiments(self):
         # across all embedding models
@@ -165,15 +192,19 @@ class ExperimentRunner:
             self.list_of_embedding_models,
             desc="Embedding Models",
         ):
-            main_experiment_directory = self.eval_path / f"{process_embedding_model_name_hf(embedding_model)}"
+            main_experiment_directory = (
+                self.eval_path/self.custom_name/ f"{process_embedding_model_name_hf(embedding_model)}"
+            )
             os.makedirs(main_experiment_directory, exist_ok=True)
 
-    # update the config with the new experiment directories
+            # update the config with the new experiment directories
             self.config["data_dir"] = str(main_experiment_directory)
             self.config["persist_dir"] = str(main_experiment_directory / "chroma_db")
 
             # save training details and config in a dataframe
-            config_df = pd.DataFrame.from_dict(self.config, orient="index").reset_index()
+            config_df = pd.DataFrame.from_dict(
+                self.config, orient="index"
+            ).reset_index()
             config_df.columns = ["Hyperparameter", "Value"]
             config_df.to_csv(main_experiment_directory / "config.csv", index=False)
 
@@ -189,9 +220,7 @@ class ExperimentRunner:
             )
 
             # across all llm models
-            for llm_model in tqdm(
-                self.list_of_llm_models, desc="LLM Models"
-            ):
+            for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
                 # update the config with the new embedding and llm models
                 self.config["embedding_model"] = embedding_model
                 self.config["llm_model"] = llm_model
@@ -201,13 +230,17 @@ class ExperimentRunner:
                 experiment_path = main_experiment_directory / experiment_name
                 os.makedirs(experiment_path, exist_ok=True)
 
-                if self.use_cached_experiment and os.path.exists(experiment_path / "results.csv"):
+                if self.use_cached_experiment and os.path.exists(
+                    experiment_path / "results.csv"
+                ):
                     print(
                         f"Experiment {experiment_name} already exists. Skipping... To disable this behavior, set use_cached_experiment = False"
                     )
                     continue
                 else:
-                    data_metadata_path = Path(self.config["data_dir"]) / "all_dataset_description.csv"
+                    data_metadata_path = (
+                        Path(self.config["data_dir"]) / "all_dataset_description.csv"
+                    )
                     data_metadata = pd.read_csv(data_metadata_path)
 
                     combined_df = self.aggregate_multiple_queries(
@@ -234,7 +267,7 @@ def get_dataset_queries(subset_ids, query_templates, merged_labels):
                     y_val.append(id)
                     labels.append(label)
 
-    return pd.DataFrame({"query": X_val, "id": y_val, "label":labels}).sample(frac=1)
+    return pd.DataFrame({"query": X_val, "id": y_val, "label": labels}).sample(frac=1)
 
 
 def create_results_dict(csv_files, df_queries):
@@ -265,5 +298,6 @@ def create_results_dict(csv_files, df_queries):
                 wrong += 1
         results_dict[folder_name] = {"correct": correct, "wrong": wrong}
     return results_dict
+
 
 # %%

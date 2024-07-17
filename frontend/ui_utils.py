@@ -172,9 +172,9 @@ class ResponseParser:
                 return filtered_metadata[
                     filtered_metadata["did"].isin(self.rag_response["initial_response"])
                 ]
-            
+
             elif self.apply_llm_before_rag == None:
-                # if no llm response is required, return the initial response 
+                # if no llm response is required, return the initial response
                 return metadata
         else:
             return metadata

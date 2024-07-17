@@ -18,8 +18,7 @@ from langchain_community.vectorstores.chroma import Chroma
 from langchain_core.output_parsers import StrOutputParser
 from tqdm import tqdm
 
-from .metadata_utils import (create_metadata_dataframe,
-                             get_all_metadata_from_openml)
+from .metadata_utils import create_metadata_dataframe, get_all_metadata_from_openml
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
@@ -228,6 +227,7 @@ def initialize_llm_chain(
         search_kwargs={"k": config["num_return_documents"]},
     )
 
+
 def setup_vector_db_and_qa(
     config: dict, data_type: str, client: ClientAPI, subset_ids: list = None
 ):
@@ -245,10 +245,14 @@ def setup_vector_db_and_qa(
     )
     # Create the combined metadata dataframe
     metadata_df, all_metadata = create_metadata_dataframe(
-        handler, openml_data_object, data_id, all_metadata, config=config, subset_ids = subset_ids
+        handler,
+        openml_data_object,
+        data_id,
+        all_metadata,
+        config=config,
+        subset_ids=subset_ids,
     )
 
-    
     # Create the vector store
     vectordb = load_document_and_create_vector_store(
         metadata_df, config=config, chroma_client=client
@@ -256,6 +260,7 @@ def setup_vector_db_and_qa(
     # Initialize the LLM chain and setup Retrieval QA
     qa = initialize_llm_chain(vectordb=vectordb, config=config)
     return qa, all_metadata
+
 
 def get_llm_chain(config: dict, local: bool = False) -> LLMChain | bool:
     """

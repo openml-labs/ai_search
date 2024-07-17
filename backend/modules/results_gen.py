@@ -8,8 +8,9 @@ from typing import Sequence, Tuple
 import langchain
 import pandas as pd
 from flashrank import Ranker, RerankRequest
-from langchain_community.document_transformers.long_context_reorder import \
-    LongContextReorder
+from langchain_community.document_transformers.long_context_reorder import (
+    LongContextReorder,
+)
 from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
@@ -196,4 +197,3 @@ def get_result_from_query(
     output_df = create_output_dataframe(dict_results, type_of_query, ids_order)
 
     return output_df, ids_order
-

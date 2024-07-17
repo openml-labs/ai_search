@@ -36,7 +36,7 @@ list_of_embedding_models = [
     "BAAI/bge-base-en-v1.5",
     "Snowflake/snowflake-arctic-embed-l",
 ]
-list_of_llm_models = ["qwen2:1.5b", "llama3", "phi3"]
+list_of_llm_models = ["llama3", "phi3"]
 # list_of_llm_models = ["llama3"]
 # list_of_llm_models = ["qwen2:1.5b"]
 
@@ -58,30 +58,32 @@ ollama_setup(list_of_llm_models)
 
 # %%
 
-with open(eval_path/ "query_templates.txt", "r") as f:
+with open(eval_path / "query_templates.txt", "r") as f:
     query_templates = f.readlines()
     query_templates = [x.strip() for x in query_templates]
 # %%
 # with open(eval_path/"merged_labels.", "r") as f:
-    # merged_labels = json.load(f)
-    # # get the dataset ids we want out evaluation to be based on (these are dataset ids for the openml datasets)
-    # subset_ids = list(merged_labels.keys())
+# merged_labels = json.load(f)
+# # get the dataset ids we want out evaluation to be based on (these are dataset ids for the openml datasets)
+# subset_ids = list(merged_labels.keys())
 
 # get subset ids
-load_eval_queries = pd.read_csv(eval_path / "LLM Evaluation - Topic Queries.csv")[["Topic", "Dataset IDs"]]
-#%%
-subset_ids = [row.split(',') for row in list(load_eval_queries["Dataset IDs"].values)]
+load_eval_queries = pd.read_csv(eval_path / "LLM Evaluation - Topic Queries.csv")[
+    ["Topic", "Dataset IDs"]
+]
+# %%
+subset_ids = [row.split(",") for row in list(load_eval_queries["Dataset IDs"].values)]
 # flatten the list and get unique values
 subset_ids = list(set([int(item) for sublist in subset_ids for item in sublist]))
-#%%
+# %%
 # get the queries for the datasets
 query_key_dict = {}
 for template in query_templates:
     for row in load_eval_queries.itertuples():
-        new_query = f"{template} {row[1]}"
+        new_query = f"{template} {row[1]}".strip()
         # load_eval_queries.at[query, "Query"] = new_query
         if new_query not in query_key_dict:
-            query_key_dict[new_query] = row[2]
+            query_key_dict[new_query.strip()] = row[2]
 
 json.dump(query_key_dict, open(eval_path / "query_key_dict.json", "w"))
 # %% [markdown]

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import pickle
+
 # from pqdm.processes import pqdm
 from typing import Sequence, Tuple, Union
 
@@ -79,7 +80,7 @@ class OpenMLObjectHandler:
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
-        subset_ids = None
+        subset_ids=None,
     ):
         """
         Description: Process the metadata.
@@ -124,7 +125,7 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
-        subset_ids = None
+        subset_ids=None,
     ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
@@ -146,8 +147,9 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         # subset the metadata if subset_ids is not None
         if subset_ids is not None:
             subset_ids = [int(x) for x in subset_ids]
-            all_dataset_metadata = all_dataset_metadata[all_dataset_metadata["did"].isin(subset_ids)]
-
+            all_dataset_metadata = all_dataset_metadata[
+                all_dataset_metadata["did"].isin(subset_ids)
+            ]
 
         all_dataset_metadata.to_csv(file_path)
 
@@ -175,7 +177,7 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         data_id: Sequence[int],
         all_dataset_metadata: pd.DataFrame,
         file_path: str,
-        subset_ids = None
+        subset_ids=None,
     ):
         descriptions = [
             extract_attribute(attr, "description") for attr in openml_data_object
@@ -198,7 +200,9 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         # subset the metadata if subset_ids is not None
         if subset_ids is not None:
             subset_ids = [int(x) for x in subset_ids]
-            all_dataset_metadata = all_dataset_metadata[all_dataset_metadata["did"].isin(subset_ids)]
+            all_dataset_metadata = all_dataset_metadata[
+                all_dataset_metadata["did"].isin(subset_ids)
+            ]
         all_data_description_df.to_csv(file_path)
 
         return (
@@ -362,7 +366,7 @@ def create_metadata_dataframe(
     data_id: Sequence[int],
     all_dataset_metadata: pd.DataFrame,
     config: dict,
-    subset_ids = None
+    subset_ids=None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Description: Creates a dataframe with all the metadata, joined columns with all information
