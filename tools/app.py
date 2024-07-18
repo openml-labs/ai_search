@@ -18,7 +18,7 @@ import streamlit as st
 LOADED_DATA = "label_data"
 UNSAVED_DATA = "unsaved_data"
 
-SAVE_FILE = Path("data/labels.json")
+SAVE_FILE = Path("data/labels_modified.json")
 
 
 @st.cache_data

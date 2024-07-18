@@ -3,22 +3,21 @@
 
 # %%
 from __future__ import annotations
+
+import json
 import os
 import sys
-import pickle
 from pathlib import Path
-import json
-
 
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
-sys.path.append(os.path.join(os.path.dirname("."), "../../llm_service/"))
+sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
+sys.path.append(os.path.join(os.path.dirname("."), "../llm_service/"))
+from evaluation.training_utils import *
 from modules.utils import load_config_and_device
-from utilities import *
 
 # %%
-new_path = Path("../../backend/")
-eval_path = Path("../../data/evaluation/")
+new_path = Path("../backend/")
+eval_path = Path("../data/evaluation/")
 
 config = load_config_and_device(str(new_path / "config.json"), training=True)
 
@@ -37,8 +36,6 @@ list_of_embedding_models = [
     "Snowflake/snowflake-arctic-embed-l",
 ]
 list_of_llm_models = ["llama3", "phi3"]
-# list_of_llm_models = ["llama3"]
-# list_of_llm_models = ["qwen2:1.5b"]
 
 # %% [markdown]
 # ## Downloading the LLM models
@@ -68,8 +65,8 @@ with open(eval_path / "query_templates.txt", "r") as f:
 # subset_ids = list(merged_labels.keys())
 
 # get subset ids
-load_eval_queries = pd.read_csv(eval_path / "LLM Evaluation - Topic Queries.csv")[
-    ["Topic", "Dataset IDs"]
+load_eval_queries = pd.read_csv(eval_path / "merged_labels.csv")[
+    ["Topics", "Dataset IDs"]
 ]
 # %%
 subset_ids = [row.split(",") for row in list(load_eval_queries["Dataset IDs"].values)]
@@ -86,8 +83,19 @@ for template in query_templates:
             query_key_dict[new_query.strip()] = row[2]
 
 json.dump(query_key_dict, open(eval_path / "query_key_dict.json", "w"))
-# %% [markdown]
-# ## Test accuracy with different embeddings
+
+"""
+Main evaluation loop that is used to run the base experiments using different models and embeddings.
+Takes into account the following:
+original data ingestion pipeline : combine a string of all metadata fields and the dataset description and embeds them with no pre-processing
+list_of_embedding_models = [
+    "BAAI/bge-large-en-v1.5",
+    "BAAI/bge-base-en-v1.5",
+    "Snowflake/snowflake-arctic-embed-l",
+]
+list_of_llm_models = ["llama3", "phi3"]
+types_of_llm_apply : llm applied as filter before the RAG pipeline, llm applied as reranker after the RAG pipeline, llm not used at all
+"""
 
 expRunner = ExperimentRunner(
     config,

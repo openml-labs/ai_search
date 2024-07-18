@@ -6,17 +6,18 @@
 # %%
 from __future__ import annotations
 
+import json
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
+import glob
 
 import chromadb
 import pandas as pd
-import json
 
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
+sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 
 
 # %%
@@ -24,9 +25,9 @@ from modules.llm import *
 from modules.results_gen import get_result_from_query
 
 # add modules from ui_utils
-sys.path.append(os.path.join(os.path.dirname("."), "../../frontend/"))
-from ui_utils import *
+sys.path.append(os.path.join(os.path.dirname("."), "../frontend/"))
 from tqdm.auto import tqdm
+from ui_utils import *
 
 
 def process_embedding_model_name_hf(name: str) -> str:
@@ -72,8 +73,6 @@ def ollama_setup(list_of_llm_models: list):
 
 
 # overloading response parser
-
-
 class ResponseParser(ResponseParser):
     def load_paths(self):
         """
@@ -136,6 +135,75 @@ class ExperimentRunner:
         self.use_cached_experiment = use_cached_experiment
         self.custom_name = custom_name
 
+    def run_experiments(self):
+        # across all embedding models
+        for embedding_model in tqdm(
+            self.list_of_embedding_models,
+            desc="Embedding Models",
+        ):
+            main_experiment_directory = (
+                self.eval_path / f"{process_embedding_model_name_hf(embedding_model)}"
+            )
+            os.makedirs(main_experiment_directory, exist_ok=True)
+
+            # update the config with the new experiment directories
+            self.config["data_dir"] = str(main_experiment_directory)
+            self.config["persist_dir"] = str(main_experiment_directory / "chroma_db")
+
+            # save training details and config in a dataframe
+            config_df = pd.DataFrame.from_dict(
+                self.config, orient="index"
+            ).reset_index()
+            config_df.columns = ["Hyperparameter", "Value"]
+            config_df.to_csv(main_experiment_directory / "config.csv", index=False)
+
+            # load the persistent database using ChromaDB
+            client = chromadb.PersistentClient(path=self.config["persist_dir"])
+
+            # Run "training"
+            qa_dataset, _ = setup_vector_db_and_qa(
+                config=self.config,
+                data_type=self.config["type_of_data"],
+                client=client,
+                subset_ids=self.subset_ids,
+            )
+
+            # across all llm models
+            for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
+                # update the config with the new embedding and llm models
+                self.config["embedding_model"] = embedding_model
+                self.config["llm_model"] = llm_model
+
+                # create a new experiment directory using a combination of the embedding model and llm model names
+                experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
+                if self.custom_name is not None:
+                    experiment_path = (
+                        main_experiment_directory / self.custom_name + experiment_name
+                    )
+                else:
+                    experiment_path = main_experiment_directory / experiment_name
+                os.makedirs(experiment_path, exist_ok=True)
+
+                if self.use_cached_experiment and os.path.exists(
+                    experiment_path / "results.csv"
+                ):
+                    print(
+                        f"Experiment {experiment_name} already exists. Skipping... To disable this behavior, set use_cached_experiment = False"
+                    )
+                    continue
+                else:
+                    data_metadata_path = (
+                        Path(self.config["data_dir"]) / "all_dataset_description.csv"
+                    )
+                    data_metadata = pd.read_csv(data_metadata_path)
+
+                    combined_df = self.aggregate_multiple_queries(
+                        qa_dataset=qa_dataset,
+                        data_metadata=data_metadata,
+                    )
+
+                    combined_df.to_csv(experiment_path / "results.csv")
+        
     def aggregate_multiple_queries(self, qa_dataset, data_metadata):
         """
         Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results.
@@ -185,119 +253,3 @@ class ExperimentRunner:
         # combined_df = pd.concat(combined_results, ignore_index=True)
 
         return combined_results
-
-    def run_experiments(self):
-        # across all embedding models
-        for embedding_model in tqdm(
-            self.list_of_embedding_models,
-            desc="Embedding Models",
-        ):
-            main_experiment_directory = (
-                self.eval_path/self.custom_name/ f"{process_embedding_model_name_hf(embedding_model)}"
-            )
-            os.makedirs(main_experiment_directory, exist_ok=True)
-
-            # update the config with the new experiment directories
-            self.config["data_dir"] = str(main_experiment_directory)
-            self.config["persist_dir"] = str(main_experiment_directory / "chroma_db")
-
-            # save training details and config in a dataframe
-            config_df = pd.DataFrame.from_dict(
-                self.config, orient="index"
-            ).reset_index()
-            config_df.columns = ["Hyperparameter", "Value"]
-            config_df.to_csv(main_experiment_directory / "config.csv", index=False)
-
-            # load the persistent database using ChromaDB
-            client = chromadb.PersistentClient(path=self.config["persist_dir"])
-
-            # Run "training"
-            qa_dataset, _ = setup_vector_db_and_qa(
-                config=self.config,
-                data_type=self.config["type_of_data"],
-                client=client,
-                subset_ids=self.subset_ids,
-            )
-
-            # across all llm models
-            for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
-                # update the config with the new embedding and llm models
-                self.config["embedding_model"] = embedding_model
-                self.config["llm_model"] = llm_model
-
-                # create a new experiment directory using a combination of the embedding model and llm model names
-                experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
-                experiment_path = main_experiment_directory / experiment_name
-                os.makedirs(experiment_path, exist_ok=True)
-
-                if self.use_cached_experiment and os.path.exists(
-                    experiment_path / "results.csv"
-                ):
-                    print(
-                        f"Experiment {experiment_name} already exists. Skipping... To disable this behavior, set use_cached_experiment = False"
-                    )
-                    continue
-                else:
-                    data_metadata_path = (
-                        Path(self.config["data_dir"]) / "all_dataset_description.csv"
-                    )
-                    data_metadata = pd.read_csv(data_metadata_path)
-
-                    combined_df = self.aggregate_multiple_queries(
-                        qa_dataset=qa_dataset,
-                        data_metadata=data_metadata,
-                    )
-
-                    combined_df.to_csv(experiment_path / "results.csv")
-
-
-def get_dataset_queries(subset_ids, query_templates, merged_labels):
-    # get the dataset ids we want out evaluation to be based on
-    X_val = []
-    y_val = []
-    labels = []
-
-    for id in subset_ids:
-        for query in query_templates:
-            for label in merged_labels[id]:
-                x = query.strip() + " " + label
-                # check if the query is not already in the list
-                if x not in X_val:
-                    X_val.append(x)
-                    y_val.append(id)
-                    labels.append(label)
-
-    return pd.DataFrame({"query": X_val, "id": y_val, "label": labels}).sample(frac=1)
-
-
-def create_results_dict(csv_files, df_queries):
-    # create a dictionary to store the results
-    results_dict = {}
-    for exp_path in csv_files:
-        folder_name = Path(exp_path).parent.name
-        exp = pd.read_csv(exp_path)
-        # create y_pred
-        exp["y_pred"] = exp["did"].astype(str)
-
-        # for each row, get the true label from the df_queries dataframe
-        for i, row in exp.iterrows():
-            res = df_queries[df_queries["query"] == row["query"]].values[0][1]
-            exp.at[i, "y_true"] = res
-
-        # get unique queries
-        all_queries = exp["query"].unique()
-
-        # calculate number of correct and wrong predictions
-        correct, wrong = 0, 0
-        for query in all_queries:
-            ypred = exp[exp["query"] == query]["y_pred"].unique()
-            ytrue = exp[exp["query"] == query]["y_true"].unique()
-            if ypred in ytrue:
-                correct += 1
-            else:
-                wrong += 1
-        results_dict[folder_name] = {"correct": correct, "wrong": wrong}
-    return results_dict
-
-
-# %%

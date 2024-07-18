@@ -11,6 +11,7 @@
   - Run training.py (for the first time/to update the model). This takes care of basically everything.
 - Install Ollama (https://ollama.com/) and download the models `ollama pull llama3`
 - Run `./start_local.sh` to start all the services, and navigate to `http://localhost:8501` to access the Streamlit frontend.
+  - WAIT for a few minutes for the services to start. The terminal should show "sending first query to avoid cold start". Things will only work after this message.
   - Do not open the uvicorn server directly, as it will not work.
   - To stop the services, run `./stop_local.sh` from a different terminal.
 - Enjoy :)

@@ -10,6 +10,3 @@
 ## Running the load test
 - Start the FastAPI server using `uvicorn main:app` (or `./start_local.sh` )
 - Load testing using Locust (`locust -f tests/locust_test.py --host http://127.0.0.1:8000` ) using a different terminal
-
-## All tests
-:::unit_testing.TestConfig
