@@ -1,7 +1,9 @@
 import glob
+from pathlib import Path
 
 import pandas as pd
 from tqdm.auto import tqdm
+
 
 class EvaluationProcessor:
     def __init__(
@@ -39,10 +41,17 @@ class EvaluationProcessor:
 
         for exp_path in tqdm(csv_files):
             exp = pd.read_csv(exp_path).rename(columns={"did": "y_pred"})
+            exp["exp_folder_name"] = Path(exp_path).parent.name
+            exp["custom_experiement"] = ""
+            # split exp_folder_name by @ to get extra information
+            exp["custom_experiement"] = exp["exp_folder_name"].apply(
+                lambda x: x.split("@")[0] if "@" in x else ""
+            )
+            exp.drop("exp_folder_name", axis=1, inplace=True)
             exp = self.preprocess_results(exp)
 
             grouped_results_for_y_true_and_pred = exp.groupby(
-                ["embedding_model", "llm_model", "query", "llm_before_rag"]
+                ["embedding_model", "llm_model", "query", "llm_before_rag", "custom_experiement"]
             ).agg({"y_true": ",".join, "y_pred": ",".join})
 
             # add metrics
@@ -63,7 +72,7 @@ class EvaluationProcessor:
             # aggregate by computing the average of the metrics for each group
             grouped_results_for_y_true_and_pred = (
                 grouped_results_for_y_true_and_pred.groupby(
-                    ["embedding_model", "llm_model", "llm_before_rag"]
+                    ["embedding_model", "llm_model", "llm_before_rag", "custom_experiement"]
                 ).agg({metric: "mean" for metric in self.metrics})
             )
 
@@ -109,7 +118,7 @@ class EvaluationProcessor:
         """
         Description: Preprocess the results dataframe by filling missing values and converting the columns to the correct data types.
         """
-        results_df["llm_before_rag"] = results_df["llm_before_rag"].fillna("None")
+        results_df["llm_before_rag"] = results_df["llm_before_rag"].fillna("No LLM filtering")
         results_df["y_pred"] = results_df["y_pred"].astype(str)
         results_df["query"] = results_df["query"].str.strip()
         results_df["y_true"] = results_df["query"].map(self.query_key_dict)
@@ -153,5 +162,8 @@ class EvaluationProcessor:
         return grouped_df
 
     def display_results(self, results_df):
-        return pd.DataFrame(results_df)
+        # add more preprocessing here
+        results_df =pd.DataFrame(results_df)
+        # heatmap results
+        return results_df.style.background_gradient(cmap='coolwarm', axis=0)
 

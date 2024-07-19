@@ -8,9 +8,8 @@ from typing import Sequence, Tuple
 import langchain
 import pandas as pd
 from flashrank import Ranker, RerankRequest
-from langchain_community.document_transformers.long_context_reorder import (
-    LongContextReorder,
-)
+from langchain_community.document_transformers.long_context_reorder import \
+    LongContextReorder
 from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
