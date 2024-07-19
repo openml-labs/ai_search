@@ -198,5 +198,7 @@ class ResponseParser:
             elif self.apply_llm_before_rag == None:
                 # if no llm response is required, return the initial response
                 return metadata
+        elif self.rag_response is not None and self.structured_query_response is not None: 
+                return metadata[["did", "name"]]
         else:
             return metadata

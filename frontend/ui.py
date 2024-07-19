@@ -38,9 +38,6 @@ if st.button("Submit"):
                 st.write(structured_query)
                 # get rag response
                 response_parser.fetch_rag_response(query_type, structured_query['query'])
-                # get llm response
-                # response_parser.fetch_llm_response(query)
-                # get updated columns based on llm response
             else:
                 # get rag response
                 response_parser.fetch_rag_response(query_type, query)
