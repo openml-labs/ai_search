@@ -6,5 +6,9 @@
     "llm_response" : {
         "docker" : "http://fastapi:8081/llmquery/",
         "local" : "http://0.0.0.0:8081/llmquery/"
+    },
+    "structured_query": {
+        "docker" : "http://fastapi:8082/structuredquery/",
+        "local" : "http://0.0.0.0:8082/structuredquery/"
     }
 }

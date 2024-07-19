@@ -13,6 +13,9 @@ kill -9 $(cat $PID_FILE)
 cd ../llm_service
 kill -9 $(cat $PID_FILE)
 
+cd ../structured_query
+kill -9 $(cat $PID_FILE)
+
 cd ../frontend
 # streamlit run ui.py &
 kill -9 $(cat $PID_FILE)

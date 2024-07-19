@@ -130,6 +130,28 @@ class ResponseParser:
                 f"{llm_response_path['local']}{query}"
             ).json()
         return self.llm_response
+    
+    def fetch_structured_query(self, query_type, query):
+        """
+        Description: Fetch the response from the FastAPI service
+
+
+        """
+        structured_response_path = self.paths["structured_query"]
+        try:
+            self.structured_query_response = requests.get(
+                f"{structured_response_path['docker']}{query}",
+                json={"query": query},
+            ).json()
+        except:
+            self.structured_query_response = requests.get(
+                f"{structured_response_path['local']}{query}",
+                json={"query": query},
+            ).json()
+        print(self.structured_query_response)
+        return self.structured_query_response
+        
+        
 
     def fetch_rag_response(self, query_type, query):
         """

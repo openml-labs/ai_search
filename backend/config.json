@@ -16,6 +16,7 @@
     "top_p" : 0.95,
     "search_type" : "similarity",
     "reranking" : false,
-    "long_context_reorder" : false
+    "long_context_reorder" : false,
+    "structure_query": true
 
 }

@@ -32,11 +32,21 @@ if st.button("Submit"):
     response_parser = ResponseParser(query_type, apply_llm_before_rag=True)
     if query_type == "Dataset":
         with st.spinner("Waiting for results..."):
-            # get rag response
-            response_parser.fetch_rag_response(query_type, query)
-            # get llm response
-            response_parser.fetch_llm_response(query)
-            # get updated columns based on llm response
+            if config["structure_query"] == True:
+                # get structured query 
+                structured_query = response_parser.fetch_structured_query(query_type, query)
+                st.write(structured_query)
+                # get rag response
+                response_parser.fetch_rag_response(query_type, structured_query['query'])
+                # get llm response
+                # response_parser.fetch_llm_response(query)
+                # get updated columns based on llm response
+            else:
+                # get rag response
+                response_parser.fetch_rag_response(query_type, query)
+                # get llm response
+                response_parser.fetch_llm_response(query)
+                # get updated columns based on llm response
             results = response_parser.parse_and_update_response(data_metadata)
             # display results in a table
             display_results(results)
