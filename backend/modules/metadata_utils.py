@@ -2,33 +2,17 @@ from __future__ import annotations
 
 import os
 import pickle
-
 # from pqdm.processes import pqdm
 from typing import Sequence, Tuple, Union
 
+import chromadb
 import openml
 import pandas as pd
 from pqdm.threads import pqdm
 
+from .vector_store_utils import *
+
 # -- DOWNLOAD METADATA --
-
-
-def load_metadata_from_file(
-    save_filename: str,
-) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame]:
-    """
-    Load metadata from a file.
-    """
-    with open(save_filename, "rb") as f:
-        return pickle.load(f)
-
-
-def save_metadata_to_file(data, save_filename: str):
-    """
-    Save metadata to a file.
-    """
-    with open(save_filename, "wb") as f:
-        pickle.dump(data, f)
 
 
 class OpenMLObjectHandler:
@@ -38,7 +22,6 @@ class OpenMLObjectHandler:
 
     def __init__(self, config):
         self.config = config
-        self.collection_name = ""
 
     def get_description(self, data_id: int):
         """
@@ -102,6 +85,73 @@ class OpenMLObjectHandler:
                 "Metadata files do not exist. Please run the training pipeline first."
             )
 
+    def extract_attribute(self, attribute: object, attr_name: str) -> str:
+        """
+        Description: Extract an attribute from the OpenML object.
+        """
+        return getattr(attribute, attr_name, "")
+
+    def join_attributes(self, attribute: object, attr_name: str) -> str:
+        """
+        Description: Join the attributes of the OpenML object.
+        """
+        return (
+            " ".join(
+                [f"{k} : {v}," for k, v in getattr(attribute, attr_name, {}).items()]
+            )
+            if hasattr(attribute, attr_name)
+            else ""
+        )
+
+    def create_combined_information_df_for_datasets(
+        self,
+        data_id: int | Sequence[int],
+        descriptions: Sequence[str],
+        joined_qualities: Sequence[str],
+        joined_features: Sequence[str],
+    ) -> pd.DataFrame:
+        """
+        Description: Create a dataframe with the combined information of the OpenML object.
+        """
+        return pd.DataFrame(
+            {
+                "did": data_id,
+                "description": descriptions,
+                "qualities": joined_qualities,
+                "features": joined_features,
+            }
+        )
+
+    def merge_all_columns_to_string(self, row: pd.Series) -> str:
+        """
+        Description: Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
+        """
+        return " ".join([f"{col} - {val}," for col, val in zip(row.index, row.values)])
+
+    def combine_metadata(
+        self, all_dataset_metadata: pd.DataFrame, all_data_description_df: pd.DataFrame
+    ) -> pd.DataFrame:
+        """
+        Description: Combine the descriptions with the metadata table.
+        """
+        all_dataset_metadata = pd.merge(
+            all_dataset_metadata, all_data_description_df, on="did", how="inner"
+        )
+        all_dataset_metadata["Combined_information"] = all_dataset_metadata.apply(
+            self.merge_all_columns_to_string, axis=1
+        )
+        return all_dataset_metadata
+
+    def subset_metadata(
+        self, subset_ids: Sequence[int] | None, all_dataset_metadata: pd.DataFrame
+    ):
+        if subset_ids is not None:
+            subset_ids = [int(x) for x in subset_ids]
+            all_dataset_metadata = all_dataset_metadata[
+                all_dataset_metadata["did"].isin(subset_ids)
+            ]
+        return all_dataset_metadata
+
 
 class OpenMLDatasetHandler(OpenMLObjectHandler):
     """
@@ -128,30 +178,33 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         subset_ids=None,
     ):
         descriptions = [
-            extract_attribute(attr, "description") for attr in openml_data_object
+            self.extract_attribute(attr, "description") for attr in openml_data_object
         ]
         joined_qualities = [
-            join_attributes(attr, "qualities") for attr in openml_data_object
+            self.join_attributes(attr, "qualities") for attr in openml_data_object
         ]
         joined_features = [
-            join_attributes(attr, "features") for attr in openml_data_object
+            self.join_attributes(attr, "features") for attr in openml_data_object
         ]
 
-        all_data_description_df = create_combined_information_df(
+        all_data_description_df = self.create_combined_information_df_for_datasets(
             data_id, descriptions, joined_qualities, joined_features
         )
-        all_dataset_metadata = combine_metadata(
+        all_dataset_metadata = self.combine_metadata(
             all_dataset_metadata, all_data_description_df
         )
 
         # subset the metadata if subset_ids is not None
-        if subset_ids is not None:
-            subset_ids = [int(x) for x in subset_ids]
-            all_dataset_metadata = all_dataset_metadata[
-                all_dataset_metadata["did"].isin(subset_ids)
-            ]
+        all_dataset_metadata = self.subset_metadata(subset_ids, all_dataset_metadata)
 
         all_dataset_metadata.to_csv(file_path)
+
+        if self.config.get("use_chroma_for_saving_metadata") == True:
+            client = chromadb.PersistentClient(
+                path=self.config["persist_dir"] + "metadata_db"
+            )
+            vecmanager = VectorStoreManager(client, self.config)
+            vecmanager.add_df_chunks_to_db(all_dataset_metadata)
 
         return (
             all_dataset_metadata[["did", "name", "Combined_information"]],
@@ -180,10 +233,10 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         subset_ids=None,
     ):
         descriptions = [
-            extract_attribute(attr, "description") for attr in openml_data_object
+            self.extract_attribute(attr, "description") for attr in openml_data_object
         ]
-        names = [extract_attribute(attr, "name") for attr in openml_data_object]
-        tags = [extract_attribute(attr, "tags") for attr in openml_data_object]
+        names = [self.extract_attribute(attr, "name") for attr in openml_data_object]
+        tags = [self.extract_attribute(attr, "tags") for attr in openml_data_object]
 
         all_data_description_df = pd.DataFrame(
             {
@@ -195,14 +248,12 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         )
 
         all_data_description_df["Combined_information"] = all_data_description_df.apply(
-            merge_all_columns_to_string, axis=1
+            self.merge_all_columns_to_string, axis=1
         )
         # subset the metadata if subset_ids is not None
-        if subset_ids is not None:
-            subset_ids = [int(x) for x in subset_ids]
-            all_dataset_metadata = all_dataset_metadata[
-                all_dataset_metadata["did"].isin(subset_ids)
-            ]
+
+        all_dataset_metadata = self.subset_metadata(subset_ids, all_dataset_metadata)
+
         all_data_description_df.to_csv(file_path)
 
         return (
@@ -211,53 +262,43 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
         )
 
 
-# install the package oslo.concurrency to ensure thread safety
-# def get_all_metadata_from_openml(config) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame]:
-def get_all_metadata_from_openml(
-    config: dict,
-) -> Tuple[pd.DataFrame, Sequence[int], pd.DataFrame] | None:
-    """
-    Description: Gets all the metadata from OpenML for the type of data specified in the config.
-    If training is set to False, it loads the metadata from the files. If training is set to True, it gets the metadata from OpenML.
+class OpenMLMetadataProcessor:
+    def __init__(self, config: dict):
+        self.config = config
+        self.save_filename = os.path.join(
+            config["data_dir"], f"all_{config['type_of_data']}_metadata.pkl"
+        )
+        self.description_filename = os.path.join(
+            config["data_dir"], f"all_{config['type_of_data']}_description.csv"
+        )
 
-    This uses parallel threads (pqdm) and so to ensure thread safety, install the package oslo.concurrency.
+    def get_all_metadata_from_openml(self):
+        """
+        Description: Gets all the metadata from OpenML for the type of data specified in the config.
+        If training is set to False, it loads the metadata from the files. If training is set to True, it gets the metadata from OpenML.
 
+        This uses parallel threads (pqdm) and so to ensure thread safety, install the package oslo.concurrency.
+        """
+        if not self.config.get("training", False) or self.config.get(
+            "ignore_downloading_data", False
+        ):
+            if not os.path.exists(self.save_filename):
+                raise Exception(
+                    "Metadata files do not exist. Please run the training pipeline first."
+                )
+            print("[INFO] Loading metadata from file.")
+            return self.load_metadata_from_file(self.save_filename)
 
-
-    """
-
-    # save_filename = f"./data/all_{config['type_of_data']}_metadata.pkl"
-    # use os.path.join to ensure compatibility with different operating systems
-    save_filename = os.path.join(
-        config["data_dir"], f"all_{config['type_of_data']}_metadata.pkl"
-    )
-    # If we are not training, we do not need to recreate the cache and can load the metadata from the files. If the files do not exist, raise an exception.
-    # TODO : Check if this behavior is correct, or if data does not exist, send to training pipeline?
-    if config["training"] == False or config["ignore_downloading_data"] == True:
-        # print("[INFO] Training is set to False.")
-        # Check if the metadata files exist for all types of data
-        if not os.path.exists(save_filename):
-            raise Exception(
-                "Metadata files do not exist. Please run the training pipeline first."
-            )
-        print("[INFO] Loading metadata from file.")
-        # Load the metadata files for all types of data
-        return load_metadata_from_file(save_filename)
-
-    # If we are training, we need to recreate the cache and get the metadata from OpenML
-    if config["training"] == True:
         print("[INFO] Training is set to True.")
-        # Gather all OpenML objects of the type of data
         handler = (
-            OpenMLDatasetHandler(config)
-            if config["type_of_data"] == "dataset"
-            else OpenMLFlowHandler(config)
+            OpenMLDatasetHandler(self.config)
+            if self.config["type_of_data"] == "dataset"
+            else OpenMLFlowHandler(self.config)
         )
 
         all_objects = handler.get_openml_objects()
 
-        # subset the data for testing
-        if config["test_subset"] == True:
+        if self.config.get("test_subset", False):
             print("[INFO] Subsetting the data.")
             all_objects = all_objects[:500]
 
@@ -266,123 +307,52 @@ def get_all_metadata_from_openml(
         print("[INFO] Initializing cache.")
         handler.initialize_cache(data_id)
 
-        print(f"[INFO] Getting {config['type_of_data']} metadata from OpenML.")
+        print(f"[INFO] Getting {self.config['type_of_data']} metadata from OpenML.")
         openml_data_object = handler.get_metadata(data_id)
 
         print("[INFO] Saving metadata to file.")
-        save_metadata_to_file(
-            (openml_data_object, data_id, all_objects, handler), save_filename
+        self.save_metadata_to_file(
+            (openml_data_object, data_id, all_objects, handler), self.save_filename
         )
 
         return openml_data_object, data_id, all_objects, handler
 
+    def load_metadata_from_file(self, filename: str):
+        # Implement the function to load metadata from a file
+        with open(filename, "rb") as f:
+            return pickle.load(f)
 
-# -- COMBINE METADATA INTO A SINGLE DATAFRAME --
+    def save_metadata_to_file(self, data: Tuple, save_filename: str):
+        # Implement the function to save metadata to a file
+        with open(save_filename, "wb") as f:
+            pickle.dump(data, f)
 
+    def create_metadata_dataframe(
+        self,
+        handler: Union["OpenMLDatasetHandler", "OpenMLFlowHandler"],
+        openml_data_object: Sequence[
+            Union[openml.datasets.dataset.OpenMLDataset, openml.flows.flow.OpenMLFlow]
+        ],
+        data_id: Sequence[int],
+        all_dataset_metadata: pd.DataFrame,
+        subset_ids=None,
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        """
+        Description: Creates a dataframe with all the metadata, joined columns with all information
+        for the type of data specified in the config. If training is set to False,
+        the dataframes are loaded from the files. If training is set to True, the
+        dataframes are created and then saved to the files.
+        """
+        if not self.config.get("training", False):
+            return (
+                handler.load_metadata(self.description_filename),
+                all_dataset_metadata,
+            )
 
-def extract_attribute(attribute: object, attr_name: str) -> str:
-    """
-    Description: Extract an attribute from the OpenML object.
-
-
-    """
-    return getattr(attribute, attr_name, "")
-
-
-def join_attributes(attribute: object, attr_name: str) -> str:
-    """
-    Description: Join the attributes of the OpenML object.
-
-
-    """
-
-    return (
-        " ".join([f"{k} : {v}," for k, v in getattr(attribute, attr_name, {}).items()])
-        if hasattr(attribute, attr_name)
-        else ""
-    )
-
-
-def create_combined_information_df(
-    # data_id, descriptions, joined_qualities, joined_features
-    data_id: int | Sequence[int],
-    descriptions: Sequence[str],
-    joined_qualities: Sequence[str],
-    joined_features: Sequence[str],
-) -> pd.DataFrame:
-    """
-    Description: Create a dataframe with the combined information of the OpenML object.
-
-
-    """
-    return pd.DataFrame(
-        {
-            "did": data_id,
-            "description": descriptions,
-            "qualities": joined_qualities,
-            "features": joined_features,
-        }
-    )
-
-
-def merge_all_columns_to_string(row: pd.Series) -> str:
-    """
-    Description: Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
-
-
-    """
-
-    return " ".join([f"{col} - {val}," for col, val in zip(row.index, row.values)])
-
-
-# def combine_metadata(all_dataset_metadata, all_data_description_df):
-def combine_metadata(
-    all_dataset_metadata: pd.DataFrame, all_data_description_df: pd.DataFrame
-) -> pd.DataFrame:
-    """
-    Description: Combine the descriptions with the metadata table.
-
-
-    """
-    # Combine the descriptions with the metadata table
-    all_dataset_metadata = pd.merge(
-        all_dataset_metadata, all_data_description_df, on="did", how="inner"
-    )
-
-    # Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
-
-    all_dataset_metadata["Combined_information"] = all_dataset_metadata.apply(
-        merge_all_columns_to_string, axis=1
-    )
-    return all_dataset_metadata
-
-
-def create_metadata_dataframe(
-    # openml_data_object, data_id, all_dataset_metadata, config
-    handler: OpenMLObjectHandler,
-    openml_data_object: Sequence[
-        Union[openml.datasets.dataset.OpenMLDataset, openml.flows.flow.OpenMLFlow]
-    ],
-    data_id: Sequence[int],
-    all_dataset_metadata: pd.DataFrame,
-    config: dict,
-    subset_ids=None,
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Description: Creates a dataframe with all the metadata, joined columns with all information
-    for the type of data specified in the config. If training is set to False,
-    the dataframes are loaded from the files. If training is set to True, the
-    dataframes are created and then saved to the files.
-
-    """
-    # use os.path.join to ensure compatibility with different operating systems
-    file_path = os.path.join(
-        config["data_dir"], f"all_{config['type_of_data']}_description.csv"
-    )
-
-    if not config["training"]:
-        return handler.load_metadata(file_path), all_dataset_metadata
-
-    return handler.process_metadata(
-        openml_data_object, data_id, all_dataset_metadata, file_path, subset_ids
-    )
+        return handler.process_metadata(
+            openml_data_object,
+            data_id,
+            all_dataset_metadata,
+            self.description_filename,
+            subset_ids,
+        )

@@ -1,11 +1,9 @@
-from langchain.chains.query_constructor.base import (
-    get_query_constructor_prompt,
-    load_query_constructor_runnable,
-)
-from structured_query_examples import examples
-
 import json
 import sys
+
+from langchain.chains.query_constructor.base import (
+    get_query_constructor_prompt, load_query_constructor_runnable)
+from structured_query_examples import examples
 
 sys.path.append("../")
 sys.path.append("../data")
@@ -46,7 +44,7 @@ chain = load_query_constructor_runnable(
 
 # def structuring_query(query:str):
 #     structured_query = chain.invoke(query)
-    
+
 #     return structured_query.query, structured_query.filter
 
 from fastapi import FastAPI
@@ -56,6 +54,7 @@ from httpx import ConnectTimeout
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
 app = FastAPI()
+
 
 # Create port
 @app.get("/structuredquery/{query}", response_class=JSONResponse)
@@ -69,4 +68,3 @@ async def get_structured_query(query: str):
     query = query.replace("%20", " ")
     response = chain.invoke({"query": query})
     return response
-

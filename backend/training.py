@@ -1,13 +1,13 @@
 import chromadb
-from modules.llm import *
+from modules.rag_llm import *
 from modules.utils import *
 
 # Load the config file and set training to true
 config = load_config_and_device("config.json", training=True)
 if config["testing_flag"] == True:
-    config["persist_dir"] = "../data/chroma_db_testing/"
+    config["persist_dir"] = "../../data/chroma_db_testing/"
     config["test_subset"] = True
-    config["data_dir"] = "../data/testing_data/"
+    config["data_dir"] = "../../data/testing_data/"
 
 config["training"] = True
 # config["device"] = "cpu"
@@ -31,15 +31,17 @@ for type_of_data in ["dataset", "flow"]:
     if not os.path.exists(config["data_dir"]):
         os.makedirs(config["data_dir"])
 
-    qa = setup_vector_db_and_qa(
-        config=config, data_type=config["type_of_data"], client=client
-    )
-
-    # Run the test query
-    result_data_frame = get_result_from_query(
-        query=query_test_dict[type_of_data],
-        qa=qa,
-        type_of_query=type_of_data,
+    qa_dataset_handler = QASetup(
         config=config,
+        data_type=config["type_of_data"],
+        client=client,
     )
+    qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
+    # Run the test query
+    result_data_frame = QueryProcessor(
+            query=query_test_dict[type_of_data],
+            qa=qa_dataset,
+            type_of_query=type_of_data,
+            config=config,
+        ).get_result_from_query()
     print(result_data_frame)

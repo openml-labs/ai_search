@@ -130,7 +130,7 @@ class ResponseParser:
                 f"{llm_response_path['local']}{query}"
             ).json()
         return self.llm_response
-    
+
     def fetch_structured_query(self, query_type, query):
         """
         Description: Fetch the response from the FastAPI service
@@ -150,8 +150,6 @@ class ResponseParser:
             ).json()
         print(self.structured_query_response)
         return self.structured_query_response
-        
-        
 
     def fetch_rag_response(self, query_type, query):
         """
@@ -198,7 +196,9 @@ class ResponseParser:
             elif self.apply_llm_before_rag == None:
                 # if no llm response is required, return the initial response
                 return metadata
-        elif self.rag_response is not None and self.structured_query_response is not None: 
-                return metadata[["did", "name"]]
+        elif (
+            self.rag_response is not None and self.structured_query_response is not None
+        ):
+            return metadata[["did", "name"]]
         else:
             return metadata

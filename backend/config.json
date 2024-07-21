@@ -17,6 +17,6 @@
     "search_type" : "similarity",
     "reranking" : false,
     "long_context_reorder" : false,
-    "structure_query": true
-
+    "structure_query": false,
+    "use_chroma_for_saving_metadata": false
 }

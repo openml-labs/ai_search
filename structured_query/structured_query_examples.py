@@ -1,4 +1,3 @@
-
 examples = [
     (
         "Give me mushroom datasets with less than 10k rows.",
@@ -36,6 +35,3 @@ examples = [
         },
     ),
 ]
-    
-
-

@@ -12,8 +12,8 @@ from pathlib import Path
 # change the path to the backend directory
 sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 sys.path.append(os.path.join(os.path.dirname("."), "../llm_service/"))
-from evaluation.training_utils import *
 from modules.utils import load_config_and_device
+from training_utils import *
 
 # %%
 new_path = Path("../backend/")
@@ -98,12 +98,81 @@ types_of_llm_apply : llm applied as filter before the RAG pipeline, llm applied 
 """
 
 expRunner = ExperimentRunner(
-    config,
-    eval_path,
-    query_key_dict.keys(),
-    list_of_embedding_models,
-    list_of_llm_models,
-    subset_ids,
+    config=config,
+    eval_path=eval_path,
+    queries=query_key_dict.keys(),
+    list_of_embedding_models=list_of_embedding_models,
+    list_of_llm_models=list_of_llm_models,
+    subset_ids=subset_ids,
     use_cached_experiment=True,
 )
 expRunner.run_experiments()
+
+"""
+Evaluating temperature = 1 (default was 0.95)
+Takes into account the following:
+original data ingestion pipeline : combine a string of all metadata fields and the dataset description and embeds them with no pre-processing
+list_of_embedding_models = [
+    "BAAI/bge-large-en-v1.5",
+]
+list_of_llm_models = ["llama3"]
+types_of_llm_apply : llm applied as filter before the RAG pipeline, llm applied as reranker after the RAG pipeline, llm not used at all
+"""
+
+list_of_embedding_models = [
+    "BAAI/bge-large-en-v1.5",
+]
+list_of_llm_models = ["llama3"]
+config["temperature"] = 1
+
+expRunner = ExperimentRunner(
+    config=config,
+    eval_path=eval_path,
+    queries=query_key_dict.keys(),
+    list_of_embedding_models=list_of_embedding_models,
+    list_of_llm_models=list_of_llm_models,
+    subset_ids=subset_ids,
+    use_cached_experiment=True,
+    custom_name="temperature_1",
+)
+expRunner.run_experiments()
+
+# reset the temperature to the default value
+config["temperature"] = 0.95
+
+"""
+Evaluating search type [mmr, similarity_score_threshold] (default was similarity)
+Takes into account the following:
+original data ingestion pipeline : combine a string of all metadata fields and the dataset description and embeds them with no pre-processing
+list_of_embedding_models = [
+    "BAAI/bge-large-en-v1.5",
+]
+list_of_llm_models = ["llama3"]
+types_of_llm_apply : llm applied as reranker after the RAG pipeline
+"""
+
+
+list_of_embedding_models = [
+    "BAAI/bge-large-en-v1.5",
+]
+list_of_llm_models = ["llama3"]
+types_of_llm_apply = [False]
+types_of_search = ["mmr", "similarity_score_threshold"]
+
+for type_of_search in types_of_search:
+    config["search_type"] = type_of_search
+    expRunner = ExperimentRunner(
+        config=config,
+        eval_path=eval_path,
+        queries=query_key_dict.keys(),
+        list_of_embedding_models=list_of_embedding_models,
+        list_of_llm_models=list_of_llm_models,
+        subset_ids=subset_ids,
+        use_cached_experiment=True,
+        custom_name=f"{type_of_search}_search",
+        types_of_llm_apply=types_of_llm_apply,
+    )
+    expRunner.run_experiments()
+
+# reset the search type to the default value
+config["search_type"] = "similarity"

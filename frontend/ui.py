@@ -33,11 +33,15 @@ if st.button("Submit"):
     if query_type == "Dataset":
         with st.spinner("Waiting for results..."):
             if config["structure_query"] == True:
-                # get structured query 
-                structured_query = response_parser.fetch_structured_query(query_type, query)
+                # get structured query
+                structured_query = response_parser.fetch_structured_query(
+                    query_type, query
+                )
                 st.write(structured_query)
                 # get rag response
-                response_parser.fetch_rag_response(query_type, structured_query['query'])
+                response_parser.fetch_rag_response(
+                    query_type, structured_query["query"]
+                )
             else:
                 # get rag response
                 response_parser.fetch_rag_response(query_type, query)

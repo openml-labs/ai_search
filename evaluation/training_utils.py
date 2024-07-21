@@ -6,12 +6,12 @@
 # %%
 from __future__ import annotations
 
+import glob
 import json
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
-import glob
 
 import chromadb
 import pandas as pd
@@ -78,7 +78,7 @@ class ResponseParser(ResponseParser):
         """
         Description: Load paths from paths.json
         """
-        with open("../../frontend/paths.json", "r") as file:
+        with open("../frontend/paths.json", "r") as file:
             return json.load(file)
 
     def parse_and_update_response(self, metadata):
@@ -122,7 +122,8 @@ class ExperimentRunner:
         queries,
         list_of_embedding_models,
         list_of_llm_models,
-        subset_ids,
+        types_of_llm_apply=[True, False, None],
+        subset_ids=None,
         use_cached_experiment=False,
         custom_name=None,
     ):
@@ -134,6 +135,7 @@ class ExperimentRunner:
         self.subset_ids = subset_ids
         self.use_cached_experiment = use_cached_experiment
         self.custom_name = custom_name
+        self.types_of_llm_apply = types_of_llm_apply
 
     def run_experiments(self):
         # across all embedding models
@@ -144,6 +146,7 @@ class ExperimentRunner:
             main_experiment_directory = (
                 self.eval_path / f"{process_embedding_model_name_hf(embedding_model)}"
             )
+
             os.makedirs(main_experiment_directory, exist_ok=True)
 
             # update the config with the new experiment directories
@@ -160,13 +163,23 @@ class ExperimentRunner:
             # load the persistent database using ChromaDB
             client = chromadb.PersistentClient(path=self.config["persist_dir"])
 
-            # Run "training"
-            qa_dataset, _ = setup_vector_db_and_qa(
-                config=self.config,
-                data_type=self.config["type_of_data"],
-                client=client,
-                subset_ids=self.subset_ids,
-            )
+            if os.path.exists(self.config["persist_dir"]):
+                # load the qa from the persistent database if it exists. Disabling training does this for us.
+                self.config["training"] = False
+                qa_dataset, _ = setup_vector_db_and_qa(
+                    config=self.config,
+                    data_type=self.config["type_of_data"],
+                    client=client,
+                    subset_ids=self.subset_ids,
+                )
+                self.config["training"] = True
+            else:
+                qa_dataset, _ = setup_vector_db_and_qa(
+                    config=self.config,
+                    data_type=self.config["type_of_data"],
+                    client=client,
+                    subset_ids=self.subset_ids,
+                )
 
             # across all llm models
             for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
@@ -178,7 +191,9 @@ class ExperimentRunner:
                 experiment_name = f"{process_embedding_model_name_hf(embedding_model)}_{process_llm_model_name_ollama(llm_model)}"
                 if self.custom_name is not None:
                     experiment_path = (
-                        main_experiment_directory / self.custom_name + experiment_name
+                        # main_experiment_directory / (self.custom_name + experiment_name)
+                        main_experiment_directory
+                        / f"{self.custom_name}@{experiment_name}"
                     )
                 else:
                     experiment_path = main_experiment_directory / experiment_name
@@ -200,16 +215,16 @@ class ExperimentRunner:
                     combined_df = self.aggregate_multiple_queries(
                         qa_dataset=qa_dataset,
                         data_metadata=data_metadata,
+                        types_of_llm_apply=self.types_of_llm_apply,
                     )
 
                     combined_df.to_csv(experiment_path / "results.csv")
-        
-    def aggregate_multiple_queries(self, qa_dataset, data_metadata):
+
+    def aggregate_multiple_queries(self, qa_dataset, data_metadata, types_of_llm_apply):
         """
         Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results.
         """
 
-        types_of_llm_apply = [True, False, None]
         combined_results = pd.DataFrame()
 
         # Initialize the ResponseParser once per query type
@@ -220,8 +235,8 @@ class ExperimentRunner:
             for apply_llm in types_of_llm_apply
         }
 
-        for query in tqdm(self.queries):
-            for apply_llm_before_rag in tqdm(types_of_llm_apply):
+        for query in tqdm(self.queries, total=len(self.queries), leave=True):
+            for apply_llm_before_rag in types_of_llm_apply:
                 response_parser = response_parsers[apply_llm_before_rag]
 
                 result_data_frame, _ = get_result_from_query(

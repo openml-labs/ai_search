@@ -1,10 +1,9 @@
-from langchain.chains.query_constructor.base import (
-    get_query_constructor_prompt,
-    load_query_constructor_runnable,
-)
-from structured_query.structured_query_examples import examples
-
 import json
+
+from langchain.chains.query_constructor.base import (
+    get_query_constructor_prompt, load_query_constructor_runnable)
+
+from structured_query.structured_query_examples import examples
 
 with open("../data/attribute_info.json", "r") as f:
     attribute_info = json.loads(f.read())
@@ -40,8 +39,8 @@ chain = load_query_constructor_runnable(
     fix_invalid=True,
 )
 
-def structuring_query(query:str):
-    structured_query = chain.invoke(query)
-    
-    return structured_query.query, structured_query.filter
 
+def structuring_query(query: str):
+    structured_query = chain.invoke(query)
+
+    return structured_query.query, structured_query.filter

@@ -9,9 +9,8 @@ cd ollama
 ./get_ollama.sh &
 echo $! > $PID_FILE
 
-structured_query = True
-if [$structured_query ==true ]
-then 
+structured_query = false
+if [ "$structured_query" == true ]; then
     cd ../structured_query
     uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8082 &
     echo $! > $PID_FILE
@@ -20,7 +19,6 @@ else
     uvicorn llm_service:app --host 0.0.0.0 --port 8081 &
     echo $! > $PID_FILE
 fi
-
 
 cd ../backend
 uvicorn backend:app --host 0.0.0.0 --port 8000 &
