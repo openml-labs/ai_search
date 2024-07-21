@@ -1,4 +1,5 @@
 #!/bin/bash
+poetry install
 killall ollama
 killall streamlit
 # Define a file to store the PIDs

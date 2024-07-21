@@ -75,6 +75,3 @@
 
 ### I just want to use the pipeline
 - You can use the pipeline by running the Streamlit frontend. Refer to the getting started section above for more details.
-
-### I am on the wrong page
-![](./images/work.jpg)

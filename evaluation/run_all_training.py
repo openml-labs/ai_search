@@ -5,14 +5,10 @@
 from __future__ import annotations
 
 import json
-import os
-import sys
 from pathlib import Path
 
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
-sys.path.append(os.path.join(os.path.dirname("."), "../llm_service/"))
-from modules.utils import load_config_and_device
+from backend.modules.utils import load_config_and_device
 from training_utils import *
 
 # %%

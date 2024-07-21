@@ -17,17 +17,16 @@ import chromadb
 import pandas as pd
 
 # change the path to the backend directory
-sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
+# sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 
 
 # %%
-from modules.rag_llm import *
-from modules.results_gen import get_result_from_query
+from backend.modules.rag_llm import *
+from backend.modules.results_gen import *
 
 # add modules from ui_utils
-sys.path.append(os.path.join(os.path.dirname("."), "../frontend/"))
 from tqdm.auto import tqdm
-from ui_utils import *
+from frontend.ui_utils import *
 
 
 def process_embedding_model_name_hf(name: str) -> str:
@@ -256,7 +255,7 @@ class ExperimentRunner:
                     qa=qa_dataset,
                     type_of_query="dataset",
                     config=self.config,
-                )
+                ).get_result_from_query()
                 response_parser.rag_response = {
                     "initial_response": list(result_data_frame["id"].values)
                 }
