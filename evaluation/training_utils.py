@@ -21,7 +21,7 @@ sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 
 
 # %%
-from modules.llm import *
+from modules.rag_llm import *
 from modules.results_gen import get_result_from_query
 
 # add modules from ui_utils
@@ -166,20 +166,25 @@ class ExperimentRunner:
             if os.path.exists(self.config["persist_dir"]):
                 # load the qa from the persistent database if it exists. Disabling training does this for us.
                 self.config["training"] = False
-                qa_dataset, _ = setup_vector_db_and_qa(
+
+                qa_dataset_handler = QASetup(
                     config=self.config,
                     data_type=self.config["type_of_data"],
                     client=client,
                     subset_ids=self.subset_ids,
                 )
+
+                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
                 self.config["training"] = True
             else:
-                qa_dataset, _ = setup_vector_db_and_qa(
+                qa_dataset_handler = QASetup(
                     config=self.config,
                     data_type=self.config["type_of_data"],
                     client=client,
                     subset_ids=self.subset_ids,
                 )
+
+                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa() 
 
             # across all llm models
             for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
@@ -239,7 +244,14 @@ class ExperimentRunner:
             for apply_llm_before_rag in types_of_llm_apply:
                 response_parser = response_parsers[apply_llm_before_rag]
 
-                result_data_frame, _ = get_result_from_query(
+                # result_data_frame, _ = get_result_from_query(
+                #     query=query,
+                #     qa=qa_dataset,
+                #     type_of_query="dataset",
+                #     config=self.config,
+                # )
+
+                result_data_frame, _ = QueryProcessor(
                     query=query,
                     qa=qa_dataset,
                     type_of_query="dataset",
