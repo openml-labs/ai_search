@@ -2,6 +2,8 @@
 - This page is only an overview. Please refer to the api reference for more detailed information.
 - Currently the frontend is based on Streamlit. The hope is to integrate it with the OpenML website in the future.
 - This is what it looks like at the moment : ![](../images/search_ui.png)
+- This component runs the Streamlit frontend. It is the UI that you see when you navigate to `http://localhost:8501`.
+- You can start it by running `cd frontend && streamlit run ui.py &`
 
 ## Design Methodology
 - The main point to note here is that the UI is responsible for all the post-processing of the results, including the displayed metadata information etc. 
