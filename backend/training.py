@@ -1,6 +1,6 @@
 import chromadb
-from modules.rag_llm import *
-from modules.utils import *
+from .modules.rag_llm import *
+from .modules.utils import *
 
 # Load the config file and set training to true
 config = load_config_and_device("config.json", training=True)

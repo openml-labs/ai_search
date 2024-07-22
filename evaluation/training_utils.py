@@ -17,7 +17,7 @@ import chromadb
 import pandas as pd
 
 # change the path to the backend directory
-# sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
+sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 
 
 # %%

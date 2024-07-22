@@ -9,7 +9,6 @@ import torch
 def find_device(training: bool = False) -> str:
     """
     Description: Find the device to use for the pipeline. If cuda is available, use it. If not, check if MPS is available and use it. If not, use CPU.
-
     """
     print("[INFO] Finding device.")
     if torch.cuda.is_available():
@@ -23,7 +22,6 @@ def find_device(training: bool = False) -> str:
 def load_config_and_device(config_file: str, training: bool = False) -> dict:
     """
     Description: Load the config file and find the device to use for the pipeline.
-
     """
     # Check if the config file exists and load it
     if not os.path.exists(config_file):
