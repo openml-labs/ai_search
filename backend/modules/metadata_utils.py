@@ -73,7 +73,8 @@ class OpenMLObjectHandler:
         """
         raise NotImplementedError
 
-    def load_metadata(self, file_path: str):
+    @staticmethod
+    def load_metadata(file_path: str):
         """
         Description: Load metadata from a file.
 
@@ -86,13 +87,15 @@ class OpenMLObjectHandler:
                 "Metadata files do not exist. Please run the training pipeline first."
             )
 
-    def extract_attribute(self, attribute: object, attr_name: str) -> str:
+    @staticmethod
+    def extract_attribute(attribute: object, attr_name: str) -> str:
         """
         Description: Extract an attribute from the OpenML object.
         """
         return getattr(attribute, attr_name, "")
 
-    def join_attributes(self, attribute: object, attr_name: str) -> str:
+    @staticmethod
+    def join_attributes(attribute: object, attr_name: str) -> str:
         """
         Description: Join the attributes of the OpenML object.
         """
@@ -104,8 +107,8 @@ class OpenMLObjectHandler:
             else ""
         )
 
+    @staticmethod
     def create_combined_information_df_for_datasets(
-        self,
         data_id: int | Sequence[int],
         descriptions: Sequence[str],
         joined_qualities: Sequence[str],
@@ -123,7 +126,8 @@ class OpenMLObjectHandler:
             }
         )
 
-    def merge_all_columns_to_string(self, row: pd.Series) -> str:
+    @staticmethod
+    def merge_all_columns_to_string(row: pd.Series) -> str:
         """
         Description: Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
         """
@@ -143,8 +147,9 @@ class OpenMLObjectHandler:
         )
         return all_dataset_metadata
 
+    @staticmethod
     def subset_metadata(
-        self, subset_ids: Sequence[int] | None, all_dataset_metadata: pd.DataFrame
+        subset_ids: Sequence[int] | None, all_dataset_metadata: pd.DataFrame
     ):
         if subset_ids is not None:
             subset_ids = [int(x) for x in subset_ids]
@@ -200,7 +205,7 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
 
         all_dataset_metadata.to_csv(file_path)
 
-        if self.config.get("use_chroma_for_saving_metadata") == True:
+        if self.config.get("use_chroma_for_saving_metadata"):
             client = chromadb.PersistentClient(
                 path=self.config["persist_dir"] + "metadata_db"
             )
@@ -318,12 +323,14 @@ class OpenMLMetadataProcessor:
 
         return openml_data_object, data_id, all_objects, handler
 
-    def load_metadata_from_file(self, filename: str):
+    @staticmethod
+    def load_metadata_from_file(filename: str):
         # Implement the function to load metadata from a file
         with open(filename, "rb") as f:
             return pickle.load(f)
 
-    def save_metadata_to_file(self, data: Tuple, save_filename: str):
+    @staticmethod
+    def save_metadata_to_file(data: Tuple, save_filename: str):
         # Implement the function to save metadata to a file
         with open(save_filename, "wb") as f:
             pickle.dump(data, f)

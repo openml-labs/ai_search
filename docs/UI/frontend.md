@@ -17,8 +17,12 @@
 - Once the results of the RAG pipeline are obtained, the resulting list of IDs is queried from the metadata files (to be replaced with elasticsearch later) and then the relevant data is displayed.
 - Now it is possible for the query parsing LLM to read the query and infer the columns that the user finds relevant. (eg: "find me a dataset with multiple classes" would enable the filters where `num_classes >=2`).
 
+### paths.json
+- Configure this file if any of the endpoints change.
+
 ### ui.py
 - This is where all the above logic is executed and displayed using Streamlit.
+
 ### ui_utils.py
 - This is where all the logic is defined.
 - Query filtering

@@ -62,6 +62,9 @@ def process_llm_model_name_ollama(name: str) -> str:
 
 
 def ollama_setup(list_of_llm_models: list):
+    """
+    Description: Setup Ollama server and pull the llm_model that is being used
+    """
     os.system("ollama serve&")
     print("Waiting for Ollama server to be active...")
     while os.system("ollama list | grep 'NAME'") == "":
@@ -85,7 +88,7 @@ class ResponseParser(ResponseParser):
         Description: Parse the response from the RAG and LLM services and update the metadata based on the response
         """
         if self.rag_response is not None and self.llm_response is not None:
-            if self.apply_llm_before_rag == False:
+            if not self.apply_llm_before_rag:
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
@@ -96,7 +99,7 @@ class ResponseParser(ResponseParser):
                     llm_parser.get_attributes_from_response()
                     return llm_parser.update_subset_cols(filtered_metadata)
 
-            elif self.apply_llm_before_rag == True:
+            elif self.apply_llm_before_rag:
                 llm_parser = LLMResponseParser(self.llm_response)
                 llm_parser.subset_cols = ["did", "name"]
                 llm_parser.get_attributes_from_response()
@@ -106,14 +109,22 @@ class ResponseParser(ResponseParser):
                     filtered_metadata["did"].isin(self.rag_response["initial_response"])
                 ]
 
-            elif self.apply_llm_before_rag == None:
+            elif self.apply_llm_before_rag is None:
                 # if no llm response is required, return the initial response
                 return metadata
+        elif (
+            self.rag_response is not None and self.structured_query_response is not None
+        ):
+            return metadata[["did", "name"]]
         else:
             return metadata
 
 
 class ExperimentRunner:
+    """
+    Description: This class is used to run all the experiments. If you want to modify any behavior, change the functions in this class according to what you want.
+    You may also want to check out ResponseParser.
+    """
     def __init__(
         self,
         config,
@@ -121,11 +132,13 @@ class ExperimentRunner:
         queries,
         list_of_embedding_models,
         list_of_llm_models,
-        types_of_llm_apply=[True, False, None],
+        types_of_llm_apply=None,
         subset_ids=None,
         use_cached_experiment=False,
         custom_name=None,
     ):
+        if types_of_llm_apply is None:
+            types_of_llm_apply = [True, False, None]
         self.config = config
         self.eval_path = eval_path
         self.queries = queries
@@ -157,7 +170,6 @@ class ExperimentRunner:
                 self.config, orient="index"
             ).reset_index()
             config_df.columns = ["Hyperparameter", "Value"]
-            config_df.to_csv(main_experiment_directory / "config.csv", index=False)
 
             # load the persistent database using ChromaDB
             client = chromadb.PersistentClient(path=self.config["persist_dir"])
@@ -202,6 +214,7 @@ class ExperimentRunner:
                 else:
                     experiment_path = main_experiment_directory / experiment_name
                 os.makedirs(experiment_path, exist_ok=True)
+                config_df.to_csv(experiment_path / "config.csv", index=False)
 
                 if self.use_cached_experiment and os.path.exists(
                     experiment_path / "results.csv"
@@ -282,7 +295,6 @@ class ExperimentRunner:
         result_data_frame["llm_model"] = self.config["llm_model"]
         result_data_frame["embedding_model"] = self.config["embedding_model"]
         result_data_frame["llm_before_rag"] = apply_llm_before_rag
-        # combined_results.append(result_data_frame)
         combined_results = pd.concat(
             [combined_results, result_data_frame], ignore_index=True
         )
