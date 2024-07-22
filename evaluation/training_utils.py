@@ -183,7 +183,7 @@ class ExperimentRunner:
                     subset_ids=self.subset_ids,
                 )
 
-                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa() 
+                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
 
             # across all llm models
             for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
@@ -241,15 +241,29 @@ class ExperimentRunner:
 
         for query in tqdm(self.queries, total=len(self.queries), leave=True):
             for apply_llm_before_rag in types_of_llm_apply:
-                combined_results = self.run_query(apply_llm_before_rag, combined_results, data_metadata, qa_dataset,
-                                                  query, response_parsers)
+                combined_results = self.run_query(
+                    apply_llm_before_rag,
+                    combined_results,
+                    data_metadata,
+                    qa_dataset,
+                    query,
+                    response_parsers,
+                )
 
         # Concatenate all collected DataFrames at once
         # combined_df = pd.concat(combined_results, ignore_index=True)
 
         return combined_results
 
-    def run_query(self, apply_llm_before_rag, combined_results, data_metadata, qa_dataset, query, response_parsers):
+    def run_query(
+        self,
+        apply_llm_before_rag,
+        combined_results,
+        data_metadata,
+        qa_dataset,
+        query,
+        response_parsers,
+    ):
         response_parser = response_parsers[apply_llm_before_rag]
         result_data_frame, _ = QueryProcessor(
             query=query,

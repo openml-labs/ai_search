@@ -2,7 +2,9 @@ import json
 import sys
 
 from langchain.chains.query_constructor.base import (
-    get_query_constructor_prompt, load_query_constructor_runnable)
+    get_query_constructor_prompt,
+    load_query_constructor_runnable,
+)
 from structured_query_examples import examples
 
 sys.path.append("../")
@@ -50,6 +52,7 @@ chain = load_query_constructor_runnable(
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from httpx import ConnectTimeout
+
 # from llm_service_utils import create_chain, parse_answers_initial
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 

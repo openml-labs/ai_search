@@ -31,7 +31,7 @@ config["persist_dir"] = "../../data/doc_examples/chroma_db/"
 config["data_dir"] = "../../data/doc_examples/"
 config["type_of_data"] = "dataset"
 config["training"] = True
-config["test_subset"] = True #set this to false while training, this is for demo
+config["test_subset"] = True  # set this to false while training, this is for demo
 # load the persistent database using ChromaDB
 client = chromadb.PersistentClient(path=config["persist_dir"])
 print(config)

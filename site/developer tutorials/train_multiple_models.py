@@ -20,6 +20,7 @@ sys.path.append(os.path.join(os.path.dirname("."), "../../backend/"))
 
 from modules.llm import *
 from modules.results_gen import aggregate_multiple_queries_and_count
+
 # %%
 from modules.utils import load_config_and_device
 
