@@ -11,7 +11,7 @@ app = FastAPI()
 
 # load the configuration and device
 config = load_config_and_device("config.json")
-if config["testing_flag"] == True:
+if config["testing_flag"]:
     config["persist_dir"] = "./data/chroma_db_testing/"
     config["test_subset"] = True
     config["data_dir"] = "./data/testing_data/"

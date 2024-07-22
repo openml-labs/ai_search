@@ -6,26 +6,26 @@ killall streamlit
 PID_FILE="processes.pid"
 
 # Start processes and save their PIDs
-cd ollama
+cd ollama || exit
 ./get_ollama.sh &
 echo $! > $PID_FILE
 
 structured_query = false
 if [ "$structured_query" == true ]; then
-    cd ../structured_query
+    cd ../structured_query || exit
     uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8082 &
     echo $! > $PID_FILE
 else
-    cd ../llm_service
+    cd ../llm_service || exit
     uvicorn llm_service:app --host 0.0.0.0 --port 8081 &
     echo $! > $PID_FILE
 fi
 
-cd ../backend
+cd ../backend || exit
 uvicorn backend:app --host 0.0.0.0 --port 8000 &
 echo $! >> $PID_FILE
 
-cd ../frontend
+cd ../frontend || exit
 streamlit run ui.py &
 echo $! >> $PID_FILE
 

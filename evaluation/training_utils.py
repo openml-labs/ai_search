@@ -241,41 +241,35 @@ class ExperimentRunner:
 
         for query in tqdm(self.queries, total=len(self.queries), leave=True):
             for apply_llm_before_rag in types_of_llm_apply:
-                response_parser = response_parsers[apply_llm_before_rag]
-
-                # result_data_frame, _ = get_result_from_query(
-                #     query=query,
-                #     qa=qa_dataset,
-                #     type_of_query="dataset",
-                #     config=self.config,
-                # )
-
-                result_data_frame, _ = QueryProcessor(
-                    query=query,
-                    qa=qa_dataset,
-                    type_of_query="dataset",
-                    config=self.config,
-                ).get_result_from_query()
-                response_parser.rag_response = {
-                    "initial_response": list(result_data_frame["id"].values)
-                }
-
-                response_parser.fetch_llm_response(query)
-                result_data_frame = response_parser.parse_and_update_response(
-                    data_metadata
-                ).copy()[["did", "name"]]
-
-                result_data_frame["query"] = query
-                result_data_frame["llm_model"] = self.config["llm_model"]
-                result_data_frame["embedding_model"] = self.config["embedding_model"]
-                result_data_frame["llm_before_rag"] = apply_llm_before_rag
-
-                # combined_results.append(result_data_frame)
-                combined_results = pd.concat(
-                    [combined_results, result_data_frame], ignore_index=True
-                )
+                combined_results = self.run_query(apply_llm_before_rag, combined_results, data_metadata, qa_dataset,
+                                                  query, response_parsers)
 
         # Concatenate all collected DataFrames at once
         # combined_df = pd.concat(combined_results, ignore_index=True)
 
+        return combined_results
+
+    def run_query(self, apply_llm_before_rag, combined_results, data_metadata, qa_dataset, query, response_parsers):
+        response_parser = response_parsers[apply_llm_before_rag]
+        result_data_frame, _ = QueryProcessor(
+            query=query,
+            qa=qa_dataset,
+            type_of_query="dataset",
+            config=self.config,
+        ).get_result_from_query()
+        response_parser.rag_response = {
+            "initial_response": result_data_frame["id"].to_list()
+        }
+        response_parser.fetch_llm_response(query)
+        result_data_frame = response_parser.parse_and_update_response(
+            data_metadata
+        ).copy()[["did", "name"]]
+        result_data_frame["query"] = query
+        result_data_frame["llm_model"] = self.config["llm_model"]
+        result_data_frame["embedding_model"] = self.config["embedding_model"]
+        result_data_frame["llm_before_rag"] = apply_llm_before_rag
+        # combined_results.append(result_data_frame)
+        combined_results = pd.concat(
+            [combined_results, result_data_frame], ignore_index=True
+        )
         return combined_results
