@@ -14,10 +14,11 @@ class DataLoader:
     """
     Description: Used to chunk data
     """
-    def __init__(self, metadata_df: pd.DataFrame, page_content_column: str, chunk_size:int = 1000):
+    def __init__(self, metadata_df: pd.DataFrame, page_content_column: str, chunk_size:int = 1000, chunk_overlap:int = 150):
         self.metadata_df = metadata_df
         self.page_content_column = page_content_column
         self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap if self.chunk_size > chunk_overlap else self.chunk_size
 
     def load_and_process_data(self) -> list:
         """
@@ -29,7 +30,7 @@ class DataLoader:
         documents = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size, chunk_overlap=150
+            chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
         )
         documents = text_splitter.split_documents(documents)
 

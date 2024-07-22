@@ -1,10 +1,11 @@
-embedding_model,llm_model,llm_before_rag,custom_experiement,precision,recall,map
+embedding_model,llm_model,llm_before_rag,custom_experiment,precision,recall,map
 Snowflake/snowflake-arctic-embed-l,phi3,False,,0.6503587153587154,0.9997150997150998,0.8818890986108248
 Snowflake/snowflake-arctic-embed-l,phi3,True,,0.6503587153587154,0.9997150997150998,0.8818890986108248
 Snowflake/snowflake-arctic-embed-l,phi3,No LLM filtering,,0.6475524475524476,1.0,0.8036501822692299
 Snowflake/snowflake-arctic-embed-l,llama3,False,,0.6503587153587154,0.9997150997150998,0.8818890986108248
 Snowflake/snowflake-arctic-embed-l,llama3,True,,0.6503587153587154,0.9997150997150998,0.8818890986108248
 Snowflake/snowflake-arctic-embed-l,llama3,No LLM filtering,,0.6475524475524476,1.0,0.8036501822692299
+BAAI/bge-large-en-v1.5,llama3,False,512_chunk,0.6547227323742475,0.9979275073972045,0.8259522762251688
 BAAI/bge-large-en-v1.5,llama3,False,similarity_score_threshold_search,0.7046654902068915,0.9655886894421927,0.8152488113948533
 BAAI/bge-large-en-v1.5,llama3,False,mmr_search,0.6659358738904193,0.9911131517192123,0.8500771034849167
 BAAI/bge-large-en-v1.5,llama3,False,temperature_1,0.648773129928433,0.9808182838485869,0.8593124999240845
