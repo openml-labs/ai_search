@@ -174,6 +174,7 @@ class ExperimentRunner:
             # load the persistent database using ChromaDB
             client = chromadb.PersistentClient(path=self.config["persist_dir"])
 
+            # Note : I was not sure how to move this to the next loop, we need the QA setup going forward..
             if os.path.exists(self.config["persist_dir"]):
                 # load the qa from the persistent database if it exists. Disabling training does this for us.
                 self.config["training"] = False
@@ -216,6 +217,7 @@ class ExperimentRunner:
                 os.makedirs(experiment_path, exist_ok=True)
                 config_df.to_csv(experiment_path / "config.csv", index=False)
 
+                # we do not want to run the models again for no reason. So we use existing caches if they exit.
                 if self.use_cached_experiment and os.path.exists(
                     experiment_path / "results.csv"
                 ):
@@ -239,7 +241,7 @@ class ExperimentRunner:
 
     def aggregate_multiple_queries(self, qa_dataset, data_metadata, types_of_llm_apply):
         """
-        Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results.
+        Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results. This was done here and not in evaluate to make it a little easier to manage as each of them requires a different chroma_db and config
         """
 
         combined_results = pd.DataFrame()

@@ -2,9 +2,12 @@
 
 ## How to run
 - Start the language server at the root of this repository with `./start_llm_service.sh` . This is important, do not skip it.
-- Run `python run_all_training.py` to train all models (get data, create vector store for each etc)
-- Run `python evaluate.py` to run all evaluations
+- Run `python run_all_training.py` to train all models (get data, create vector store for each etc) and run the models on all possible versions of the queries.
+  - Query templates are in `data/evaluation/query_templates.txt`. Add to this if you want different types of queries.
+- Run `python evaluate.py` to aggregate the results from the previous query. (This does not run the models on the queries) 
 - Results are found in in `./evaluation_results.csv` and `evaluation_results.png`
+- **Important note** : If you want to re-run some experiments because things have changed and if the models that you use are the same but the data/labels are new.
+  - Go to `/data/evaluation/{rag-model}/{llm-model}` and remove/move all the folders under it **except** `chroma_db`. If new data is added, the training loop will take care of adding them to the vector database. But if you remove this, it will take a lot longer for the data to be embedded from scratch.
 
 ## How to add a new evaluation
 
