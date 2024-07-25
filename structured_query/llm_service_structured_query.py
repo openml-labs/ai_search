@@ -1,5 +1,7 @@
 import json
 import sys
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 
 from langchain.chains.query_constructor.base import (
     get_query_constructor_prompt,
@@ -68,9 +70,17 @@ async def get_structured_query(query: str):
     Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt.
 
     """
-    query = query.replace("%20", " ")
-    response = chain.invoke({"query": query})
-    obj = ChromaTranslator()
-    filter_condition = obj.visit_structured_query(structured_query=response)[1]
+    try:
+        query = query.replace("%20", " ")
+        response = chain.invoke({"query": query})
+        obj = ChromaTranslator()
+        filter_condition = obj.visit_structured_query(structured_query=response)[1]
+        return response, filter_condition
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=500, detail=f"JSON decode error: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
+        
+        
    
-    return response, filter_condition
+    

@@ -44,12 +44,18 @@ if st.button("Submit"):
                     query_type, query
                 )
                 st.write(response_parser.structured_query_response[0])
-                # get rag response
-                response_parser.fetch_rag_response(
-                    query_type, response_parser.structured_query_response[0]["query"]
-                )
-                if response_parser.structured_query_response[1].get("filter"):
-                    response_parser.database_filter(response_parser.structured_query_response[1]["filter"], collec)
+                if response_parser.structured_query_response:
+                    # get rag response
+                    response_parser.fetch_rag_response(
+                        query_type, response_parser.structured_query_response[0]["query"]
+                    )
+                    if response_parser.structured_query_response[1].get("filter"):
+                        response_parser.database_filter(response_parser.structured_query_response[1]["filter"], collec)
+                else:
+                    # get rag response
+                    response_parser.fetch_rag_response(
+                        query_type, query
+                    )
             else:
                 # get rag response
                 response_parser.fetch_rag_response(query_type, query)

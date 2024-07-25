@@ -150,11 +150,21 @@ class ResponseParser:
                 f"{structured_response_path['docker']}{query}",
                 json={"query": query},
             ).json()
-        except:
+        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+            # Print the error for debugging purposes
+            print(f"Error occurred: {e}")
+            # Set structured_query_response to None on error
+            self.structured_query_response = None
+        try:
             self.structured_query_response = requests.get(
                 f"{structured_response_path['local']}{query}",
                 json={"query": query},
             ).json()
+        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+            # Print the error for debugging purposes
+            print(f"Error occurred while fetching from local endpoint: {e}")
+            # Set structured_query_response to None if the local request also fails
+            self.structured_query_response = None
         
         return self.structured_query_response
     
