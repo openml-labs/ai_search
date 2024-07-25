@@ -17,6 +17,7 @@
     "search_type" : "similarity",
     "reranking" : false,
     "long_context_reorder" : false,
-    "structure_query": false,
-    "use_chroma_for_saving_metadata": false
+    "structured_query": false,
+    "use_chroma_for_saving_metadata": false,
+    "chroma_metadata_dir": "../data/chroma_db_metadata"
 }

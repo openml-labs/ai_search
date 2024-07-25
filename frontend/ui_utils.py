@@ -4,6 +4,7 @@ import os
 import requests
 import streamlit as st
 from streamlit import session_state as ss
+from langchain_community.query_constructors.chroma import ChromaTranslator
 
 
 def feedback_cb():
@@ -108,6 +109,8 @@ class ResponseParser:
         self.rag_response = None
         self.llm_response = None
         self.apply_llm_before_rag = apply_llm_before_rag
+        self.database_filtered = None
+        self.structured_query_response = None
 
     def load_paths(self):
         """
@@ -148,9 +151,19 @@ class ResponseParser:
                 f"{structured_response_path['local']}{query}",
                 json={"query": query},
             ).json()
-        print(self.structured_query_response)
+        
         return self.structured_query_response
-
+    
+    def database_filter(self, filter_condition, collec):
+        """
+        Apply database filter on the rag_response
+        """
+        ids = list(map(str, self.rag_response['initial_response']))
+        self.database_filtered = collec.get(ids = ids, where=filter_condition)['ids']
+        self.database_filtered = list(map(int, self.database_filtered))
+        # print(self.database_filtered)
+        return self.database_filtered
+        
     def fetch_rag_response(self, query_type, query):
         """
         Description: Fetch the response from the FastAPI service
@@ -198,7 +211,20 @@ class ResponseParser:
                 return metadata
         elif (
             self.rag_response is not None and self.structured_query_response is not None
-        ):
-            return metadata[["did", "name"]]
+        ):  
+            col_name = ["status", "NumberOfClasses", "NumberOfFeatures", "NumberOfInstances"]
+            if self.structured_query_response[0].get("filter"):
+                filtered_metadata = metadata[
+                        metadata["did"].isin(self.database_filtered)
+                    ]
+                print("Showing database filtered data")
+            else:
+                filtered_metadata = metadata[
+                        metadata["did"].isin(self.rag_response['initial_response'])
+                    ]
+                print("Showing only rag response")
+            return filtered_metadata[["did", "name", *col_name]]
         else:
             return metadata
+        
+  

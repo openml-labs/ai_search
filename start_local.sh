@@ -10,7 +10,10 @@ cd ollama || exit
 ./get_ollama.sh &
 echo $! > $PID_FILE
 
-structured_query = false
+# Fetch configuration from ../backend/config.json
+config_file="../backend/config.json"
+structured_query=$(jq -r '.structured_query' $config_file)
+
 if [ "$structured_query" == true ]; then
     cd ../structured_query || exit
     uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8082 &

@@ -8,7 +8,7 @@ from structured_query_examples import examples
 sys.path.append("../")
 sys.path.append("../data")
 
-with open("attribute_info.json", "r") as f:
+with open("../data/attribute_info.json", "r") as f:
     attribute_info = json.loads(f.read())
 
 attribute_info = attribute_info[1:]
@@ -52,19 +52,22 @@ from fastapi.responses import JSONResponse
 from httpx import ConnectTimeout
 # from llm_service_utils import create_chain, parse_answers_initial
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from langchain_community.query_constructors.chroma import ChromaTranslator
 
 app = FastAPI()
 
-
+print("[INFO] Starting structured query service.")
 # Create port
 @app.get("/structuredquery/{query}", response_class=JSONResponse)
-@retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
+@retry(stop=stop_after_attempt(1), retry=retry_if_exception_type(ConnectTimeout))
 async def get_structured_query(query: str):
     """
-    Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt
-
+    Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt.
 
     """
     query = query.replace("%20", " ")
     response = chain.invoke({"query": query})
-    return response
+    obj = ChromaTranslator()
+    filter_condition = obj.visit_structured_query(structured_query=response)[1]
+   
+    return response, filter_condition
