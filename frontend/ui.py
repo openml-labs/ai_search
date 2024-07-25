@@ -10,7 +10,7 @@ with open("../backend/config.json", "r") as file:
     config = json.load(file)
 
 # Load metadata chroma database
-if config['structure_query']:
+if config['structured_query']:
     import sys
     sys.path.append('../')
     from structured_query.chroma_store_utilis import *
@@ -38,7 +38,7 @@ if st.button("Submit"):
     response_parser = ResponseParser(query_type, apply_llm_before_rag=False)
     if query_type == "Dataset":
         with st.spinner("Waiting for results..."):
-            if config["structure_query"] == True:
+            if config["structured_query"] == True:
                 # get structured query
                 response_parser.fetch_structured_query(
                     query_type, query
