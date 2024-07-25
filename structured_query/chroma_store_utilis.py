@@ -27,7 +27,7 @@ def chunk_dataframe(df, chunk_size):
 
 def load_chroma_metadata():        
     # Define the chunk size
-    chunk_size = 100  # Adjust the chunk size as needed
+    chunk_size = config['chunk_size']  # Adjust the chunk size as needed
 
     # Process each chunk
     for chunk in tqdm(

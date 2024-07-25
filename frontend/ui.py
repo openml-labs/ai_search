@@ -43,8 +43,8 @@ if st.button("Submit"):
                 response_parser.fetch_structured_query(
                     query_type, query
                 )
-                st.write(response_parser.structured_query_response[0])
                 if response_parser.structured_query_response:
+                    st.write(response_parser.structured_query_response[0])
                     # get rag response
                     response_parser.fetch_rag_response(
                         query_type, response_parser.structured_query_response[0]["query"]
