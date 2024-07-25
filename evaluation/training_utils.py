@@ -17,7 +17,7 @@ import chromadb
 import pandas as pd
 
 # change the path to the backend directory
-# sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
+sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 
 
 # %%
@@ -62,6 +62,9 @@ def process_llm_model_name_ollama(name: str) -> str:
 
 
 def ollama_setup(list_of_llm_models: list):
+    """
+    Description: Setup Ollama server and pull the llm_model that is being used
+    """
     os.system("ollama serve&")
     print("Waiting for Ollama server to be active...")
     while os.system("ollama list | grep 'NAME'") == "":
@@ -85,7 +88,7 @@ class ResponseParser(ResponseParser):
         Description: Parse the response from the RAG and LLM services and update the metadata based on the response
         """
         if self.rag_response is not None and self.llm_response is not None:
-            if self.apply_llm_before_rag == False:
+            if not self.apply_llm_before_rag:
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
@@ -96,7 +99,7 @@ class ResponseParser(ResponseParser):
                     llm_parser.get_attributes_from_response()
                     return llm_parser.update_subset_cols(filtered_metadata)
 
-            elif self.apply_llm_before_rag == True:
+            elif self.apply_llm_before_rag:
                 llm_parser = LLMResponseParser(self.llm_response)
                 llm_parser.subset_cols = ["did", "name"]
                 llm_parser.get_attributes_from_response()
@@ -106,14 +109,22 @@ class ResponseParser(ResponseParser):
                     filtered_metadata["did"].isin(self.rag_response["initial_response"])
                 ]
 
-            elif self.apply_llm_before_rag == None:
+            elif self.apply_llm_before_rag is None:
                 # if no llm response is required, return the initial response
                 return metadata
+        elif (
+            self.rag_response is not None and self.structured_query_response is not None
+        ):
+            return metadata[["did", "name"]]
         else:
             return metadata
 
 
 class ExperimentRunner:
+    """
+    Description: This class is used to run all the experiments. If you want to modify any behavior, change the functions in this class according to what you want.
+    You may also want to check out ResponseParser.
+    """
     def __init__(
         self,
         config,
@@ -121,11 +132,13 @@ class ExperimentRunner:
         queries,
         list_of_embedding_models,
         list_of_llm_models,
-        types_of_llm_apply=[True, False, None],
+        types_of_llm_apply=None,
         subset_ids=None,
         use_cached_experiment=False,
         custom_name=None,
     ):
+        if types_of_llm_apply is None:
+            types_of_llm_apply = [True, False, None]
         self.config = config
         self.eval_path = eval_path
         self.queries = queries
@@ -157,11 +170,11 @@ class ExperimentRunner:
                 self.config, orient="index"
             ).reset_index()
             config_df.columns = ["Hyperparameter", "Value"]
-            config_df.to_csv(main_experiment_directory / "config.csv", index=False)
 
             # load the persistent database using ChromaDB
             client = chromadb.PersistentClient(path=self.config["persist_dir"])
 
+            # Note : I was not sure how to move this to the next loop, we need the QA setup going forward..
             if os.path.exists(self.config["persist_dir"]):
                 # load the qa from the persistent database if it exists. Disabling training does this for us.
                 self.config["training"] = False
@@ -183,7 +196,7 @@ class ExperimentRunner:
                     subset_ids=self.subset_ids,
                 )
 
-                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa() 
+                qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
 
             # across all llm models
             for llm_model in tqdm(self.list_of_llm_models, desc="LLM Models"):
@@ -202,7 +215,9 @@ class ExperimentRunner:
                 else:
                     experiment_path = main_experiment_directory / experiment_name
                 os.makedirs(experiment_path, exist_ok=True)
+                config_df.to_csv(experiment_path / "config.csv", index=False)
 
+                # we do not want to run the models again for no reason. So we use existing caches if they exit.
                 if self.use_cached_experiment and os.path.exists(
                     experiment_path / "results.csv"
                 ):
@@ -226,7 +241,7 @@ class ExperimentRunner:
 
     def aggregate_multiple_queries(self, qa_dataset, data_metadata, types_of_llm_apply):
         """
-        Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results.
+        Description: Aggregate the results of multiple queries into a single dataframe and count the number of times a dataset appears in the results. This was done here and not in evaluate to make it a little easier to manage as each of them requires a different chroma_db and config
         """
 
         combined_results = pd.DataFrame()
@@ -241,15 +256,29 @@ class ExperimentRunner:
 
         for query in tqdm(self.queries, total=len(self.queries), leave=True):
             for apply_llm_before_rag in types_of_llm_apply:
-                combined_results = self.run_query(apply_llm_before_rag, combined_results, data_metadata, qa_dataset,
-                                                  query, response_parsers)
+                combined_results = self.run_query(
+                    apply_llm_before_rag,
+                    combined_results,
+                    data_metadata,
+                    qa_dataset,
+                    query,
+                    response_parsers,
+                )
 
         # Concatenate all collected DataFrames at once
         # combined_df = pd.concat(combined_results, ignore_index=True)
 
         return combined_results
 
-    def run_query(self, apply_llm_before_rag, combined_results, data_metadata, qa_dataset, query, response_parsers):
+    def run_query(
+        self,
+        apply_llm_before_rag,
+        combined_results,
+        data_metadata,
+        qa_dataset,
+        query,
+        response_parsers,
+    ):
         response_parser = response_parsers[apply_llm_before_rag]
         result_data_frame, _ = QueryProcessor(
             query=query,
@@ -268,7 +297,6 @@ class ExperimentRunner:
         result_data_frame["llm_model"] = self.config["llm_model"]
         result_data_frame["embedding_model"] = self.config["embedding_model"]
         result_data_frame["llm_before_rag"] = apply_llm_before_rag
-        # combined_results.append(result_data_frame)
         combined_results = pd.concat(
             [combined_results, result_data_frame], ignore_index=True
         )

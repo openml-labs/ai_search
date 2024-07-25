@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import pickle
+
 # from pqdm.processes import pqdm
 from typing import Sequence, Tuple, Union
 
@@ -17,41 +18,32 @@ from .vector_store_utils import *
 
 class OpenMLObjectHandler:
     """
-    Description: The base class for handling OpenML objects.
+    Description: The base class for handling OpenML objects. The logic for handling datasets/flows are subclasses from this.
     """
-
     def __init__(self, config):
         self.config = config
 
     def get_description(self, data_id: int):
         """
         Description: Get the description of the OpenML object.
-
-
         """
         raise NotImplementedError
 
     def get_openml_objects(self):
         """
         Description: Get the OpenML objects.
-
-
         """
         raise NotImplementedError
 
     def initialize_cache(self, data_id: Sequence[int]) -> None:
         """
         Description: Initialize the cache for the OpenML objects.
-
-
         """
         self.get_description(data_id[0])
 
     def get_metadata(self, data_id: Sequence[int]):
         """
         Description: Get metadata from OpenML using parallel processing.
-
-
         """
         return pqdm(
             data_id, self.get_description, n_jobs=self.config["data_download_n_jobs"]
@@ -67,16 +59,13 @@ class OpenMLObjectHandler:
     ):
         """
         Description: Process the metadata.
-
-
         """
         raise NotImplementedError
 
-    def load_metadata(self, file_path: str):
+    @staticmethod
+    def load_metadata(file_path: str):
         """
         Description: Load metadata from a file.
-
-
         """
         try:
             return pd.read_csv(file_path)
@@ -85,13 +74,15 @@ class OpenMLObjectHandler:
                 "Metadata files do not exist. Please run the training pipeline first."
             )
 
-    def extract_attribute(self, attribute: object, attr_name: str) -> str:
+    @staticmethod
+    def extract_attribute(attribute: object, attr_name: str) -> str:
         """
         Description: Extract an attribute from the OpenML object.
         """
         return getattr(attribute, attr_name, "")
 
-    def join_attributes(self, attribute: object, attr_name: str) -> str:
+    @staticmethod
+    def join_attributes(attribute: object, attr_name: str) -> str:
         """
         Description: Join the attributes of the OpenML object.
         """
@@ -103,8 +94,8 @@ class OpenMLObjectHandler:
             else ""
         )
 
+    @staticmethod
     def create_combined_information_df_for_datasets(
-        self,
         data_id: int | Sequence[int],
         descriptions: Sequence[str],
         joined_qualities: Sequence[str],
@@ -122,7 +113,8 @@ class OpenMLObjectHandler:
             }
         )
 
-    def merge_all_columns_to_string(self, row: pd.Series) -> str:
+    @staticmethod
+    def merge_all_columns_to_string(row: pd.Series) -> str:
         """
         Description: Create a single column that has a combined string of all the metadata and the description in the form of "column - value, column - value, ... description"
         """
@@ -142,8 +134,9 @@ class OpenMLObjectHandler:
         )
         return all_dataset_metadata
 
+    @staticmethod
     def subset_metadata(
-        self, subset_ids: Sequence[int] | None, all_dataset_metadata: pd.DataFrame
+        subset_ids: Sequence[int] | None, all_dataset_metadata: pd.DataFrame
     ):
         if subset_ids is not None:
             subset_ids = [int(x) for x in subset_ids]
@@ -177,6 +170,11 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         file_path: str,
         subset_ids=None,
     ):
+        """
+        Description: Combine the metadata attributes into a single string and save it to a CSV / ChromaDB file. Subset the data if given a list of IDs to subset by.
+        """
+
+        # Metadata
         descriptions = [
             self.extract_attribute(attr, "description") for attr in openml_data_object
         ]
@@ -186,6 +184,8 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         joined_features = [
             self.join_attributes(attr, "features") for attr in openml_data_object
         ]
+
+        # Combine them
 
         all_data_description_df = self.create_combined_information_df_for_datasets(
             data_id, descriptions, joined_qualities, joined_features
@@ -197,9 +197,11 @@ class OpenMLDatasetHandler(OpenMLObjectHandler):
         # subset the metadata if subset_ids is not None
         all_dataset_metadata = self.subset_metadata(subset_ids, all_dataset_metadata)
 
+        # Save to a CSV
         all_dataset_metadata.to_csv(file_path)
 
-        if self.config.get("use_chroma_for_saving_metadata") == True:
+        # Save to chroma if needed
+        if self.config.get("use_chroma_for_saving_metadata"):
             client = chromadb.PersistentClient(
                 path=self.config["persist_dir"] + "metadata_db"
             )
@@ -263,6 +265,9 @@ class OpenMLFlowHandler(OpenMLObjectHandler):
 
 
 class OpenMLMetadataProcessor:
+    """
+    Description: Process metadata using the OpenMLHandlers
+    """
     def __init__(self, config: dict):
         self.config = config
         self.save_filename = os.path.join(
@@ -287,7 +292,7 @@ class OpenMLMetadataProcessor:
                     "Metadata files do not exist. Please run the training pipeline first."
                 )
             print("[INFO] Loading metadata from file.")
-            return self.load_metadata_from_file(self.save_filename)
+            return load_metadata_from_file(self.save_filename)
 
         print("[INFO] Training is set to True.")
         handler = (
@@ -311,21 +316,11 @@ class OpenMLMetadataProcessor:
         openml_data_object = handler.get_metadata(data_id)
 
         print("[INFO] Saving metadata to file.")
-        self.save_metadata_to_file(
+        save_metadata_to_file(
             (openml_data_object, data_id, all_objects, handler), self.save_filename
         )
 
         return openml_data_object, data_id, all_objects, handler
-
-    def load_metadata_from_file(self, filename: str):
-        # Implement the function to load metadata from a file
-        with open(filename, "rb") as f:
-            return pickle.load(f)
-
-    def save_metadata_to_file(self, data: Tuple, save_filename: str):
-        # Implement the function to save metadata to a file
-        with open(save_filename, "wb") as f:
-            pickle.dump(data, f)
 
     def create_metadata_dataframe(
         self,
@@ -356,3 +351,15 @@ class OpenMLMetadataProcessor:
             self.description_filename,
             subset_ids,
         )
+
+
+def save_metadata_to_file(data: Tuple, save_filename: str):
+    # Implement the function to save metadata to a file
+    with open(save_filename, "wb") as f:
+        pickle.dump(data, f)
+
+
+def load_metadata_from_file(filename: str):
+    # Implement the function to load metadata from a file
+    with open(filename, "rb") as f:
+        return pickle.load(f)

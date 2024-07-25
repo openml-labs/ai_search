@@ -4,11 +4,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 
-def create_chain(prompt, model="llama3", temperature=0):
+def create_chain(prompt, model: str = "llama3", temperature: int = 0):
     """
-    Description: Create a chain with the given prompt and model
-
-
+    Description: Create a langchain chain with the given prompt and model and the temperature.
+    The lower the temperature, the less "creative" the model will be.
     """
     llm = ChatOllama(model=model, temperature=temperature)
     prompt = ChatPromptTemplate.from_template(prompt)
@@ -16,15 +15,13 @@ def create_chain(prompt, model="llama3", temperature=0):
     return prompt | llm | StrOutputParser()
 
 
-def parse_answers_initial(response, patterns, prompt_dict):
+def parse_answers_initial(response: str, patterns: list, prompt_dict: dict) -> dict:
     """
     Description: Parse the answers from the initial response
-
-
+    - if the response contains a ? and a new line then join the next line with it (sometimes the LLM adds a new line after the ? instead of just printing it on the same line)
     """
 
     answers = []
-    # if the response contains a ? and a new line then join the next line with it (sometimes the LLM adds a new line after the ? instead of just printing it on the same line)
     response = response.replace("?\n", "?")
 
     # convert the response to lowercase and split it into lines

@@ -23,17 +23,29 @@ os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 
 class LLMChainInitializer:
+    """
+    Description: Setup the vectordb (Chroma) as a retriever with parameters
+    """
     @staticmethod
     def initialize_llm_chain(
         vectordb: Chroma, config: dict
     ) -> langchain.chains.retrieval_qa.base.RetrievalQA:
-        return vectordb.as_retriever(
-            search_type=config["search_type"],
-            search_kwargs={"k": config["num_return_documents"]},
-        )
+        if config["search_type"] == "similarity_score_threshold":
+            return vectordb.as_retriever(
+                search_type=config["search_type"],
+                search_kwargs={"k": config["num_return_documents"], "score_threshold": 0.5},
+            )
+        else:
+            return vectordb.as_retriever(
+                search_type=config["search_type"],
+                search_kwargs={"k": config["num_return_documents"]},
+            )
 
 
 class QASetup:
+    """
+    Description: Setup the VectorDB, QA and initalize the LLM for each type of data
+    """
     def __init__(
         self, config: dict, data_type: str, client: ClientAPI, subset_ids: list = None
     ):
@@ -65,11 +77,17 @@ class QASetup:
 
 
 class LLMChainCreator:
+    """
+    Description: Gets Ollama, sends query, enables query caching
+    """
     def __init__(self, config: dict, local: bool = False):
         self.config = config
         self.local = local
 
     def get_llm_chain(self) -> LLMChain | bool:
+        """
+        Description: Send a query to Ollama using the paths.
+        """
         base_url = "http://127.0.0.1:11434" if self.local else "http://ollama:11434"
         llm = Ollama(model=self.config["llm_model"], base_url=base_url)
         map_template = self.config["llm_prompt_template"]
@@ -77,6 +95,9 @@ class LLMChainCreator:
         return map_prompt | llm | StrOutputParser()
 
     def enable_cache(self):
+        """
+        Description: Enable a cache for queries to prevent running the same query again for no reason.
+        """
         set_llm_cache(
             SQLiteCache(
                 database_path=os.path.join(self.config["data_dir"], ".langchain.db")

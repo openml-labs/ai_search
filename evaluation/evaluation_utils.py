@@ -6,9 +6,14 @@ from tqdm.auto import tqdm
 
 
 class EvaluationProcessor:
+    """
+    Description: Process all the evaluated results, add the required metrics and save results as a csv/generate plots
+    """
     def __init__(
-        self, eval_path, metrics=["precision", "recall", "map"], sort_by="precision"
+        self, eval_path, metrics=None, sort_by="precision"
     ):
+        if metrics is None:
+            metrics = ["precision", "recall", "map"]
         self.eval_path = eval_path
         self.load_eval_queries = self.load_queries_from_csv()
         self.query_templates = self.load_query_templates()
@@ -16,9 +21,16 @@ class EvaluationProcessor:
         self.metrics = metrics
         self.sort_by = sort_by
 
+        # Define a dictionary to map metric names to their corresponding methods
+        self.metric_methods = {
+            "precision": self.add_precision,
+            "recall": self.add_recall,
+            "map": self.add_map
+        }
+
     def run(self):
         """
-        Description: Run the evaluation process and display the results
+        Description: Load files, Run the evaluation process and display the results
 
         """
         csv_files = self.load_result_files()
@@ -28,7 +40,7 @@ class EvaluationProcessor:
 
     def load_result_files(self):
         """
-        Description: Find all the csv files in the evaluation directory
+        Description: Find all the csv files in the evaluation directory.
 
         """
         return glob.glob(str(self.eval_path / "*/*/results.csv"))
@@ -42,9 +54,9 @@ class EvaluationProcessor:
         for exp_path in tqdm(csv_files):
             exp = pd.read_csv(exp_path).rename(columns={"did": "y_pred"})
             exp["exp_folder_name"] = Path(exp_path).parent.name
-            exp["custom_experiement"] = ""
+            exp["custom_experiment"] = ""
             # split exp_folder_name by @ to get extra information
-            exp["custom_experiement"] = exp["exp_folder_name"].apply(
+            exp["custom_experiment"] = exp["exp_folder_name"].apply(
                 lambda x: x.split("@")[0] if "@" in x else ""
             )
             exp.drop("exp_folder_name", axis=1, inplace=True)
@@ -56,24 +68,11 @@ class EvaluationProcessor:
                     "llm_model",
                     "query",
                     "llm_before_rag",
-                    "custom_experiement",
+                    "custom_experiment",
                 ]
             ).agg({"y_true": ",".join, "y_pred": ",".join})
 
-            # add metrics
-            for metric in self.metrics:
-                if metric == "precision":
-                    grouped_results_for_y_true_and_pred = self.add_precision(
-                        grouped_results_for_y_true_and_pred
-                    )
-                elif metric == "recall":
-                    grouped_results_for_y_true_and_pred = self.add_recall(
-                        grouped_results_for_y_true_and_pred
-                    )
-                elif metric == "map":
-                    grouped_results_for_y_true_and_pred = self.add_map(
-                        grouped_results_for_y_true_and_pred
-                    )
+            grouped_results_for_y_true_and_pred = self.add_metrics(grouped_results_for_y_true_and_pred)
 
             # aggregate by computing the average of the metrics for each group
             grouped_results_for_y_true_and_pred = (
@@ -82,7 +81,7 @@ class EvaluationProcessor:
                         "embedding_model",
                         "llm_model",
                         "llm_before_rag",
-                        "custom_experiement",
+                        "custom_experiment",
                     ]
                 ).agg({metric: "mean" for metric in self.metrics})
             )
@@ -94,6 +93,16 @@ class EvaluationProcessor:
             if self.sort_by in self.metrics:
                 merged_df = merged_df.sort_values(by=self.sort_by, ascending=False)
         return merged_df
+
+    def add_metrics(self, grouped_results_for_y_true_and_pred):
+        # Iterate over the metrics and apply the corresponding method if it exists
+        for metric in self.metrics:
+            if metric in self.metric_methods:
+                grouped_results_for_y_true_and_pred = self.metric_methods[metric](
+                    grouped_results_for_y_true_and_pred
+                )
+
+        return grouped_results_for_y_true_and_pred
 
     def load_queries_from_csv(self):
         """
@@ -137,7 +146,8 @@ class EvaluationProcessor:
         results_df["y_true"] = results_df["query"].map(self.query_key_dict)
         return results_df
 
-    def add_precision(self, grouped_df):
+    @staticmethod
+    def add_precision(grouped_df):
         """
         Description: Compute the precision metric for each group in the dataframe
         """
@@ -147,7 +157,8 @@ class EvaluationProcessor:
         ]
         return grouped_df
 
-    def add_recall(self, grouped_df):
+    @staticmethod
+    def add_recall(grouped_df):
         """
         Description: Compute the recall metric for each group in the dataframe
 
@@ -158,7 +169,8 @@ class EvaluationProcessor:
         ]
         return grouped_df
 
-    def add_map(self, grouped_df):
+    @staticmethod
+    def add_map(grouped_df):
         """
         Description: Compute the mean average precision metric for each group in the dataframe
         """
@@ -174,7 +186,8 @@ class EvaluationProcessor:
         ]
         return grouped_df
 
-    def display_results(self, results_df):
+    @staticmethod
+    def display_results(results_df):
         # add more preprocessing here
         results_df = pd.DataFrame(results_df)
         # heatmap results

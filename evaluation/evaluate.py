@@ -4,9 +4,9 @@ from pathlib import Path
 import pandas as pd
 from evaluation_utils import EvaluationProcessor
 from tqdm import tqdm
-
+metrics = ["precision", "recall", "map"]
 eval_path = Path("../data/evaluation/")
-processor = EvaluationProcessor(eval_path, sort_by=None)
+processor = EvaluationProcessor(eval_path, sort_by=None, metrics=metrics)
 results_display = processor.run()
 print(results_display)
 

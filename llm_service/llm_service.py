@@ -35,9 +35,7 @@ app = FastAPI()
 @retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
 async def get_llm_query(query: str):
     """
-    Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt
-
-
+    Description: Get the query, replace %20 (url spacing) with space and invoke the chain to get the answers based on the prompt
     """
     query = query.replace("%20", " ")
     response = chain.invoke({"query": query})

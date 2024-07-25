@@ -11,18 +11,26 @@ from tqdm.auto import tqdm
 
 
 class DataLoader:
-    def __init__(self, metadata_df: pd.DataFrame, page_content_column: str):
+    """
+    Description: Used to chunk data
+    """
+    def __init__(self, metadata_df: pd.DataFrame, page_content_column: str, chunk_size:int = 1000, chunk_overlap:int = 150):
         self.metadata_df = metadata_df
         self.page_content_column = page_content_column
+        self.chunk_size = chunk_size
+        self.chunk_overlap = chunk_overlap if self.chunk_size > chunk_overlap else self.chunk_size
 
     def load_and_process_data(self) -> list:
+        """
+        Description: Recursively chunk data before embedding
+        """
         loader = DataFrameLoader(
             self.metadata_df, page_content_column=self.page_content_column
         )
         documents = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000, chunk_overlap=150
+            chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
         )
         documents = text_splitter.split_documents(documents)
 
@@ -30,8 +38,14 @@ class DataLoader:
 
 
 class DocumentProcessor:
+    """
+    Description: Used to generate unique documents based on text content to prevent duplicates during embedding
+    """
     @staticmethod
     def generate_unique_documents(documents: list, db: Chroma) -> tuple:
+        """
+        Description: Sometimes the text content of the data is the same, this ensures that does not happen by computing a string matching
+        """
         new_document_ids = set([str(x.metadata["did"]) for x in documents])
         print(f"[INFO] Generating unique documents. Total documents: {len(documents)}")
         try:
@@ -57,16 +71,25 @@ class DocumentProcessor:
 
 
 class VectorStoreManager:
+    """
+    Description: Manages the Vector store (chromadb) and takes care of data ingestion, loading the embedding model and embedding the data before adding it to the vector store
+    """
     def __init__(self, chroma_client: ClientAPI, config: dict):
         self.chroma_client = chroma_client
         self.config = config
         self.chunk_size = 100
 
     def chunk_dataframe(self, df, chunk_size):
+        """
+        Description: Chunk dataframe for use with chroma metadata saving
+        """
         for i in range(0, df.shape[0], self.chunk_size):
             yield df.iloc[i : i + self.chunk_size]
 
     def add_df_chunks_to_db(self, metadata_df):
+        """
+        Description: Add chunks from a dataframe for use with chroma metadata saving
+        """
         collec = self.chroma_client.get_or_create_collection("metadata")
         for chunk in tqdm(
             self.chunk_dataframe(metadata_df, self.chunk_size),
@@ -80,6 +103,9 @@ class VectorStoreManager:
             collec.add(ids=ids, documents=documents, metadatas=metadatas)
 
     def load_model(self) -> HuggingFaceEmbeddings | None:
+        """
+        Description: Load a model from Hugging face for embedding
+        """
         print("[INFO] Loading model...")
         model_kwargs = {"device": self.config["device"], "trust_remote_code": True}
         encode_kwargs = {"normalize_embeddings": True}
@@ -93,6 +119,9 @@ class VectorStoreManager:
         return embeddings
 
     def get_collection_name(self) -> str:
+        """
+        Description: Fixes some collection names. (workaround from OpenML API)
+        """
         return {"dataset": "datasets", "flow": "flows"}.get(
             self.config["type_of_data"], "default"
         )
@@ -100,6 +129,9 @@ class VectorStoreManager:
     def load_vector_store(
         self, embeddings: HuggingFaceEmbeddings, collection_name: str
     ) -> Chroma:
+        """
+        Description: Persist directory. If does not exist, cannot be served
+        """
         if not os.path.exists(self.config["persist_dir"]):
             raise Exception(
                 "Persist directory does not exist. Please run the training pipeline first."
@@ -112,8 +144,11 @@ class VectorStoreManager:
             collection_name=collection_name,
         )
 
-    def add_documents_to_db(self, db, unique_docs, unique_ids):
-        bs = 512
+    @staticmethod
+    def add_documents_to_db(db, unique_docs, unique_ids, bs = 512):
+        """
+        Description: Add documents to Chroma DB in batches of bs
+        """
         if len(unique_docs) < bs:
             db.add_documents(unique_docs, ids=unique_ids)
         else:
@@ -121,6 +156,9 @@ class VectorStoreManager:
                 db.add_documents(unique_docs[i : i + bs], ids=unique_ids[i : i + bs])
 
     def create_vector_store(self, metadata_df: pd.DataFrame) -> Chroma:
+        """
+        Description: Load embeddings, get chunked data, subset if needed , find unique, and then finally add to ChromaDB
+        """
         embeddings = self.load_model()
         collection_name = self.get_collection_name()
 
@@ -132,7 +170,7 @@ class VectorStoreManager:
         )
 
         data_loader = DataLoader(
-            metadata_df, page_content_column="Combined_information"
+            metadata_df, page_content_column="Combined_information", chunk_size = self.config["chunk_size"]
         )
         documents = data_loader.load_and_process_data()
 

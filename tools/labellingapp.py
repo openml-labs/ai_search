@@ -2,7 +2,7 @@
 Small tool for labeling data.
 
 pip install streamlit
-streamlit run app.py
+streamlit run labellingapp.py
 
 Expects the metadata csv and the topic csv in the `data` directory.
 """

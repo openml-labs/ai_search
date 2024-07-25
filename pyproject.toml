@@ -8,6 +8,7 @@ packages = [
     { include = "backend", from = "." },
     { include = "frontend", from = "." },
     { include = "llm_service", from = "." },
+    { include = "evaluation", from = "." },
 ]
 [tool.poetry.dependencies]
 python = "^3.10"

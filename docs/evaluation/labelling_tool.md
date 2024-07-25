@@ -34,4 +34,3 @@ You can now browse through datasets, and for each dataset you can select which o
 Changes are not automatically persisted. If the 'save me' button is red, there are local unsaved changes. Click it to persist the changes.
 
 We should be able to merge the different label files later without problem.
-
