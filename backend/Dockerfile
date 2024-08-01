@@ -1,12 +1,13 @@
 FROM python:3.10.14
 RUN mkdir /fastapi
-COPY requirements.txt fastapi/requirements.txt
+RUN mkdir /data
+COPY ./backend /fastapi
+COPY ./data /data
 WORKDIR /fastapi
 
 RUN pip install -r requirements.txt
 
-COPY ./data /fastapi
-COPY . /fastapi
+#COPY . /fastapi
 # COPY modules /fastapi
 # COPY *.py /fastapi
 # COPY *.json /fastapi

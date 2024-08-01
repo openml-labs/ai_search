@@ -16,11 +16,12 @@ if config["testing_flag"]:
     config["test_subset"] = True
     config["data_dir"] = "./data/testing_data/"
 # load the persistent database using ChromaDB
+print('Loading DB')
 client = chromadb.PersistentClient(path=config["persist_dir"])
 # Loading the metadata for all types
 
 # Setup llm chain, initialize the retriever and llm, and setup Retrieval QA
-
+print('Setting LLM chain')
 qa_dataset_handler = QASetup(
     config=config,
     data_type="dataset",
@@ -41,7 +42,7 @@ qa_flow, _ = qa_flow_handler.setup_vector_db_and_qa()
 llm_chain_handler = LLMChainCreator(config=config, local=True)
 llm_chain_handler.enable_cache()
 llm_chain = llm_chain_handler.get_llm_chain()
-
+print('OK.')
 
 # Send test query as first query to avoid cold start
 try:

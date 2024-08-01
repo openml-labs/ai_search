@@ -1,6 +1,6 @@
 services:
   ollama:
-    # build: ollama/
+#    build: ollama/
     image: ollama/ollama:latest
     ports: 
       - 11434:11434
@@ -9,14 +9,16 @@ services:
     # restart: always
     # tty: true
     container_name: ollama
-    restart: unless-stopped
-    # volumes:
-      # - ./get_ollama.sh:/get_ollama.sh
-    # entrypoint: ["/bin/bash", "/get_ollama.sh"]
+#    restart: unless-stopped
+    volumes:
+      - ./ollama/get_ollama.sh:/get_ollama.sh
+    entrypoint: ["/bin/bash", "/get_ollama.sh"]
 
   fastapi:
-    build: backend/
-    ports: 
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
       - 8000:8000
     networks:
       - deploy_network
@@ -24,12 +26,24 @@ services:
       - ollama
     container_name: fastapi
 
+  llmservice:
+    build: llm_service/
+    ports:
+      - 8081:8081
+    networks:
+      - deploy_network
+    depends_on:
+      - ollama
+    container_name: llmservice
+
   streamlit:
-    build: frontend/
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
     depends_on:
       - fastapi
       - ollama
-    ports: 
+    ports:
         - 8501:8501
     networks:
       - deploy_network
