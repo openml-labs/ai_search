@@ -205,8 +205,28 @@ class ResponseParser:
         -  self.apply_llm_before_rag == False
              - Metadata is filtered based by the Query parsing LLM first and the rag response second
         """
-        if self.rag_response is not None and self.llm_response is not None:
-            if not self.apply_llm_before_rag:
+        if self.apply_llm_before_rag is None or self.llm_response is None:
+            print('No LLM filter.')
+            print(self.rag_response)
+            filtered_metadata = metadata[
+                metadata["did"].isin(self.rag_response["initial_response"])
+            ]
+            print(filtered_metadata)
+            # if no llm response is required, return the initial response
+            return filtered_metadata
+
+        elif self.rag_response is not None and self.llm_response is not None:
+            if self.apply_llm_before_rag is None:
+                print('No LLM filter.')
+                print(self.rag_response)
+                filtered_metadata = metadata[
+                    metadata["did"].isin(self.rag_response["initial_response"])
+                ]
+                print(filtered_metadata)
+                # if no llm response is required, return the initial response
+                return filtered_metadata
+            elif not self.apply_llm_before_rag:
+                print('RAG before LLM filter.')
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
@@ -216,6 +236,7 @@ class ResponseParser:
                     llm_parser.get_attributes_from_response()
                     return llm_parser.update_subset_cols(filtered_metadata)
             elif self.apply_llm_before_rag:
+                print('LLM filter before RAG')
                 llm_parser = LLMResponseParser(self.llm_response)
                 llm_parser.get_attributes_from_response()
                 filtered_metadata = llm_parser.update_subset_cols(metadata)
@@ -224,9 +245,6 @@ class ResponseParser:
                     filtered_metadata["did"].isin(self.rag_response["initial_response"])
                 ]
 
-            elif self.apply_llm_before_rag is None:
-                # if no llm response is required, return the initial response
-                return metadata
         elif (
             self.rag_response is not None and self.structured_query_response is not None
         ):  
@@ -242,7 +260,5 @@ class ResponseParser:
                     ]
                 print("Showing only rag response")
             return filtered_metadata[["did", "name", *col_name]]
-        else:
-            return metadata
         
   

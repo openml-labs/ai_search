@@ -4,7 +4,7 @@
         "local" : "http://0.0.0.0:8000/"
     },
     "llm_response" : {
-        "docker" : "http://fastapi:8081/llmquery/",
+        "docker" : "http://llmservice:8081/llmquery/",
         "local" : "http://0.0.0.0:8081/llmquery/"
     },
     "structured_query": {

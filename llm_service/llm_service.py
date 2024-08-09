@@ -25,8 +25,9 @@ patterns = [
 # join the prompt dictionary to the prompt template to create the final prompt
 prompt = prompt_template + "\n".join([prompt_dict[key] for key in prompt_dict.keys()])
 
-chain = create_chain(prompt)
 
+chain = create_chain(prompt)
+chain_docker = create_chain(prompt, base_url='http://ollama:11434')
 app = FastAPI()
 
 
@@ -38,6 +39,9 @@ async def get_llm_query(query: str):
     Description: Get the query, replace %20 (url spacing) with space and invoke the chain to get the answers based on the prompt
     """
     query = query.replace("%20", " ")
-    response = chain.invoke({"query": query})
+    try:
+        response = chain_docker.invoke({"query": query})
+    except:
+        response = chain.invoke({"query": query})
     answers = parse_answers_initial(response, patterns, prompt_dict)
     return JSONResponse(content=answers)
