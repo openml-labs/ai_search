@@ -33,9 +33,11 @@ query = st.text_input("Enter your query")
 st.session_state["query"] = query
 st.session_state["query_type"] = query_type
 
+llm_filter = st.checkbox('LLM Filter')
 # Submit button logic
 if st.button("Submit"):
-    response_parser = ResponseParser(query_type, apply_llm_before_rag=False)
+    apply_llm_before_rag=None if not llm_filter else False
+    response_parser = ResponseParser(query_type, apply_llm_before_rag=apply_llm_before_rag)
     if query_type == "Dataset":
         with st.spinner("Waiting for results..."):
             if config["structured_query"] == True:
@@ -59,8 +61,9 @@ if st.button("Submit"):
             else:
                 # get rag response
                 response_parser.fetch_rag_response(query_type, query)
-                # get llm response
-                response_parser.fetch_llm_response(query)
+                if llm_filter:
+                    # get llm response
+                    response_parser.fetch_llm_response(query)
                 # get updated columns based on llm response
                 
             results = response_parser.parse_and_update_response(data_metadata)

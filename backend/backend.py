@@ -66,8 +66,8 @@ async def read_dataset(query: str):
         # Fetch the result data frame based on the query
         _, ids_order = QueryProcessor(
             query=query,
-            qa=qa_dataset if type_of_query == "dataset" else qa_flow,
-            type_of_query=type_of_query,
+            qa=qa_dataset,
+            type_of_query='dataset',
             config=config,
         ).get_result_from_query()
 
@@ -87,8 +87,8 @@ async def read_flow(query: str):
     try:
         _, ids_order = QueryProcessor(
             query=query,
-            qa=qa_dataset if type_of_query == "flow" else qa_flow,
-            type_of_query=type_of_query,
+            qa=qa_flow,
+            type_of_query='flow',
             config=config,
         ).get_result_from_query()
 

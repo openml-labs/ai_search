@@ -1,3 +1,3 @@
-cd ai_search/backend
+cd backend
 python training.py
 cd ..
