@@ -13,7 +13,7 @@ content_attr = [
     "NumberOfInstances"
 ]
 
-chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3")
+chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3.1")
 
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 from langchain_community.query_constructors.chroma import ChromaTranslator
