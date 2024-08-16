@@ -165,19 +165,19 @@ class ResponseParser:
             print(f"Error occurred while fetching from local endpoint: {e}")
             # Set structured_query_response to None if the local request also fails
             self.structured_query_response = None
-        
+
         return self.structured_query_response
-    
+
     def database_filter(self, filter_condition, collec):
         """
         Apply database filter on the rag_response
         """
         ids = list(map(str, self.rag_response['initial_response']))
-        self.database_filtered = collec.get(ids = ids, where=filter_condition)['ids']
+        self.database_filtered = collec.get(ids=ids, where=filter_condition)['ids']
         self.database_filtered = list(map(int, self.database_filtered))
         # print(self.database_filtered)
         return self.database_filtered
-        
+
     def fetch_rag_response(self, query_type, query):
         """
         Description: Fetch the response from RAG pipeline
@@ -194,6 +194,14 @@ class ResponseParser:
                 f"{rag_response_path['local']}{query_type.lower()}/{query}",
                 json={"query": query, "type": query_type.lower()},
             ).json()
+        doc_set = set()
+        ordered_set = []
+        for docid in self.rag_response['initial_response']:
+            if docid not in doc_set:
+                ordered_set.append(docid)
+            doc_set.add(docid)
+        self.rag_response['initial_response'] = ordered_set
+
         return self.rag_response
 
     def parse_and_update_response(self, metadata: pd.DataFrame):
@@ -207,29 +215,29 @@ class ResponseParser:
         """
         if self.apply_llm_before_rag is None or self.llm_response is None:
             print('No LLM filter.')
-            print(self.rag_response)
+            print(self.rag_response, flush=True)
             filtered_metadata = metadata[
                 metadata["did"].isin(self.rag_response["initial_response"])
             ]
+            filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+                                                      categories=self.rag_response["initial_response"],
+                                                      ordered=True)
+            filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+
             print(filtered_metadata)
             # if no llm response is required, return the initial response
             return filtered_metadata
 
         elif self.rag_response is not None and self.llm_response is not None:
-            if self.apply_llm_before_rag is None:
-                print('No LLM filter.')
-                print(self.rag_response)
-                filtered_metadata = metadata[
-                    metadata["did"].isin(self.rag_response["initial_response"])
-                ]
-                print(filtered_metadata)
-                # if no llm response is required, return the initial response
-                return filtered_metadata
-            elif not self.apply_llm_before_rag:
+            if not self.apply_llm_before_rag:
                 print('RAG before LLM filter.')
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
+                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+                                                          categories=self.rag_response["initial_response"],
+                                                          ordered=True)
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
                 llm_parser = LLMResponseParser(self.llm_response)
 
                 if self.query_type.lower() == "dataset":
@@ -240,25 +248,33 @@ class ResponseParser:
                 llm_parser = LLMResponseParser(self.llm_response)
                 llm_parser.get_attributes_from_response()
                 filtered_metadata = llm_parser.update_subset_cols(metadata)
-
-                return filtered_metadata[
-                    filtered_metadata["did"].isin(self.rag_response["initial_response"])
+                filtered_metadata = filtered_metadata[
+                    metadata["did"].isin(self.rag_response["initial_response"])
                 ]
+                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+                                                          categories=self.rag_response["initial_response"],
+                                                          ordered=True)
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                return filtered_metadata
 
-        elif (
-            self.rag_response is not None and self.structured_query_response is not None
-        ):  
+        elif self.rag_response is not None and self.structured_query_response is not None:
             col_name = ["status", "NumberOfClasses", "NumberOfFeatures", "NumberOfInstances"]
             if self.structured_query_response[0].get("filter"):
                 filtered_metadata = metadata[
-                        metadata["did"].isin(self.database_filtered)
-                    ]
+                    metadata["did"].isin(self.database_filtered)
+                ]
+                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+                                                          categories=self.rag_response["initial_response"],
+                                                          ordered=True)
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
                 print("Showing database filtered data")
             else:
                 filtered_metadata = metadata[
-                        metadata["did"].isin(self.rag_response['initial_response'])
-                    ]
+                    metadata["did"].isin(self.rag_response['initial_response'])
+                ]
+                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+                                                          categories=self.rag_response["initial_response"],
+                                                          ordered=True)
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
                 print("Showing only rag response")
             return filtered_metadata[["did", "name", *col_name]]
-        
-  
