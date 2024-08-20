@@ -30,6 +30,7 @@ if __name__ == "__main__":
         "BAAI/bge-large-en-v1.5",
         "BAAI/bge-base-en-v1.5",
         "Snowflake/snowflake-arctic-embed-l",
+        "Alibaba-NLP/gte-large-en-v1.5"
     ]
     list_of_llm_models = ["llama3", "phi3"]
 

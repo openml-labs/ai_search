@@ -175,7 +175,8 @@ class ExperimentRunner:
             client = chromadb.PersistentClient(path=self.config["persist_dir"])
 
             # Note : I was not sure how to move this to the next loop, we need the QA setup going forward..
-            if os.path.exists(self.config["persist_dir"]):
+            # Check if the chroma db as well as metadata files exist.
+            if os.path.exists(self.config["persist_dir"]) and os.path.exists(main_experiment_directory/"all_dataset_description.csv"):
                 # load the qa from the persistent database if it exists. Disabling training does this for us.
                 self.config["training"] = False
 
@@ -189,6 +190,7 @@ class ExperimentRunner:
                 qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
                 self.config["training"] = True
             else:
+                self.config["training"] = True
                 qa_dataset_handler = QASetup(
                     config=self.config,
                     data_type=self.config["type_of_data"],
