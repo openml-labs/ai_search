@@ -13,7 +13,7 @@ content_attr = [
     "NumberOfInstances"
 ]
 
-chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3.1")
+chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3")
 
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
 from langchain_community.query_constructors.chroma import ChromaTranslator
@@ -23,7 +23,7 @@ app = FastAPI()
 print("[INFO] Starting structured query service.")
 # Create port
 @app.get("/structuredquery/{query}", response_class=JSONResponse)
-@retry(stop=stop_after_attempt(1), retry=retry_if_exception_type(ConnectTimeout))
+@retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
 async def get_structured_query(query: str):
     """
     Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt.

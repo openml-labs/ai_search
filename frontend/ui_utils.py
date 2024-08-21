@@ -6,7 +6,11 @@ import streamlit as st
 from streamlit import session_state as ss
 from langchain_community.query_constructors.chroma import ChromaTranslator
 import pandas as pd
+import sys
+from pathlib import Path
 
+sys.path.append("../")
+from structured_query.chroma_store_utilis import *
 
 def feedback_cb():
     """
@@ -35,7 +39,7 @@ def display_results(initial_response):
     """
     Description: Display the results in a DataFrame
     """
-    st.write("Results:")
+    st.write("OpenML Agent: ")
     st.dataframe(initial_response)
 
 
@@ -172,8 +176,8 @@ class ResponseParser:
         """
         Apply database filter on the rag_response
         """
-        ids = list(map(str, self.rag_response['initial_response']))
-        self.database_filtered = collec.get(ids=ids, where=filter_condition)['ids']
+        ids = list(map(str, self.rag_response["initial_response"]))
+        self.database_filtered = collec.get(ids=ids, where=filter_condition)["ids"]
         self.database_filtered = list(map(int, self.database_filtered))
         # print(self.database_filtered)
         return self.database_filtered
@@ -196,11 +200,11 @@ class ResponseParser:
             ).json()
         doc_set = set()
         ordered_set = []
-        for docid in self.rag_response['initial_response']:
+        for docid in self.rag_response["initial_response"]:
             if docid not in doc_set:
                 ordered_set.append(docid)
             doc_set.add(docid)
-        self.rag_response['initial_response'] = ordered_set
+        self.rag_response["initial_response"] = ordered_set
 
         return self.rag_response
 
@@ -214,67 +218,194 @@ class ResponseParser:
              - Metadata is filtered based by the Query parsing LLM first and the rag response second
         """
         if self.apply_llm_before_rag is None or self.llm_response is None:
-            print('No LLM filter.')
-            print(self.rag_response, flush=True)
+            print("No LLM filter.")
+            # print(self.rag_response, flush=True)
             filtered_metadata = metadata[
                 metadata["did"].isin(self.rag_response["initial_response"])
             ]
-            filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                      categories=self.rag_response["initial_response"],
-                                                      ordered=True)
-            filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+            filtered_metadata["did"] = pd.Categorical(
+                filtered_metadata["did"],
+                categories=self.rag_response["initial_response"],
+                ordered=True,
+            )
+            filtered_metadata = filtered_metadata.sort_values("did").reset_index(
+                drop=True
+            )
 
-            print(filtered_metadata)
+            # print(filtered_metadata)
             # if no llm response is required, return the initial response
             return filtered_metadata
 
         elif self.rag_response is not None and self.llm_response is not None:
             if not self.apply_llm_before_rag:
-                print('RAG before LLM filter.')
+                print("RAG before LLM filter.")
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                filtered_metadata["did"] = pd.Categorical(
+                    filtered_metadata["did"],
+                    categories=self.rag_response["initial_response"],
+                    ordered=True,
+                )
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(
+                    drop=True
+                )
                 llm_parser = LLMResponseParser(self.llm_response)
 
                 if self.query_type.lower() == "dataset":
                     llm_parser.get_attributes_from_response()
                     return llm_parser.update_subset_cols(filtered_metadata)
             elif self.apply_llm_before_rag:
-                print('LLM filter before RAG')
+                print("LLM filter before RAG")
                 llm_parser = LLMResponseParser(self.llm_response)
                 llm_parser.get_attributes_from_response()
                 filtered_metadata = llm_parser.update_subset_cols(metadata)
                 filtered_metadata = filtered_metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
                 ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                filtered_metadata["did"] = pd.Categorical(
+                    filtered_metadata["did"],
+                    categories=self.rag_response["initial_response"],
+                    ordered=True,
+                )
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(
+                    drop=True
+                )
                 return filtered_metadata
 
-        elif self.rag_response is not None and self.structured_query_response is not None:
-            col_name = ["status", "NumberOfClasses", "NumberOfFeatures", "NumberOfInstances"]
+        elif (
+            self.rag_response is not None and self.structured_query_response is not None
+        ):
+            col_name = [
+                "status",
+                "NumberOfClasses",
+                "NumberOfFeatures",
+                "NumberOfInstances",
+            ]
             if self.structured_query_response[0].get("filter"):
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.database_filtered)
                 ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                filtered_metadata["did"] = pd.Categorical(
+                    filtered_metadata["did"],
+                    categories=self.rag_response["initial_response"],
+                    ordered=True,
+                )
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(
+                    drop=True
+                )
                 print("Showing database filtered data")
             else:
                 filtered_metadata = metadata[
-                    metadata["did"].isin(self.rag_response['initial_response'])
+                    metadata["did"].isin(self.rag_response["initial_response"])
                 ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                filtered_metadata["did"] = pd.Categorical(
+                    filtered_metadata["did"],
+                    categories=self.rag_response["initial_response"],
+                    ordered=True,
+                )
+                filtered_metadata = filtered_metadata.sort_values("did").reset_index(
+                    drop=True
+                )
                 print("Showing only rag response")
             return filtered_metadata[["did", "name", *col_name]]
+
+class UILoader:
+    """
+    Description : Create the chat interface
+    """
+    def __init__(self, config_path):
+        with open(config_path, "r") as file:
+            # Load config
+            self.config = json.load(file)
+
+        # Paths and display information
+        
+        self.chatbot_display = "How do I do X using OpenML? / Find me a dataset about Y"
+        self.chatbot_input_max_chars = 500
+
+        # Load metadata chroma database for structured query
+        self.collec = load_chroma_metadata()
+
+        # Metadata paths
+        self.data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
+        self.flow_metadata_path = Path(config["data_dir"]) / "all_flow_description.csv"
+
+        # Read metadata
+        self.data_metadata = pd.read_csv(self.data_metadata_path)
+        self.flow_metadata = pd.read_csv(self.flow_metadata_path)
+
+        # defaults
+        self.query_type = "Dataset"
+        self.llm_filter = False
+
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+    def chat_entry(self):
+        """
+        Description: Create the chat input box with a maximum character limit
+        
+        """
+        return st.chat_input(
+            self.chatbot_display, max_chars=self.chatbot_input_max_chars
+        )
+    
+    def create_chat_interface(self, user_input, query_type, llm_filter):
+        """
+        Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.
+        
+        """
+        self.query_type = query_type
+        self.llm_filter = llm_filter
+        # Handle user input
+        if user_input:
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            with st.spinner("Waiting for results..."):
+                results = self.process_query_chat(user_input)
+
+            st.session_state.messages.append({"role": "OpenML Agent", "content": results})
+
+        # Display chat history
+        for message in st.session_state.messages:
+            if message["role"] == "user":
+                st.write(f"You: {message['content']}")
+            else:
+                display_results(message["content"])
+
+    # Function to handle query processing
+    def process_query_chat(self, query):
+        """
+        Description: Process the query and return the results based on the query type and the LLM filter.
+        
+        """
+        apply_llm_before_rag = None if not self.llm_filter else False
+        response_parser = ResponseParser(
+            self.query_type, apply_llm_before_rag=apply_llm_before_rag
+        )
+
+        if self.query_type == "Dataset":
+            if config["structured_query"] == True:
+                # get structured query
+                response_parser.fetch_structured_query(self.query_type, query)
+                try:
+                    # get rag response
+                    response_parser.fetch_rag_response(
+                        self.query_type, response_parser.structured_query_response[0]["query"]
+                    )
+                    if response_parser.structured_query_response[1].get("filter"):
+                        response_parser.database_filter(
+                            response_parser.structured_query_response[1]["filter"], collec
+                        )
+                except:
+                    # fallback to RAG response
+                    response_parser.fetch_rag_response(self.query_type, query)
+            else:
+                # get rag response
+                response_parser.fetch_rag_response(self.query_type, query)
+                if self.llm_filter:
+                    # get llm response
+                    response_parser.fetch_llm_response(query)
+
+            results = response_parser.parse_and_update_response(self.data_metadata)
+            return results

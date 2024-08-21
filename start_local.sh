@@ -16,7 +16,7 @@ structured_query=$(jq -r '.structured_query' $config_file)
 
 if [ "$structured_query" == true ]; then
     cd ../structured_query || exit
-    uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8082 &
+    uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8081 &
     echo $! > $PID_FILE
 else
     cd ../llm_service || exit

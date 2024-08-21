@@ -18,7 +18,7 @@ import pandas as pd
 
 # change the path to the backend directory
 sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
-
+import requests
 
 # %%
 from backend.modules.rag_llm import *
@@ -303,3 +303,10 @@ class ExperimentRunner:
             [combined_results, result_data_frame], ignore_index=True
         )
         return combined_results
+
+def get_elastic_search_results(query):
+    query = query.replace(' ', '%20')
+    url = 'https://es.openml.org/_search?q=' + query
+    response = requests.get(url)
+    response_json = response.json()
+    return response_json['hits']['hits']

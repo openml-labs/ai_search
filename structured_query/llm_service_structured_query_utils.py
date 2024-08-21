@@ -17,7 +17,7 @@ with open("../data/attribute_info.json", "r") as f:
     
 attribute_info = attribute_info[1:]
 
-def create_query_structuring_chain(document_content_description, content_attr, model = "llama3.1"):
+def create_query_structuring_chain(document_content_description, content_attr, model = "llama3"):
     
     prompt = get_query_constructor_prompt(
         document_contents=document_content_description,

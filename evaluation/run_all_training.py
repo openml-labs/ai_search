@@ -6,7 +6,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-
+import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from backend.modules.utils import load_config_and_device
 from training_utils import *
 
@@ -32,7 +33,7 @@ if __name__ == "__main__":
         "Snowflake/snowflake-arctic-embed-l",
         "Alibaba-NLP/gte-large-en-v1.5"
     ]
-    list_of_llm_models = ["llama3", "phi3"]
+    list_of_llm_models = ["llama3"]
 
     # %% [markdown]
     # ## Downloading the LLM models
@@ -79,7 +80,42 @@ if __name__ == "__main__":
             if new_query not in query_key_dict:
                 query_key_dict[new_query.strip()] = row[2]
 
+    
     json.dump(query_key_dict, open(eval_path / "query_key_dict.json", "w"))
+
+    """
+    EXPERIMENT 0
+    Get results from elastic search
+    """
+    # cols = ,did,name,query,llm_model,embedding_model,llm_before_rag
+    
+    # for every query, get the results from elastic search
+    if not os.path.exists(eval_path / "elasticsearch"/ "elasticsearch"):
+        os.makedirs(eval_path / "elasticsearch" / "elasticsearch")
+
+    output_file_path = eval_path / "elasticsearch" / "elasticsearch" / "results.csv"
+
+    def process_query(query, dataset_id):
+        res = get_elastic_search_results(query)
+        ids = [val["_id"] for val in res]
+        return [(id, query) for id in ids]
+
+    # check if the file exists and skip
+    if os.path.exists(output_file_path) == False:
+        with open(output_file_path, "w") as f:
+            f.write("did,name,query,llm_model,embedding_model,llm_before_rag\n")
+
+            # Use ThreadPoolExecutor to parallelize requests
+            with ThreadPoolExecutor(max_workers=10) as executor:
+                # Start a future for each query
+                futures = {executor.submit(process_query, query, dataset_id): query for query, dataset_id in
+                           query_key_dict.items()}
+
+                for future in tqdm(as_completed(futures), total=len(futures)):
+                    result = future.result()
+                    # Save the results to a CSV file
+                    for id, query in result:
+                        f.write(f"{id},None,{query},es,es,None\n")
 
     """
     EXPERIMENT 1
