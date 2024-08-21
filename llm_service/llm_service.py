@@ -39,6 +39,7 @@ async def get_llm_query(query: str):
     Description: Get the query, replace %20 (url spacing) with space and invoke the chain to get the answers based on the prompt
     """
     query = query.replace("%20", " ")
+    print(f"Query: {query}")
     try:
         response = chain_docker.invoke({"query": query})
     except:

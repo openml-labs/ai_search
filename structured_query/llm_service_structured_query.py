@@ -3,6 +3,8 @@ from fastapi import FastAPI, HTTPException
 from llm_service_structured_query_utils import create_query_structuring_chain
 from fastapi.responses import JSONResponse
 from httpx import ConnectTimeout
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from langchain_community.query_constructors.chroma import ChromaTranslator
 
 document_content_description = "Metadata of datasets for various machine learning applications fetched from OpenML platform."
 
@@ -14,9 +16,7 @@ content_attr = [
 ]
 
 chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3")
-
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
-from langchain_community.query_constructors.chroma import ChromaTranslator
+print("[INFO] Chain created.")
 
 app = FastAPI()
 
@@ -32,12 +32,14 @@ async def get_structured_query(query: str):
     try:
         query = query.replace("%20", " ")
         response = chain.invoke({"query": query})
+        print(response)
         obj = ChromaTranslator()
         filter_condition = obj.visit_structured_query(structured_query=response)[1]
         return response, filter_condition
     except json.JSONDecodeError as e:
         raise HTTPException(status_code=500, detail=f"JSON decode error: {e}")
     except Exception as e:
+        print(f"An error occurred: {e}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
         
         

@@ -310,3 +310,23 @@ def get_elastic_search_results(query):
     response = requests.get(url)
     response_json = response.json()
     return response_json['hits']['hits']
+
+def get_queries(query_templates, load_eval_queries):
+    """
+    Get queries from the dataset templates and format it
+    """
+    query_key_dict = {}
+    for template in query_templates:
+        for row in load_eval_queries.itertuples():
+            new_query = f"{template} {row[1]}".strip()
+            if new_query not in query_key_dict:
+                query_key_dict[new_query.strip()] = row[2]
+    return query_key_dict
+
+def process_query_elastic_search(query, dataset_id):
+    """
+    Get the results from elastic search opemml server
+    """
+    res = get_elastic_search_results(query)
+    ids = [val["_id"] for val in res]
+    return [(id, query) for id in ids]
