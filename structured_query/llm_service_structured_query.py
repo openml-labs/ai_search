@@ -15,8 +15,11 @@ content_attr = [
     "NumberOfInstances"
 ]
 
-chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3")
-print("[INFO] Chain created.")
+chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3.1")
+# print(chain.get_prompts())
+
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from langchain_community.query_constructors.chroma import ChromaTranslator
 
 app = FastAPI()
 

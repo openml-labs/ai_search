@@ -15,6 +15,8 @@ if config["testing_flag"]:
     config["persist_dir"] = "./data/chroma_db_testing/"
     config["test_subset"] = True
     config["data_dir"] = "./data/testing_data/"
+
+config["device"] = "cpu"
 # load the persistent database using ChromaDB
 print('Loading DB')
 client = chromadb.PersistentClient(path=config["persist_dir"])
