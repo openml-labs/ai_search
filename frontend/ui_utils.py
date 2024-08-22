@@ -419,18 +419,11 @@ class UILoader:
                         st.write("Detected Filter(s): ", None)
                         # st.write("Detected Topics: ", response_parser.structured_query_response[0].get("query", None))
                     if response_parser.structured_query_response[1].get("filter"):
-<<<<<<< HEAD
-                        response_parser.database_filter(
-                            response_parser.structured_query_response[1]["filter"],
-                            collec,
-                        )
-=======
                         
                         with st.spinner("Applying LLM Detected Filter(s)..."):
                             response_parser.database_filter(
                                 response_parser.structured_query_response[1]["filter"], collec
                             )
->>>>>>> 639671c (better error handle and bug fix in structured query llm)
                 except:
                     # fallback to RAG response
                     response_parser.fetch_rag_response(self.query_type, query)
