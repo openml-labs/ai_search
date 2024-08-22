@@ -27,7 +27,7 @@ prompt = prompt_template + "\n".join([prompt_dict[key] for key in prompt_dict.ke
 
 
 chain = create_chain(prompt)
-chain_docker = create_chain(prompt, base_url='http://ollama:11434')
+chain_docker = create_chain(prompt, base_url="http://ollama:11434")
 app = FastAPI()
 
 

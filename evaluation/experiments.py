@@ -1,7 +1,7 @@
-
 from training_utils import *
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm.auto import tqdm
+
 
 def exp_0(process_query_elastic_search, eval_path, query_key_dict):
     """
@@ -21,9 +21,12 @@ def exp_0(process_query_elastic_search, eval_path, query_key_dict):
             # Use ThreadPoolExecutor to parallelize requests
             with ThreadPoolExecutor(max_workers=10) as executor:
                 # Start a future for each query
-                futures = {executor.submit(process_query_elastic_search, query, dataset_id): query for query, dataset_id
-                           in
-                           query_key_dict.items()}
+                futures = {
+                    executor.submit(
+                        process_query_elastic_search, query, dataset_id
+                    ): query
+                    for query, dataset_id in query_key_dict.items()
+                }
 
                 for future in tqdm(as_completed(futures), total=len(futures)):
                     result = future.result()
@@ -31,7 +34,15 @@ def exp_0(process_query_elastic_search, eval_path, query_key_dict):
                     for id, query in result:
                         f.write(f"{id},None,{query},es,es,None\n")
 
-def exp_1(eval_path, config, list_of_embedding_models, list_of_llm_models, subset_ids, query_key_dict):
+
+def exp_1(
+    eval_path,
+    config,
+    list_of_embedding_models,
+    list_of_llm_models,
+    subset_ids,
+    query_key_dict,
+):
     """
     EXPERIMENT 1
     Main evaluation loop that is used to run the base experiments using different models and embeddings.
@@ -56,6 +67,7 @@ def exp_1(eval_path, config, list_of_embedding_models, list_of_llm_models, subse
         use_cached_experiment=True,
     )
     expRunner.run_experiments()
+
 
 def exp_2(eval_path, config, subset_ids, query_key_dict):
     """
@@ -91,6 +103,7 @@ def exp_2(eval_path, config, subset_ids, query_key_dict):
     # reset the temperature to the default value
     config["temperature"] = 0.95
 
+
 def exp_3(eval_path, config, subset_ids, query_key_dict):
     """
     EXPERIMENT 3
@@ -103,7 +116,6 @@ def exp_3(eval_path, config, subset_ids, query_key_dict):
     list_of_llm_models = ["llama3"]
     types_of_llm_apply : llm applied as reranker after the RAG pipeline
     """
-
 
     list_of_embedding_models = [
         "BAAI/bge-large-en-v1.5",
@@ -130,6 +142,7 @@ def exp_3(eval_path, config, subset_ids, query_key_dict):
     # reset the search type to the default value
     config["search_type"] = "similarity"
 
+
 def exp_4(eval_path, config, subset_ids, query_key_dict):
     """
     EXPERIMENT 4
@@ -142,7 +155,6 @@ def exp_4(eval_path, config, subset_ids, query_key_dict):
     list_of_llm_models = ["llama3"]
     types_of_llm_apply : llm applied as reranker after the RAG pipeline
     """
-
 
     list_of_embedding_models = [
         "BAAI/bge-large-en-v1.5",

@@ -9,16 +9,21 @@ from sklearn.metrics import cohen_kappa_score
 # df = pd.read_csv(topic_path)
 # CLS = df["Topic"].unique().tolist()
 # CLS = [c.strip().lower() for c in CLS]
-CLS=set()
+CLS = set()
 
 labels_1 = {}
 labels_2 = {}
 
-label_files = ["data/all_labels/wenhan_labels.json", "data/all_labels/pieter_labels.json", "data/all_labels/jiaxu_labels.json",
-               "data/all_labels/taniya_labels.json", "data/all_labels/subhaditya_labels.json"]
+label_files = [
+    "data/all_labels/wenhan_labels.json",
+    "data/all_labels/pieter_labels.json",
+    "data/all_labels/jiaxu_labels.json",
+    "data/all_labels/taniya_labels.json",
+    "data/all_labels/subhaditya_labels.json",
+]
 # label_files = ["data/merged_labels.json", "data/llm_labels.json"]
 for i in range(len(label_files)):
-    for j in range(i+1, len(label_files)):
+    for j in range(i + 1, len(label_files)):
         # print(f"{label_files[i]},{label_files[j]}")
         with open(label_files[i]) as f1, open(label_files[j]) as f2:
             json1 = json.load(f1)
@@ -27,7 +32,9 @@ for i in range(len(label_files)):
         for key in intersec:
             if key in labels_1 and key in labels_2:
                 continue
-            assert key not in labels_1 and key not in labels_2, f"{key}: {label_files[i]},{label_files[j]}\n{json1[key]}\n{json2[key]}\n{labels_1[key]}\n{labels_2[key]}"
+            assert (
+                key not in labels_1 and key not in labels_2
+            ), f"{key}: {label_files[i]},{label_files[j]}\n{json1[key]}\n{json2[key]}\n{labels_1[key]}\n{labels_2[key]}"
             labels_1[key] = json1[key]
             labels_2[key] = json2[key]
             CLS.update(json1[key])
@@ -35,6 +42,7 @@ for i in range(len(label_files)):
 print(labels_1)
 print(labels_2)
 CLS = [c.strip().lower() for c in CLS]
+
 
 # Create label matrix
 def create_label_matrix(labels, CLS):

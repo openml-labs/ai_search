@@ -3,37 +3,35 @@ import json
 import pandas as pd
 from openai import OpenAI
 
-client = OpenAI(api_key='YOUR_KEY')
+client = OpenAI(api_key="YOUR_KEY")
 
 
 def call_gpt(prompt):
     # 调用OpenAI API
     response = client.chat.completions.create(
         model="gpt-4o-mini",  # 使用GPT-4 Turbo模型
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
+        messages=[{"role": "user", "content": prompt}],
     )
 
     # 获取模型的响应
     model_response = response.choices[0].message.content
-    print('-------------------------------')
+    print("-------------------------------")
     # print(prompt)
     # print('--------------')
     print(model_response)
-    print('-------------------------------')
+    print("-------------------------------")
 
     return model_response
 
 
 def post_process(text):
-    if ':' in text:
-        text = text.split(':', 1)[1]
-    if 'is' in text:
-        text = text.split('is', 1)[1]
-    if 'are' in text:
-        text = text.split('are', 1)[1]
-    labels = text.split(',')
+    if ":" in text:
+        text = text.split(":", 1)[1]
+    if "is" in text:
+        text = text.split("is", 1)[1]
+    if "are" in text:
+        text = text.split("are", 1)[1]
+    labels = text.split(",")
     labels = [l.strip().lower() for l in labels]
     return labels
 
@@ -51,7 +49,7 @@ topic_path = "data/LLM Evaluation - Topic Queries.csv"
 df = pd.read_csv(topic_path)
 CLS = df["Topic"].unique().tolist()
 lower_CLS = [c.strip().lower() for c in CLS]
-candidates = ', '.join(CLS)
+candidates = ", ".join(CLS)
 llm_labels = {}
 for did in merged_labels:
     print(did)

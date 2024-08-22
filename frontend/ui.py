@@ -36,4 +36,6 @@ user_input = ui_loader.chat_entry()
 
 # Chat interface
 if user_input:
-    ui_loader.create_chat_interface(user_input, query_type= query_type, llm_filter= llm_filter)
+    ui_loader.create_chat_interface(
+        user_input, query_type=query_type, llm_filter=llm_filter
+    )

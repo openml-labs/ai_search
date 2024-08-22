@@ -125,6 +125,7 @@ class ExperimentRunner:
     Description: This class is used to run all the experiments. If you want to modify any behavior, change the functions in this class according to what you want.
     You may also want to check out ResponseParser.
     """
+
     def __init__(
         self,
         config,
@@ -176,7 +177,9 @@ class ExperimentRunner:
 
             # Note : I was not sure how to move this to the next loop, we need the QA setup going forward..
             # Check if the chroma db as well as metadata files exist.
-            if os.path.exists(self.config["persist_dir"]) and os.path.exists(main_experiment_directory/"all_dataset_description.csv"):
+            if os.path.exists(self.config["persist_dir"]) and os.path.exists(
+                main_experiment_directory / "all_dataset_description.csv"
+            ):
                 # load the qa from the persistent database if it exists. Disabling training does this for us.
                 self.config["training"] = False
 
@@ -304,12 +307,14 @@ class ExperimentRunner:
         )
         return combined_results
 
+
 def get_elastic_search_results(query):
-    query = query.replace(' ', '%20')
-    url = 'https://es.openml.org/_search?q=' + query
+    query = query.replace(" ", "%20")
+    url = "https://es.openml.org/_search?q=" + query
     response = requests.get(url)
     response_json = response.json()
-    return response_json['hits']['hits']
+    return response_json["hits"]["hits"]
+
 
 def get_queries(query_templates, load_eval_queries):
     """
@@ -322,6 +327,7 @@ def get_queries(query_templates, load_eval_queries):
             if new_query not in query_key_dict:
                 query_key_dict[new_query.strip()] = row[2]
     return query_key_dict
+
 
 def process_query_elastic_search(query, dataset_id):
     """

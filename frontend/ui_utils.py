@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.append("../")
 from structured_query.chroma_store_utilis import *
 
+
 def feedback_cb():
     """
     Description: Callback function to save feedback to a file
@@ -310,17 +311,19 @@ class ResponseParser:
                 print("Showing only rag response")
             return filtered_metadata[["did", "name", *col_name]]
 
+
 class UILoader:
     """
     Description : Create the chat interface
     """
+
     def __init__(self, config_path):
         with open(config_path, "r") as file:
             # Load config
             self.config = json.load(file)
 
         # Paths and display information
-        
+
         self.chatbot_display = "How do I do X using OpenML? / Find me a dataset about Y"
         self.chatbot_input_max_chars = 500
 
@@ -328,7 +331,9 @@ class UILoader:
         self.collec = load_chroma_metadata()
 
         # Metadata paths
-        self.data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
+        self.data_metadata_path = (
+            Path(config["data_dir"]) / "all_dataset_description.csv"
+        )
         self.flow_metadata_path = Path(config["data_dir"]) / "all_flow_description.csv"
 
         # Read metadata
@@ -345,16 +350,16 @@ class UILoader:
     def chat_entry(self):
         """
         Description: Create the chat input box with a maximum character limit
-        
+
         """
         return st.chat_input(
             self.chatbot_display, max_chars=self.chatbot_input_max_chars
         )
-    
+
     def create_chat_interface(self, user_input, query_type, llm_filter):
         """
         Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.
-        
+
         """
         self.query_type = query_type
         self.llm_filter = llm_filter
@@ -364,7 +369,9 @@ class UILoader:
             with st.spinner("Waiting for results..."):
                 results = self.process_query_chat(user_input)
 
-            st.session_state.messages.append({"role": "OpenML Agent", "content": results})
+            st.session_state.messages.append(
+                {"role": "OpenML Agent", "content": results}
+            )
 
         # Display chat history
         for message in st.session_state.messages:
@@ -377,7 +384,7 @@ class UILoader:
     def process_query_chat(self, query):
         """
         Description: Process the query and return the results based on the query type and the LLM filter.
-        
+
         """
         apply_llm_before_rag = None if not self.llm_filter else False
         response_parser = ResponseParser(
@@ -391,11 +398,13 @@ class UILoader:
                 try:
                     # get rag response
                     response_parser.fetch_rag_response(
-                        self.query_type, response_parser.structured_query_response[0]["query"]
+                        self.query_type,
+                        response_parser.structured_query_response[0]["query"],
                     )
                     if response_parser.structured_query_response[1].get("filter"):
                         response_parser.database_filter(
-                            response_parser.structured_query_response[1]["filter"], collec
+                            response_parser.structured_query_response[1]["filter"],
+                            collec,
                         )
                 except:
                     # fallback to RAG response

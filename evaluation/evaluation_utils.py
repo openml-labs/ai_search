@@ -9,9 +9,8 @@ class EvaluationProcessor:
     """
     Description: Process all the evaluated results, add the required metrics and save results as a csv/generate plots
     """
-    def __init__(
-        self, eval_path, metrics=None, sort_by="precision"
-    ):
+
+    def __init__(self, eval_path, metrics=None, sort_by="precision"):
         if metrics is None:
             metrics = ["precision", "recall", "map"]
         self.eval_path = eval_path
@@ -25,7 +24,7 @@ class EvaluationProcessor:
         self.metric_methods = {
             "precision": self.add_precision,
             "recall": self.add_recall,
-            "map": self.add_map
+            "map": self.add_map,
         }
 
     def run(self):
@@ -72,7 +71,9 @@ class EvaluationProcessor:
                 ]
             ).agg({"y_true": ",".join, "y_pred": ",".join})
 
-            grouped_results_for_y_true_and_pred = self.add_metrics(grouped_results_for_y_true_and_pred)
+            grouped_results_for_y_true_and_pred = self.add_metrics(
+                grouped_results_for_y_true_and_pred
+            )
 
             # aggregate by computing the average of the metrics for each group
             grouped_results_for_y_true_and_pred = (

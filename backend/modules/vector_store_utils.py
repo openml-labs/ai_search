@@ -14,11 +14,20 @@ class DataLoader:
     """
     Description: Used to chunk data
     """
-    def __init__(self, metadata_df: pd.DataFrame, page_content_column: str, chunk_size:int = 1000, chunk_overlap:int = 150):
+
+    def __init__(
+        self,
+        metadata_df: pd.DataFrame,
+        page_content_column: str,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 150,
+    ):
         self.metadata_df = metadata_df
         self.page_content_column = page_content_column
         self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap if self.chunk_size > chunk_overlap else self.chunk_size
+        self.chunk_overlap = (
+            chunk_overlap if self.chunk_size > chunk_overlap else self.chunk_size
+        )
 
     def load_and_process_data(self) -> list:
         """
@@ -41,6 +50,7 @@ class DocumentProcessor:
     """
     Description: Used to generate unique documents based on text content to prevent duplicates during embedding
     """
+
     @staticmethod
     def generate_unique_documents(documents: list, db: Chroma) -> tuple:
         """
@@ -74,6 +84,7 @@ class VectorStoreManager:
     """
     Description: Manages the Vector store (chromadb) and takes care of data ingestion, loading the embedding model and embedding the data before adding it to the vector store
     """
+
     def __init__(self, chroma_client: ClientAPI, config: dict):
         self.chroma_client = chroma_client
         self.config = config
@@ -145,7 +156,7 @@ class VectorStoreManager:
         )
 
     @staticmethod
-    def add_documents_to_db(db, unique_docs, unique_ids, bs = 512):
+    def add_documents_to_db(db, unique_docs, unique_ids, bs=512):
         """
         Description: Add documents to Chroma DB in batches of bs
         """
@@ -170,7 +181,9 @@ class VectorStoreManager:
         )
 
         data_loader = DataLoader(
-            metadata_df, page_content_column="Combined_information", chunk_size = self.config["chunk_size"]
+            metadata_df,
+            page_content_column="Combined_information",
+            chunk_size=self.config["chunk_size"],
         )
         documents = data_loader.load_and_process_data()
 

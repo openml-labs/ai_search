@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "BAAI/bge-large-en-v1.5",
         "BAAI/bge-base-en-v1.5",
         "Snowflake/snowflake-arctic-embed-l",
-        "Alibaba-NLP/gte-large-en-v1.5"
+        "Alibaba-NLP/gte-large-en-v1.5",
     ]
     list_of_llm_models = ["llama3"]
 
@@ -72,7 +72,9 @@ if __name__ == "__main__":
     subset_ids = list(set([int(item) for sublist in subset_ids for item in sublist]))
     # %%
     # get the queries for the datasets
-    query_key_dict = get_queries(query_templates=query_templates, load_eval_queries=load_eval_queries)
+    query_key_dict = get_queries(
+        query_templates=query_templates, load_eval_queries=load_eval_queries
+    )
     json.dump(query_key_dict, open(eval_path / "query_key_dict.json", "w"))
 
     # Run experiments on just queries and not filters
@@ -81,7 +83,14 @@ if __name__ == "__main__":
     exp_0(process_query_elastic_search, eval_path, query_key_dict)
 
     # Experiment 1 : Run the base experiments using different models and embeddings
-    exp_1(eval_path, config, list_of_embedding_models, list_of_llm_models, subset_ids, query_key_dict)
+    exp_1(
+        eval_path,
+        config,
+        list_of_embedding_models,
+        list_of_llm_models,
+        subset_ids,
+        query_key_dict,
+    )
 
     # Experiment 2 : Evaluating temperature = 1 (default was 0.95)
     exp_2(eval_path, config, subset_ids, query_key_dict)

@@ -4,7 +4,12 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 
-def create_chain(prompt, model: str = "llama3", temperature: int = 0, base_url: str = "http://localhost:11434"):
+def create_chain(
+    prompt,
+    model: str = "llama3",
+    temperature: int = 0,
+    base_url: str = "http://localhost:11434",
+):
     """
     Description: Create a langchain chain with the given prompt and model and the temperature.
     The lower the temperature, the less "creative" the model will be.

@@ -8,22 +8,18 @@ from langchain_community.query_constructors.chroma import ChromaTranslator
 
 document_content_description = "Metadata of datasets for various machine learning applications fetched from OpenML platform."
 
-content_attr = [
-    "status",
-    "NumberOfClasses",
-    "NumberOfFeatures",
-    "NumberOfInstances"
-]
+content_attr = ["status", "NumberOfClasses", "NumberOfFeatures", "NumberOfInstances"]
 
-chain = create_query_structuring_chain(document_content_description, content_attr, model = "llama3.1")
-# print(chain.get_prompts())
-
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
-from langchain_community.query_constructors.chroma import ChromaTranslator
+chain = create_query_structuring_chain(
+    document_content_description, content_attr, model="llama3"
+)
+print("[INFO] Chain created.")
 
 app = FastAPI()
 
 print("[INFO] Starting structured query service.")
+
+
 # Create port
 @app.get("/structuredquery/{query}", response_class=JSONResponse)
 @retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
@@ -44,7 +40,3 @@ async def get_structured_query(query: str):
     except Exception as e:
         print(f"An error occurred: {e}")
         raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
-        
-        
-   
-    

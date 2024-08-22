@@ -20,6 +20,7 @@ class OpenMLObjectHandler:
     """
     Description: The base class for handling OpenML objects. The logic for handling datasets/flows are subclasses from this.
     """
+
     def __init__(self, config):
         self.config = config
 
@@ -268,6 +269,7 @@ class OpenMLMetadataProcessor:
     """
     Description: Process metadata using the OpenMLHandlers
     """
+
     def __init__(self, config: dict):
         self.config = config
         self.save_filename = os.path.join(

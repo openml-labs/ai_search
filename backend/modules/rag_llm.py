@@ -26,6 +26,7 @@ class LLMChainInitializer:
     """
     Description: Setup the vectordb (Chroma) as a retriever with parameters
     """
+
     @staticmethod
     def initialize_llm_chain(
         vectordb: Chroma, config: dict
@@ -33,7 +34,10 @@ class LLMChainInitializer:
         if config["search_type"] == "similarity_score_threshold":
             return vectordb.as_retriever(
                 search_type=config["search_type"],
-                search_kwargs={"k": config["num_return_documents"], "score_threshold": 0.5},
+                search_kwargs={
+                    "k": config["num_return_documents"],
+                    "score_threshold": 0.5,
+                },
             )
         else:
             return vectordb.as_retriever(
@@ -46,6 +50,7 @@ class QASetup:
     """
     Description: Setup the VectorDB, QA and initalize the LLM for each type of data
     """
+
     def __init__(
         self, config: dict, data_type: str, client: ClientAPI, subset_ids: list = None
     ):
@@ -80,6 +85,7 @@ class LLMChainCreator:
     """
     Description: Gets Ollama, sends query, enables query caching
     """
+
     def __init__(self, config: dict, local: bool = False):
         self.config = config
         self.local = local

@@ -13,7 +13,7 @@
 
 - It is "pretty easy" to add a new evaluation. 
   - (Note that `training_utils.py` already overloads some classes from the original training. Which means that you can modify this to your hearts content without affecting the main code. Enjoy~)
-  - Step 1: Find the method you want to override and overload the class/method in `training_utils.py`.
+  - Step 1: Find the method you want to override and overload the class/method in `experiments.py`.
   - Step 2: Add some if statements in `class ExperimentRunner` to ensure you dont break everything.
   - Step 3: Follow the ExperimentRunner templates in `run_all_training.py` to add whatever you added in Step 2 as a new experiment.
     - Give it a custom name so it is easy to understand what happens
