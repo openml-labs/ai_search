@@ -15,9 +15,19 @@ chain = create_query_structuring_chain(
 )
 print("[INFO] Chain created.")
 
-app = FastAPI()
+app = FastAPI(root_path="/struct")
 
-print("[INFO] Starting structured query service.")
+try:
+    print("[INFO] Sending first query to structured query llm to avoid cold start.")
+    
+    query = "mushroom data with 2 classess"
+    response = chain.invoke({"query": query})    
+    obj = ChromaTranslator()
+    filter_condition = obj.visit_structured_query(structured_query=response)[1]
+    print(response, filter_condition)
+
+except Exception as e:
+    print("Error in first query: ", e)
 
 
 # Create port
