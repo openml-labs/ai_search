@@ -15,7 +15,7 @@ chain = create_query_structuring_chain(
 )
 print("[INFO] Chain created.")
 
-app = FastAPI(root_path="/struct")
+app = FastAPI()
 
 try:
     print("[INFO] Sending first query to structured query llm to avoid cold start.")
