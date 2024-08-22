@@ -165,7 +165,8 @@ class ResponseParser:
                 f"{structured_response_path['local']}{query}",
                 json={"query": query},
             ).json()
-        except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+        # except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
+        except Exception as e:
             # Print the error for debugging purposes
             print(f"Error occurred while fetching from local endpoint: {e}")
             # Set structured_query_response to None if the local request also fails
@@ -217,8 +218,9 @@ class ResponseParser:
              - Metadata is filtered based on the rag response first and then by the Query parsing LLM
         -  self.apply_llm_before_rag == False
              - Metadata is filtered based by the Query parsing LLM first and the rag response second
+        - in case structured_query == true, take results are applying data filters. 
         """
-        if self.apply_llm_before_rag is None or self.llm_response is None:
+        if (self.apply_llm_before_rag is None or self.llm_response is None) and not config["structured_query"]:
             print("No LLM filter.")
             # print(self.rag_response, flush=True)
             filtered_metadata = metadata[
@@ -237,7 +239,7 @@ class ResponseParser:
             # if no llm response is required, return the initial response
             return filtered_metadata
 
-        elif self.rag_response is not None and self.llm_response is not None:
+        elif (self.rag_response is not None and self.llm_response is not None) and not config["structured_query"]:
             if not self.apply_llm_before_rag:
                 print("RAG before LLM filter.")
                 filtered_metadata = metadata[
@@ -276,17 +278,26 @@ class ResponseParser:
 
         elif (
             self.rag_response is not None and self.structured_query_response is not None
-        ):
+            ):
             col_name = [
                 "status",
                 "NumberOfClasses",
                 "NumberOfFeatures",
                 "NumberOfInstances",
             ]
-            if self.structured_query_response[0].get("filter"):
-                filtered_metadata = metadata[
-                    metadata["did"].isin(self.database_filtered)
-                ]
+            print(self.structured_query_response) # Only for debugging. Comment later. 
+            if self.structured_query_response[0] is not None and isinstance(self.structured_query_response[1], dict):
+                # Safely attempt to access the "filter" key in the first element
+                if self.structured_query_response[0].get("filter", None):
+                    filtered_metadata = metadata[
+                        metadata["did"].isin(self.database_filtered)
+                    ]
+                    print("Showing database filtered data")
+                else:
+                    filtered_metadata = metadata[
+                    metadata["did"].isin(self.rag_response["initial_response"])
+                    ]
+                    print("Showing only rag response as filter is empty")
                 filtered_metadata["did"] = pd.Categorical(
                     filtered_metadata["did"],
                     categories=self.rag_response["initial_response"],
@@ -295,7 +306,7 @@ class ResponseParser:
                 filtered_metadata = filtered_metadata.sort_values("did").reset_index(
                     drop=True
                 )
-                print("Showing database filtered data")
+                
             else:
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
@@ -392,20 +403,34 @@ class UILoader:
         )
 
         if self.query_type == "Dataset":
-            if config["structured_query"] == True:
+            if config["structured_query"]:
                 # get structured query
                 response_parser.fetch_structured_query(self.query_type, query)
                 try:
                     # get rag response
+                    # using original query instead of extracted topics. 
                     response_parser.fetch_rag_response(
-                        self.query_type,
-                        response_parser.structured_query_response[0]["query"],
+                        self.query_type, query
                     )
+                    
+                    if response_parser.structured_query_response:
+                        st.write("Detected Filter(s): ", json.dumps(response_parser.structured_query_response[0].get("filter", None)))
+                    else:
+                        st.write("Detected Filter(s): ", None)
+                        # st.write("Detected Topics: ", response_parser.structured_query_response[0].get("query", None))
                     if response_parser.structured_query_response[1].get("filter"):
+<<<<<<< HEAD
                         response_parser.database_filter(
                             response_parser.structured_query_response[1]["filter"],
                             collec,
                         )
+=======
+                        
+                        with st.spinner("Applying LLM Detected Filter(s)..."):
+                            response_parser.database_filter(
+                                response_parser.structured_query_response[1]["filter"], collec
+                            )
+>>>>>>> 639671c (better error handle and bug fix in structured query llm)
                 except:
                     # fallback to RAG response
                     response_parser.fetch_rag_response(self.query_type, query)

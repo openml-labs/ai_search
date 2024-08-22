@@ -34,9 +34,13 @@ async def get_structured_query(query: str):
         print(response)
         obj = ChromaTranslator()
         filter_condition = obj.visit_structured_query(structured_query=response)[1]
-        return response, filter_condition
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"JSON decode error: {e}")
+        
     except Exception as e:
-        print(f"An error occurred: {e}")
-        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")
+        print(f"An error occurred: ", HTTPException(status_code=500, detail=f"An error occurred: {e}"))
+        response, filter_condition = None, None
+        
+    return response, filter_condition
+        
+        
+   
+    
