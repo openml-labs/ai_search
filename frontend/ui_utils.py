@@ -288,6 +288,7 @@ class ResponseParser:
             print(self.structured_query_response) # Only for debugging. Comment later. 
             if self.structured_query_response[0] is not None and isinstance(self.structured_query_response[1], dict):
                 # Safely attempt to access the "filter" key in the first element
+                
                 if self.structured_query_response[0].get("filter", None) and self.database_filtered:
                     filtered_metadata = metadata[
                         metadata["did"].isin(self.database_filtered)
@@ -414,7 +415,7 @@ class UILoader:
                     )
                     
                     if response_parser.structured_query_response:
-                        st.session_state.messages.append("Detected Filter(s): ", json.dumps(response_parser.structured_query_response[0].get("filter", None)))
+                        st.write("Detected Filter(s): ", json.dumps(response_parser.structured_query_response[0].get("filter", None)))
                     else:
                         st.write("Detected Filter(s): ", None)
                         # st.write("Detected Topics: ", response_parser.structured_query_response[0].get("query", None))
