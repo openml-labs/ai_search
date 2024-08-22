@@ -38,6 +38,7 @@ async def get_structured_query(query: str):
     Description: Get the query, replace %20 with space and invoke the chain to get the answers based on the prompt.
 
     """
+    response, filter_condition = None, None
     try:
         query = query.replace("%20", " ")
         response = chain.invoke({"query": query})
@@ -47,7 +48,6 @@ async def get_structured_query(query: str):
         
     except Exception as e:
         print(f"An error occurred: ", HTTPException(status_code=500, detail=f"An error occurred: {e}"))
-        response, filter_condition = None, None
         
     return response, filter_condition
         
