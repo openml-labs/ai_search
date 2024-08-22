@@ -11,7 +11,7 @@ cd ollama
 echo $! > $PID_FILE
 
 cd ../structured_query
-uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8082 &
+uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8081 &
 echo $! > $PID_FILE
 
 cd ..
