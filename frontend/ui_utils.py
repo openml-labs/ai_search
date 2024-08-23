@@ -37,15 +37,6 @@ def feedback_cb():
         json.dump(data, file, indent=4)
 
 
-def display_results(initial_response):
-    """
-    Description: Display the results in a DataFrame
-    """
-    # st.write("OpenML Agent: ")
-    try:
-        st.dataframe(initial_response)
-    except:
-        st.write(initial_response)
 
 class LLMResponseParser:
     """
@@ -352,11 +343,11 @@ class UILoader:
         with open(config_path, "r") as file:
             # Load config
             self.config = json.load(file)
+        # self.message_box = message_box
 
         # Paths and display information
 
-        self.chatbot_display = "How do I do X using OpenML? / Find me a dataset about Y"
-        self.chatbot_input_max_chars = 500
+        # self.chatbot_input_max_chars = 500
 
         # Load metadata chroma database for structured query
         self.collec = load_chroma_metadata()
@@ -378,22 +369,22 @@ class UILoader:
         if "messages" not in st.session_state:
             st.session_state.messages = []
 
-    def chat_entry(self):
-        """
-        Description: Create the chat input box with a maximum character limit
+    # def chat_entry(self):
+    #     """
+    #     Description: Create the chat input box with a maximum character limit
 
-        """
-        return st.chat_input(
-            self.chatbot_display, max_chars=self.chatbot_input_max_chars
-        )
+    #     """
+    #     return st.chat_input(
+    #         self.chatbot_display, max_chars=self.chatbot_input_max_chars
+    #     )
 
-    def create_chat_interface(self, user_input, query_type=None, llm_filter=None):
+    def create_chat_interface(self, user_input, query_type=None):
         """
         Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.
 
         """
         self.query_type = query_type
-        self.llm_filter = llm_filter
+        # self.llm_filter = llm_filter
         if user_input is None:
             with st.chat_message(name = "ai"):
                 st.write("OpenML Agent: ", "Hello! How can I help you today?")
@@ -412,10 +403,23 @@ class UILoader:
         for message in st.session_state.messages:
             if message["role"] == "user":
                 with st.chat_message(name = "user"):
-                    display_results(message["content"])
+                    self.display_results(message["content"], "user")
             else:
                 with st.chat_message(name = "ai"):
-                    display_results(message["content"])
+                    self.display_results(message["content"], "ai")
+
+    def display_results(self,initial_response, role):
+        """
+        Description: Display the results in a DataFrame
+        """
+        # st.write("OpenML Agent: ")
+        
+        try:
+            st.dataframe(initial_response)
+            # self.message_box.chat_message(role).write(st.dataframe(initial_response))
+        except:
+            st.write(initial_response)
+            # self.message_box.chat_message(role).write(initial_response)
 
     # Function to handle query processing
     def process_query_chat(self, query):
