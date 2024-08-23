@@ -17,17 +17,7 @@ print("[INFO] Chain created.")
 
 app = FastAPI()
 
-try:
-    print("[INFO] Sending first query to structured query llm to avoid cold start.")
-    
-    query = "mushroom data with 2 classess"
-    response = chain.invoke({"query": query})    
-    obj = ChromaTranslator()
-    filter_condition = obj.visit_structured_query(structured_query=response)[1]
-    print(response, filter_condition)
-
-except Exception as e:
-    print("Error in first query: ", e)
+print("[INFO] Starting structured query service.")
 
 
 # Create port
@@ -47,10 +37,5 @@ async def get_structured_query(query: str):
         filter_condition = obj.visit_structured_query(structured_query=response)[1]
         
     except Exception as e:
-        print(f"An error occurred: ", HTTPException(status_code=500, detail=f"An error occurred: {e}"))
-        
-    return response, filter_condition
-        
-        
-   
-    
+        print(f"An error occurred: {e}")
+        raise HTTPException(status_code=500, detail=f"An error occurred: {e}")

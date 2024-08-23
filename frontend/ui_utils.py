@@ -411,7 +411,8 @@ class UILoader:
                     # get rag response
                     # using original query instead of extracted topics. 
                     response_parser.fetch_rag_response(
-                        self.query_type, query
+                        self.query_type,
+                        response_parser.structured_query_response[0]["query"],
                     )
                     
                     if response_parser.structured_query_response:
