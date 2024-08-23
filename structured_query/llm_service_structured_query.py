@@ -33,8 +33,9 @@ async def get_structured_query(query: str):
         query = query.replace("%20", " ")
         response = chain.invoke({"query": query})
         print(response)
-        obj = ChromaTranslator()
-        filter_condition = obj.visit_structured_query(structured_query=response)[1]
+        # obj = ChromaTranslator()
+        # filter_condition = obj.visit_structured_query(structured_query=response)[1]
+        return JSONResponse(content=str(response))
         
     except Exception as e:
         print(f"An error occurred: {e}")

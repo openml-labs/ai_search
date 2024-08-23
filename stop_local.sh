@@ -20,6 +20,9 @@ cd ../frontend
 # streamlit run ui.py &
 kill -9 $(cat $PID_FILE)
 
+cd ../documentation_bot
+kill -9 $(cat $PID_FILE)
+
 cd ..
 
 killall ollama

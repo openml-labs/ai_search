@@ -41,9 +41,11 @@ def display_results(initial_response):
     """
     Description: Display the results in a DataFrame
     """
-    st.write("OpenML Agent: ")
-    st.dataframe(initial_response)
-
+    # st.write("OpenML Agent: ")
+    try:
+        st.dataframe(initial_response)
+    except:
+        st.write(initial_response)
 
 class LLMResponseParser:
     """
@@ -145,6 +147,22 @@ class ResponseParser:
                 f"{llm_response_path['local']}{query}"
             ).json()
         return self.llm_response
+    
+    def fetch_documentation_query(self, query: str):
+        """
+        Description: Fetch the response for a general or documentation or code query from the LLM service as a JSON
+        """
+        documentation_response_path = self.paths["documentation_query"]
+        try:
+            self.documentation_response = requests.get(
+                f"{documentation_response_path['docker']}{query}",
+                json={"query": query},
+            ).json()
+        except:
+            self.documentation_response = requests.get(
+                f"{documentation_response_path['local']}{query}",
+                json={"query": query},
+            ).json()
 
     def fetch_structured_query(self, query_type: str, query: str):
         """
@@ -369,13 +387,17 @@ class UILoader:
             self.chatbot_display, max_chars=self.chatbot_input_max_chars
         )
 
-    def create_chat_interface(self, user_input, query_type, llm_filter):
+    def create_chat_interface(self, user_input, query_type=None, llm_filter=None):
         """
         Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.
 
         """
         self.query_type = query_type
         self.llm_filter = llm_filter
+        if user_input is None:
+            with st.chat_message(name = "ai"):
+                st.write("OpenML Agent: ", "Hello! How can I help you today?")
+        
         # Handle user input
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
@@ -389,9 +411,11 @@ class UILoader:
         # Display chat history
         for message in st.session_state.messages:
             if message["role"] == "user":
-                st.write(f"You: {message['content']}")
+                with st.chat_message(name = "user"):
+                    display_results(message["content"])
             else:
-                display_results(message["content"])
+                with st.chat_message(name = "ai"):
+                    display_results(message["content"])
 
     # Function to handle query processing
     def process_query_chat(self, query):
@@ -404,7 +428,7 @@ class UILoader:
             self.query_type, apply_llm_before_rag=apply_llm_before_rag
         )
 
-        if self.query_type == "Dataset":
+        if self.query_type == "Dataset" or self.query_type == "Flow":
             if config["structured_query"]:
                 # get structured query
                 response_parser.fetch_structured_query(self.query_type, query)
@@ -439,3 +463,6 @@ class UILoader:
 
             results = response_parser.parse_and_update_response(self.data_metadata)
             return results
+        elif self.query_type == "General Query":
+            response_parser.fetch_documentation_query(query)
+            return response_parser.documentation_response

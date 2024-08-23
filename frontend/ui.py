@@ -29,13 +29,17 @@ with st.spinner("Loading Required Data"):
     config_path = Path("../backend/config.json")
     ui_loader = UILoader(config_path)
 
-query_type = st.selectbox("Select Query Type", ["Dataset", "Flow"])
-llm_filter = st.toggle("LLM Filter")
 # Chat input box
 user_input = ui_loader.chat_entry()
 
+ui_loader.create_chat_interface(None)
+query_type = st.selectbox("Select Query Type", ["General Query","Dataset", "Flow"], key="query_type_2")
+llm_filter = st.toggle("LLM Filter")
 # Chat interface
 if user_input:
     ui_loader.create_chat_interface(
         user_input, query_type=query_type, llm_filter=llm_filter
     )
+    ui_loader.query_type = st.selectbox("Select Query Type", ["General Query","Dataset", "Flow"], key="query_type_3")
+    ui_loader.llm_filter = st.toggle("LLM Filter", key="llm_filter_2")
+

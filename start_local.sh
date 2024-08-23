@@ -24,6 +24,10 @@ else
     echo $! > $PID_FILE
 fi
 
+cd ../documentation_bot || exit
+uvicorn documentation_query:app --host 0.0.0.0 --port 8083 &
+echo $! >> $PID_FILE
+
 cd ../backend || exit
 uvicorn backend:app --host 0.0.0.0 --port 8000 &
 echo $! >> $PID_FILE

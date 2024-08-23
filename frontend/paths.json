@@ -10,5 +10,9 @@
     "structured_query": {
         "docker" : "http://fastapi:8081/structuredquery/",
         "local" : "http://0.0.0.0:8081/structuredquery/"
+    },
+    "documentation_query": {
+        "docker" : "http://fastapi:8083/documentationquery/",
+        "local" : "http://0.0.0.0:8083/documentationquery/"
     }
 }
