@@ -33,13 +33,14 @@ with col2:
         info,
         unsafe_allow_html=True,
     )
+
 chat_container = st.container()
 with chat_container:
-    query_type = st.radio(
-        "Select Query Type", ["General Query", "Dataset", "Flow"], key="query_type_2"
-    )
-    user_input = st.chat_input(placeholder=chatbot_display, max_chars=chatbot_max_chars)
 
+    with st.form(key="chat_form"):
+        user_input = st.text_input(label=chatbot_display)
+        query_type = st.selectbox("Select Query Type", ["General Query", "Dataset", "Flow"])
+        submit_button = st.form_submit_button(label="Submit")
 
     ui_loader.create_chat_interface(user_input=None)
     if user_input:

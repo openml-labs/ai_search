@@ -378,7 +378,6 @@ class UILoader:
     #     return st.chat_input(
     #         self.chatbot_display, max_chars=self.chatbot_input_max_chars
     #     )
-
     def create_chat_interface(self, user_input, query_type=None):
         """
         Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.
