@@ -13,7 +13,6 @@ sys.path.append("../")
 from structured_query.chroma_store_utilis import *
 
 
-
 def feedback_cb():
     """
     Description: Callback function to save feedback to a file
@@ -35,7 +34,6 @@ def feedback_cb():
     # Write updated content back to the file
     with open(file_path, "w") as file:
         json.dump(data, file, indent=4)
-
 
 
 class LLMResponseParser:
@@ -138,22 +136,6 @@ class ResponseParser:
                 f"{llm_response_path['local']}{query}"
             ).json()
         return self.llm_response
-    
-    # def fetch_documentation_query(self, query: str):
-    #     """
-    #     Description: Fetch the response for a general or documentation or code query from the LLM service as a JSON
-    #     """
-    #     documentation_response_path = self.paths["documentation_query"]
-    #     try:
-    #         self.documentation_response = requests.get(
-    #             f"{documentation_response_path['docker']}{query}",
-    #             json={"query": query},
-    #         ).json()
-    #     except:
-    #         self.documentation_response = requests.get(
-    #             f"{documentation_response_path['local']}{query}",
-    #             json={"query": query},
-    #         ).json()
 
     def fetch_structured_query(self, query_type: str, query: str):
         """
@@ -175,7 +157,6 @@ class ResponseParser:
                 f"{structured_response_path['local']}{query}",
                 json={"query": query},
             ).json()
-        # except (requests.exceptions.RequestException, json.JSONDecodeError) as e:
         except Exception as e:
             # Print the error for debugging purposes
             print(f"Error occurred while fetching from local endpoint: {e}")
@@ -228,9 +209,11 @@ class ResponseParser:
              - Metadata is filtered based on the rag response first and then by the Query parsing LLM
         -  self.apply_llm_before_rag == False
              - Metadata is filtered based by the Query parsing LLM first and the rag response second
-        - in case structured_query == true, take results are applying data filters. 
+        - in case structured_query == true, take results are applying data filters.
         """
-        if (self.apply_llm_before_rag is None or self.llm_response is None) and not config["structured_query"]:
+        if (
+            self.apply_llm_before_rag is None or self.llm_response is None
+        ) and not config["structured_query"]:
             print("No LLM filter.")
             # print(self.rag_response, flush=True)
             filtered_metadata = metadata[
@@ -249,7 +232,9 @@ class ResponseParser:
             # if no llm response is required, return the initial response
             return filtered_metadata
 
-        elif (self.rag_response is not None and self.llm_response is not None) and not config["structured_query"]:
+        elif (
+            self.rag_response is not None and self.llm_response is not None
+        ) and not config["structured_query"]:
             if not self.apply_llm_before_rag:
                 print("RAG before LLM filter.")
                 filtered_metadata = metadata[
@@ -288,27 +273,34 @@ class ResponseParser:
 
         elif (
             self.rag_response is not None and self.structured_query_response is not None
-            ):
+        ):
             col_name = [
                 "status",
                 "NumberOfClasses",
                 "NumberOfFeatures",
                 "NumberOfInstances",
             ]
-            print(self.structured_query_response) # Only for debugging. Comment later. 
-            if self.structured_query_response[0] is not None and isinstance(self.structured_query_response[1], dict):
+            print(self.structured_query_response)  # Only for debugging. Comment later.
+            if self.structured_query_response[0] is not None and isinstance(
+                self.structured_query_response[1], dict
+            ):
                 # Safely attempt to access the "filter" key in the first element
-                
-                if self.structured_query_response[0].get("filter", None) and self.database_filtered:
+
+                if (
+                    self.structured_query_response[0].get("filter", None)
+                    and self.database_filtered
+                ):
                     filtered_metadata = metadata[
                         metadata["did"].isin(self.database_filtered)
                     ]
                     print("Showing database filtered data")
                 else:
                     filtered_metadata = metadata[
-                    metadata["did"].isin(self.rag_response["initial_response"])
+                        metadata["did"].isin(self.rag_response["initial_response"])
                     ]
-                    print("Showing only rag response as filter is empty or none of the rag data satisfies filter conditions.")
+                    print(
+                        "Showing only rag response as filter is empty or none of the rag data satisfies filter conditions."
+                    )
                 filtered_metadata["did"] = pd.Categorical(
                     filtered_metadata["did"],
                     categories=self.rag_response["initial_response"],
@@ -317,7 +309,7 @@ class ResponseParser:
                 filtered_metadata = filtered_metadata.sort_values("did").reset_index(
                     drop=True
                 )
-                
+
             else:
                 filtered_metadata = metadata[
                     metadata["did"].isin(self.rag_response["initial_response"])
@@ -386,16 +378,16 @@ class UILoader:
         self.query_type = query_type
         # self.llm_filter = llm_filter
         if user_input is None:
-            with st.chat_message(name = "ai"):
+            with st.chat_message(name="ai"):
                 st.write("OpenML Agent: ", "Hello! How can I help you today?")
-        
+
         # Handle user input
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("Waiting for results..."):
                 results = self.process_query_chat(user_input)
-            
-            if not self.query_type == "General Query": 
+
+            if not self.query_type == "General Query":
                 st.session_state.messages.append(
                     {"role": "OpenML Agent", "content": results}
                 )
@@ -412,24 +404,40 @@ class UILoader:
                     st.session_state.messages.append(
                         {"role": "OpenML Agent", "content": streamed_response}
                     )
+            
+            # reverse messages to show the latest message at the top
+            reversed_messages = []
+            for index in range(0, len(st.session_state.messages),2):
+                reversed_messages.insert(0, st.session_state.messages[index])
+                reversed_messages.insert(1, st.session_state.messages[index + 1])
 
             # Display chat history
-            for message in st.session_state.messages:
+            for message in reversed_messages:
                 if query_type == "General Query":
                     pass
                 if message["role"] == "user":
-                    with st.chat_message(name = "user"):
+                    with st.chat_message(name="user"):
                         self.display_results(message["content"], "user")
                 else:
-                    with st.chat_message(name = "ai"):
+                    with st.chat_message(name="ai"):
                         self.display_results(message["content"], "ai")
+            self.create_download_button()
+    
+    @st.experimental_fragment()
+    def create_download_button(self):
+        data = "\n".join([str(message["content"]) for message in st.session_state.messages])
+        st.download_button(
+            label="Download chat history",
+            data=data,
+            file_name="chat_history.txt",
+        )
 
-    def display_results(self,initial_response, role):
+    def display_results(self, initial_response, role):
         """
         Description: Display the results in a DataFrame
         """
         # st.write("OpenML Agent: ")
-        
+
         try:
             st.dataframe(initial_response)
             # self.message_box.chat_message(role).write(st.dataframe(initial_response))
@@ -454,22 +462,30 @@ class UILoader:
                 response_parser.fetch_structured_query(self.query_type, query)
                 try:
                     # get rag response
-                    # using original query instead of extracted topics. 
+                    # using original query instead of extracted topics.
                     response_parser.fetch_rag_response(
                         self.query_type,
                         response_parser.structured_query_response[0]["query"],
                     )
-                    
+
                     if response_parser.structured_query_response:
-                        st.write("Detected Filter(s): ", json.dumps(response_parser.structured_query_response[0].get("filter", None)))
+                        st.write(
+                            "Detected Filter(s): ",
+                            json.dumps(
+                                response_parser.structured_query_response[0].get(
+                                    "filter", None
+                                )
+                            ),
+                        )
                     else:
                         st.write("Detected Filter(s): ", None)
                         # st.write("Detected Topics: ", response_parser.structured_query_response[0].get("query", None))
                     if response_parser.structured_query_response[1].get("filter"):
-                        
+
                         with st.spinner("Applying LLM Detected Filter(s)..."):
                             response_parser.database_filter(
-                                response_parser.structured_query_response[1]["filter"], collec
+                                response_parser.structured_query_response[1]["filter"],
+                                collec,
                             )
                 except:
                     # fallback to RAG response
@@ -486,7 +502,9 @@ class UILoader:
         elif self.query_type == "General Query":
             # response_parser.fetch_documentation_query(query)
             # return response_parser.documentation_response
-            documentation_response_path = self.paths["documentation_query"]["local"] + query
+            documentation_response_path = (
+                self.paths["documentation_query"]["local"] + query
+            )
             # with requests.get(documentation_response_path, stream=True) as r:
             #     resp_contain = st.empty()
             #     streamed_response = ""
@@ -496,7 +514,7 @@ class UILoader:
             #             resp_contain.markdown(streamed_response)
             # return requests.get(documentation_response_path, stream=True)
             return documentation_response_path
-                
+
     def load_paths(self):
         """
         Description: Load paths from paths.json

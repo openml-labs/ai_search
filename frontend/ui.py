@@ -21,10 +21,6 @@ with st.spinner("Loading Required Data"):
     ui_loader = UILoader(config_path)
 
 # container for company description and logo
-# with st.sidebar:
-#     query_type = st.radio(
-#         "Select Query Type", ["General Query", "Dataset", "Flow"], key="query_type_2"
-#     )
 col1, col2 = st.columns([1, 4])
 with col1:
     st.image(logo, width=100)
@@ -35,11 +31,16 @@ with col2:
     )
 
 chat_container = st.container()
+
+
+
 with chat_container:
 
     with st.form(key="chat_form"):
         user_input = st.text_input(label=chatbot_display)
-        query_type = st.selectbox("Select Query Type", ["General Query", "Dataset", "Flow"])
+        query_type = st.selectbox(
+            "Select Query Type", ["General Query", "Dataset", "Flow"]
+        )
         submit_button = st.form_submit_button(label="Submit")
 
     ui_loader.create_chat_interface(user_input=None)
