@@ -5,11 +5,13 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import os
-from backend.modules.utils import load_config_and_device
-from training_utils import *
+from pathlib import Path
+
 from experiments import *
+from training_utils import *
+
+from backend.modules.utils import load_config_and_device
 
 if __name__ == "__main__":
     # %%

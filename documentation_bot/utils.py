@@ -1,24 +1,25 @@
-import requests
-from bs4 import BeautifulSoup
 import csv
 import os
+from urllib.parse import urljoin
+
 import pandas as pd
+import requests
 import torch
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from bs4 import BeautifulSoup
+from langchain.chains import (create_history_aware_retriever,
+                              create_retrieval_chain)
+from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.document_loaders import DataFrameLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_community.vectorstores.chroma import Chroma
-from urllib.parse import urljoin
-from tqdm.auto import tqdm
-
-from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.chat_history import BaseChatMessageHistory
-
-from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain.chains import create_history_aware_retriever, create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_ollama import ChatOllama
+from tqdm.auto import tqdm
+
 
 def find_device() -> str:
     """
@@ -30,13 +31,17 @@ def find_device() -> str:
         return "mps"
     return "cpu"
 
-store = {} #TODO : change this to a nicer way of storing the chat history
+
+store = {}  # TODO : change this to a nicer way of storing the chat history
+
+
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     # print("this is the session id", session_id)
     if session_id not in store:
         store[session_id] = ChatMessageHistory()
     # print("this is the store id", store[session_id])
     return store[session_id]
+
 
 class Crawler:
     """

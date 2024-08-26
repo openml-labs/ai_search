@@ -1,10 +1,10 @@
-import sqlalchemy
-import pandas as pd
+import sys
+
 import chromadb
+import pandas as pd
+import sqlalchemy
 from langchain_community.vectorstores.chroma import Chroma
 from tqdm.auto import tqdm
-
-import sys
 
 sys.path.append("../")
 sys.path.append("../backend/")

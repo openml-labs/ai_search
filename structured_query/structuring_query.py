@@ -1,9 +1,7 @@
 import json
 
 from langchain.chains.query_constructor.base import (
-    get_query_constructor_prompt,
-    load_query_constructor_runnable,
-)
+    get_query_constructor_prompt, load_query_constructor_runnable)
 
 from structured_query.structured_query_examples import examples
 

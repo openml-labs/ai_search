@@ -16,13 +16,15 @@
 # - How would you use a different embedding and llm model?
 
 from __future__ import annotations
-from langchain_community.cache import SQLiteCache
+
 import os
 import sys
-import chromadb
 
-from backend.modules.utils import load_config_and_device
+import chromadb
+from langchain_community.cache import SQLiteCache
+
 from backend.modules.rag_llm import QASetup
+from backend.modules.utils import load_config_and_device
 
 # ## Initial config
 

@@ -1,10 +1,11 @@
 import json
+
 from fastapi import FastAPI, HTTPException
-from llm_service_structured_query_utils import create_query_structuring_chain
 from fastapi.responses import JSONResponse
 from httpx import ConnectTimeout
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
 from langchain_community.query_constructors.chroma import ChromaTranslator
+from llm_service_structured_query_utils import create_query_structuring_chain
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
 
 document_content_description = "Metadata of datasets for various machine learning applications fetched from OpenML platform."
 
@@ -19,9 +20,9 @@ app = FastAPI()
 
 try:
     print("[INFO] Sending first query to structured query llm to avoid cold start.")
-    
+
     query = "mushroom data with 2 classess"
-    response = chain.invoke({"query": query})    
+    response = chain.invoke({"query": query})
     obj = ChromaTranslator()
     filter_condition = obj.visit_structured_query(structured_query=response)[1]
     print(response, filter_condition)
@@ -45,12 +46,11 @@ async def get_structured_query(query: str):
         print(response)
         obj = ChromaTranslator()
         filter_condition = obj.visit_structured_query(structured_query=response)[1]
-        
+
     except Exception as e:
-        print(f"An error occurred: ", HTTPException(status_code=500, detail=f"An error occurred: {e}"))
-        
+        print(
+            f"An error occurred: ",
+            HTTPException(status_code=500, detail=f"An error occurred: {e}"),
+        )
+
     return response, filter_condition
-        
-        
-   
-    
