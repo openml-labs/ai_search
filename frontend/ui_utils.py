@@ -139,21 +139,21 @@ class ResponseParser:
             ).json()
         return self.llm_response
     
-    def fetch_documentation_query(self, query: str):
-        """
-        Description: Fetch the response for a general or documentation or code query from the LLM service as a JSON
-        """
-        documentation_response_path = self.paths["documentation_query"]
-        try:
-            self.documentation_response = requests.get(
-                f"{documentation_response_path['docker']}{query}",
-                json={"query": query},
-            ).json()
-        except:
-            self.documentation_response = requests.get(
-                f"{documentation_response_path['local']}{query}",
-                json={"query": query},
-            ).json()
+    # def fetch_documentation_query(self, query: str):
+    #     """
+    #     Description: Fetch the response for a general or documentation or code query from the LLM service as a JSON
+    #     """
+    #     documentation_response_path = self.paths["documentation_query"]
+    #     try:
+    #         self.documentation_response = requests.get(
+    #             f"{documentation_response_path['docker']}{query}",
+    #             json={"query": query},
+    #         ).json()
+    #     except:
+    #         self.documentation_response = requests.get(
+    #             f"{documentation_response_path['local']}{query}",
+    #             json={"query": query},
+    #         ).json()
 
     def fetch_structured_query(self, query_type: str, query: str):
         """
@@ -365,6 +365,7 @@ class UILoader:
         # defaults
         self.query_type = "Dataset"
         self.llm_filter = False
+        self.paths = self.load_paths()
 
         if "messages" not in st.session_state:
             st.session_state.messages = []
@@ -394,19 +395,35 @@ class UILoader:
             st.session_state.messages.append({"role": "user", "content": user_input})
             with st.spinner("Waiting for results..."):
                 results = self.process_query_chat(user_input)
-
-            st.session_state.messages.append(
-                {"role": "OpenML Agent", "content": results}
-            )
-
-        # Display chat history
-        for message in st.session_state.messages:
-            if message["role"] == "user":
-                with st.chat_message(name = "user"):
-                    self.display_results(message["content"], "user")
+            
+            if not self.query_type == "General Query": 
+                st.session_state.messages.append(
+                    {"role": "OpenML Agent", "content": results}
+                )
             else:
-                with st.chat_message(name = "ai"):
-                    self.display_results(message["content"], "ai")
+                with st.spinner("Fetching results..."):
+                    with requests.get(results, stream=True) as r:
+                        resp_contain = st.empty()
+                        streamed_response = ""
+                        for chunk in r.iter_content(chunk_size=1024):
+                            if chunk:
+                                streamed_response += chunk.decode("utf-8")
+                                resp_contain.markdown(streamed_response)
+                        resp_contain.empty()
+                    st.session_state.messages.append(
+                        {"role": "OpenML Agent", "content": streamed_response}
+                    )
+
+            # Display chat history
+            for message in st.session_state.messages:
+                if query_type == "General Query":
+                    pass
+                if message["role"] == "user":
+                    with st.chat_message(name = "user"):
+                        self.display_results(message["content"], "user")
+                else:
+                    with st.chat_message(name = "ai"):
+                        self.display_results(message["content"], "ai")
 
     def display_results(self,initial_response, role):
         """
@@ -468,5 +485,22 @@ class UILoader:
             results = response_parser.parse_and_update_response(self.data_metadata)
             return results
         elif self.query_type == "General Query":
-            response_parser.fetch_documentation_query(query)
-            return response_parser.documentation_response
+            # response_parser.fetch_documentation_query(query)
+            # return response_parser.documentation_response
+            documentation_response_path = self.paths["documentation_query"]["local"] + query
+            # with requests.get(documentation_response_path, stream=True) as r:
+            #     resp_contain = st.empty()
+            #     streamed_response = ""
+            #     for chunk in r.iter_content(chunk_size=1024):
+            #         if chunk:
+            #             streamed_response += chunk.decode("utf-8")
+            #             resp_contain.markdown(streamed_response)
+            # return requests.get(documentation_response_path, stream=True)
+            return documentation_response_path
+                
+    def load_paths(self):
+        """
+        Description: Load paths from paths.json
+        """
+        with open("paths.json", "r") as file:
+            return json.load(file)

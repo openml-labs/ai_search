@@ -279,7 +279,7 @@ class ChromaStore:
         self.store = {}
         self.session_id = session_id
 
-    def openml_page_search(self, input: str) -> str:
+    def openml_page_search(self, input: str):
 
         vectorstore = Chroma(
             persist_directory=self.chroma_file_path,
@@ -326,10 +326,16 @@ class ChromaStore:
             output_messages_key="answer",
         )
 
-        answer = conversational_rag_chain.invoke(
+        # answer = conversational_rag_chain.invoke(
+        #     {"input": f"{input}"},
+        #     config={
+        #         "configurable": {"session_id": self.session_id}
+        #     },  # constructs a key "abc123" in `store`.
+        # )["answer"]
+        answer = conversational_rag_chain.stream(
             {"input": f"{input}"},
             config={
                 "configurable": {"session_id": self.session_id}
             },  # constructs a key "abc123" in `store`.
-        )["answer"]
+        )
         return answer

@@ -21,12 +21,10 @@ with st.spinner("Loading Required Data"):
     ui_loader = UILoader(config_path)
 
 # container for company description and logo
-with st.sidebar:
-    query_type = st.radio(
-        "Select Query Type", ["General Query", "Dataset", "Flow"], key="query_type_2"
-    )
-
-user_input = st.chat_input(placeholder=chatbot_display, max_chars=chatbot_max_chars)
+# with st.sidebar:
+#     query_type = st.radio(
+#         "Select Query Type", ["General Query", "Dataset", "Flow"], key="query_type_2"
+#     )
 col1, col2 = st.columns([1, 4])
 with col1:
     st.image(logo, width=100)
@@ -35,6 +33,14 @@ with col2:
         info,
         unsafe_allow_html=True,
     )
-ui_loader.create_chat_interface(user_input=None)
-if user_input:
-    ui_loader.create_chat_interface(user_input, query_type=query_type)
+chat_container = st.container()
+with chat_container:
+    query_type = st.radio(
+        "Select Query Type", ["General Query", "Dataset", "Flow"], key="query_type_2"
+    )
+    user_input = st.chat_input(placeholder=chatbot_display, max_chars=chatbot_max_chars)
+
+
+    ui_loader.create_chat_interface(user_input=None)
+    if user_input:
+        ui_loader.create_chat_interface(user_input, query_type=query_type)
