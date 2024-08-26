@@ -19,13 +19,12 @@ import pandas as pd
 # change the path to the backend directory
 sys.path.append(os.path.join(os.path.dirname("."), "../backend/"))
 import requests
+# add modules from ui_utils
+from tqdm.auto import tqdm
 
 # %%
 from backend.modules.rag_llm import *
 from backend.modules.results_gen import *
-
-# add modules from ui_utils
-from tqdm.auto import tqdm
 from frontend.ui_utils import *
 
 

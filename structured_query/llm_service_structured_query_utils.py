@@ -1,14 +1,13 @@
 import json
 import sys
+
+from langchain.chains.query_constructor.base import (
+    get_query_constructor_prompt, load_query_constructor_runnable)
 from langchain_community.chat_models import ChatOllama
+from structured_query_examples import examples
 
 # from langchain_ollama.llms import OllamaLLM
 
-from langchain.chains.query_constructor.base import (
-    get_query_constructor_prompt,
-    load_query_constructor_runnable,
-)
-from structured_query_examples import examples
 
 
 sys.path.append("../")

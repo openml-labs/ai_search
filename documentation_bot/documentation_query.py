@@ -1,12 +1,13 @@
-from utils import ChromaStore, Crawler
 import os
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
-from httpx import ConnectTimeout
-from tenacity import retry, retry_if_exception_type, stop_after_attempt
 import uuid
 
-#TODO : make this into a separate thing using config
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse, StreamingResponse
+from httpx import ConnectTimeout
+from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from utils import ChromaStore, Crawler
+
+# TODO : make this into a separate thing using config
 recrawl_websites = False
 
 crawled_files_data_path = "../data/crawler/crawled_data.csv"
@@ -41,6 +42,17 @@ if recrawl_websites == True:
 app = FastAPI()
 session_id = str(uuid.uuid4())
 
+
+def stream_response(response):
+    for line in response:
+        try:
+            yield str(line["answer"])
+        except GeneratorExit:
+            break
+        except:
+            yield ""
+
+
 @app.get("/documentationquery/{query}", response_class=JSONResponse)
 @retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
 async def get_documentation_query(query: str):
@@ -49,4 +61,5 @@ async def get_documentation_query(query: str):
 
     chroma_store.setup_inference(session_id)
     response = chroma_store.openml_page_search(input=query)
-    return JSONResponse(content=response)
+    # return JSONResponse(content=response)
+    return StreamingResponse(stream_response(response), media_type="text/event-stream")
