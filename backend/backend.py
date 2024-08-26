@@ -5,6 +5,7 @@ from httpx import ConnectTimeout
 from modules.rag_llm import *
 from modules.utils import *
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
+from pathlib import Path
 
 app = FastAPI()
 # Config and DB
@@ -18,7 +19,12 @@ if config["testing_flag"]:
 # load the persistent database using ChromaDB
 print('Loading DB')
 client = chromadb.PersistentClient(path=config["persist_dir"])
+
 # Loading the metadata for all types
+data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
+flow_metadata_path = Path(config["data_dir"]) / "all_flow_description.csv"
+data_metadata = pd.read_csv(data_metadata_path)
+flow_metadata = pd.read_csv(flow_metadata_path)
 
 # Setup llm chain, initialize the retriever and llm, and setup Retrieval QA
 print('Setting LLM chain')
@@ -64,15 +70,17 @@ except Exception as e:
 async def read_dataset(query: str):
     try:
         # Fetch the result data frame based on the query
-        _, ids_order = QueryProcessor(
+        result = QueryProcessor(
             query=query,
             qa=qa_dataset,
             type_of_query='dataset',
             config=config,
+            dataset_meta=data_metadata,
+            flow_meta=flow_metadata,
         ).get_result_from_query()
 
         response = JSONResponse(
-            content={"initial_response": ids_order}, status_code=200
+            content={"initial_response": result}, status_code=200
         )
 
         return response
@@ -81,21 +89,21 @@ async def read_dataset(query: str):
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
-@app.get("/flow/{query}", response_class=JSONResponse)
-@retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
-async def read_flow(query: str):
-    try:
-        _, ids_order = QueryProcessor(
-            query=query,
-            qa=qa_flow,
-            type_of_query='flow',
-            config=config,
-        ).get_result_from_query()
-
-        response = JSONResponse(
-            content={"initial_response": ids_order}, status_code=200
-        )
-
-        return response
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
+# @app.get("/flow/{query}", response_class=JSONResponse)
+# @retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
+# async def read_flow(query: str):
+#     try:
+#         _, ids_order = QueryProcessor(
+#             query=query,
+#             qa=qa_flow,
+#             type_of_query='flow',
+#             config=config,
+#         ).get_result_from_query()
+#
+#         response = JSONResponse(
+#             content={"initial_response": ids_order}, status_code=200
+#         )
+#
+#         return response
+#     except Exception as e:
+#         return JSONResponse(content={"error": str(e)}, status_code=500)

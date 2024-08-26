@@ -37,11 +37,11 @@ for type_of_data in ["dataset", "flow"]:
         client=client,
     )
     qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
-    # Run the test query
-    result_data_frame = QueryProcessor(
-        query=query_test_dict[type_of_data],
-        qa=qa_dataset,
-        type_of_query=type_of_data,
-        config=config,
-    ).get_result_from_query()
-    print(result_data_frame)
+    # # Run the test query
+    # result_data_frame = QueryProcessor(
+    #     query=query_test_dict[type_of_data],
+    #     qa=qa_dataset,
+    #     type_of_query=type_of_data,
+    #     config=config,
+    # ).get_result_from_query()
+    # print(result_data_frame)

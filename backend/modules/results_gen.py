@@ -15,6 +15,9 @@ from langchain_community.document_transformers.long_context_reorder import (
 from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
+from structured_query.structuring_query import filter_attribute_info
+
+
 # --- PROCESSING RESULTS ---
 
 
@@ -34,11 +37,13 @@ def long_context_reorder(results):
 
 
 class QueryProcessor:
-    def __init__(self, query: str, qa: RetrievalQA, type_of_query: str, config: dict):
+    def __init__(self, query: str, qa: RetrievalQA, type_of_query: str, dataset_meta, flow_meta, config: dict):
         self.query = query
         self.qa = qa
         self.type_of_query = type_of_query
         self.config = config
+        self.dataset_meta = dataset_meta
+        self.flow_meta = flow_meta
 
     def fetch_results(self):
         """
@@ -81,18 +86,15 @@ class QueryProcessor:
 
     @staticmethod
     def process_documents(
-        source_documents: Sequence[Document],
+            source_documents: Sequence[Document],
     ) -> Tuple[OrderedDict, list]:
         """
         Process the source documents and create a dictionary with the key_name as the key and the name and page content as the values.
         """
         dict_results = OrderedDict()
         for result in source_documents:
-            dict_results[result.metadata["did"]] = {
-                "name": result.metadata["name"],
-                "page_content": result.page_content,
-            }
-        ids = [result.metadata["did"] for result in source_documents]
+            dict_results[result.metadata["did"]] = result
+        ids = [(result.metadata["did"], result.metadata['type']) for result in source_documents]
         return dict_results, ids
 
     @staticmethod
@@ -103,7 +105,7 @@ class QueryProcessor:
         return '<a href="{}">{}</a>'.format(val, val)
 
     def create_output_dataframe(
-        self, dict_results: dict, type_of_data: str, ids_order: list
+            self, dict_results: dict, type_of_data: str, ids_order: list
     ) -> pd.DataFrame:
         """
         Create an output dataframe with the results. The URLs are API calls to the OpenML API for the specific type of data.
@@ -151,6 +153,31 @@ class QueryProcessor:
         query = query[:200]
         return query
 
+    def meta_synthesize(self, ids_order):
+        # Initialize an empty list to store the synthesized rows
+        synthesized_rows = []
+
+        # Iterate over ids_order and append the corresponding row from dataset_meta or flow_meta
+        for did, dtype in ids_order:
+            if dtype == 'dataset':
+                row = self.dataset_meta[self.dataset_meta['did'] == did].copy()
+                if not row.empty:
+                    row.loc[:, 'type'] = 'dataset'
+                    synthesized_rows.append(row.iloc[0])
+            elif dtype == 'flow':
+                row = self.flow_meta[self.flow_meta['did'] == did].copy()
+                if not row.empty:
+                    row.loc[:, 'type'] = 'flow'
+                    synthesized_rows.append(row.iloc[0])
+
+        # Convert the list of rows to a DataFrame
+        synthesized_df = pd.DataFrame(synthesized_rows).reset_index(drop=True)
+        # Reorder the columns to place 'type' as the second column
+        cols = synthesized_df.columns.tolist()
+        cols.insert(1, cols.pop(cols.index('type')))
+        synthesized_df = synthesized_df[cols]
+        return synthesized_df
+
     def get_result_from_query(self) -> Tuple[pd.DataFrame, Sequence[Document]]:
         """
         Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
@@ -168,6 +195,7 @@ class QueryProcessor:
 
         source_documents = self.fetch_results()
         dict_results, ids_order = self.process_documents(source_documents)
-        output_df = self.create_output_dataframe(dict_results, type_of_query, ids_order)
-
-        return output_df, ids_order
+        # output_df = self.create_output_dataframe(dict_results, type_of_query, ids_order)
+        output_df = self.meta_synthesize(ids_order)
+        output_json = output_df.to_json(orient="records")
+        return output_json

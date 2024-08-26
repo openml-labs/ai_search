@@ -70,7 +70,7 @@ class QASetup:
         )
 
         vector_store_manager = VectorStoreManager(self.client, self.config)
-        vectordb = vector_store_manager.create_vector_store(metadata_df)
+        vectordb = vector_store_manager.create_vector_store(metadata_df,self.data_type)
         qa = LLMChainInitializer.initialize_llm_chain(vectordb, self.config)
 
         return qa, all_metadata

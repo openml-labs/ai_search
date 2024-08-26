@@ -16,13 +16,7 @@ if config['structured_query']:
     from structured_query.chroma_store_utilis import *
     collec = load_chroma_metadata() 
        
-# Metadata paths
-data_metadata_path = Path(config["data_dir"]) / "all_dataset_description.csv"
-flow_metadata_path = Path(config["data_dir"]) / "all_flow_description.csv"
 
-# Load metadata
-data_metadata = pd.read_csv(data_metadata_path)
-flow_metadata = pd.read_csv(flow_metadata_path)
 
 # Main Streamlit App
 st.title("OpenML AI Search")
@@ -66,7 +60,7 @@ if st.button("Submit"):
                     response_parser.fetch_llm_response(query)
                 # get updated columns based on llm response
                 
-            results = response_parser.parse_and_update_response(data_metadata)
+            results = response_parser.parse_and_update_response()
             # display results in a table
             display_results(results)
 

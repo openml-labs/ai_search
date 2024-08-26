@@ -168,6 +168,7 @@ class ResponseParser:
 
         return self.structured_query_response
 
+
     def database_filter(self, filter_condition, collec):
         """
         Apply database filter on the rag_response
@@ -194,17 +195,17 @@ class ResponseParser:
                 f"{rag_response_path['local']}{query_type.lower()}/{query}",
                 json={"query": query, "type": query_type.lower()},
             ).json()
-        doc_set = set()
-        ordered_set = []
-        for docid in self.rag_response['initial_response']:
-            if docid not in doc_set:
-                ordered_set.append(docid)
-            doc_set.add(docid)
-        self.rag_response['initial_response'] = ordered_set
+        # doc_set = set()
+        # ordered_set = []
+        # for docid in self.rag_response['initial_response']:
+        #     if docid not in doc_set:
+        #         ordered_set.append(docid)
+        #     doc_set.add(docid)
+        # self.rag_response['initial_response'] = ordered_set
 
         return self.rag_response
 
-    def parse_and_update_response(self, metadata: pd.DataFrame):
+    def parse_and_update_response(self):
         """
          Description: Parse the response from the RAG and LLM services and update the metadata based on the response.
          Decide which order to apply them
@@ -216,46 +217,30 @@ class ResponseParser:
         if self.apply_llm_before_rag is None or self.llm_response is None:
             print('No LLM filter.')
             print(self.rag_response, flush=True)
-            filtered_metadata = metadata[
-                metadata["did"].isin(self.rag_response["initial_response"])
-            ]
-            filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                      categories=self.rag_response["initial_response"],
-                                                      ordered=True)
-            filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
-
-            print(filtered_metadata)
-            # if no llm response is required, return the initial response
-            return filtered_metadata
+            return pd.read_json(self.rag_response['initial_response'], orient='records')
 
         elif self.rag_response is not None and self.llm_response is not None:
             if not self.apply_llm_before_rag:
                 print('RAG before LLM filter.')
-                filtered_metadata = metadata[
-                    metadata["did"].isin(self.rag_response["initial_response"])
-                ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+                filtered_metadata = pd.read_json(self.rag_response['initial_response'], orient='records')
                 llm_parser = LLMResponseParser(self.llm_response)
 
                 if self.query_type.lower() == "dataset":
                     llm_parser.get_attributes_from_response()
                     return llm_parser.update_subset_cols(filtered_metadata)
-            elif self.apply_llm_before_rag:
-                print('LLM filter before RAG')
-                llm_parser = LLMResponseParser(self.llm_response)
-                llm_parser.get_attributes_from_response()
-                filtered_metadata = llm_parser.update_subset_cols(metadata)
-                filtered_metadata = filtered_metadata[
-                    metadata["did"].isin(self.rag_response["initial_response"])
-                ]
-                filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
-                                                          categories=self.rag_response["initial_response"],
-                                                          ordered=True)
-                filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
-                return filtered_metadata
+            # elif self.apply_llm_before_rag:
+            #     print('LLM filter before RAG')
+            #     llm_parser = LLMResponseParser(self.llm_response)
+            #     llm_parser.get_attributes_from_response()
+            #     filtered_metadata = llm_parser.update_subset_cols(metadata)
+            #     filtered_metadata = filtered_metadata[
+            #         metadata["did"].isin(self.rag_response["initial_response"])
+            #     ]
+            #     filtered_metadata["did"] = pd.Categorical(filtered_metadata["did"],
+            #                                               categories=self.rag_response["initial_response"],
+            #                                               ordered=True)
+            #     filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+            #     return filtered_metadata
 
         elif self.rag_response is not None and self.structured_query_response is not None:
             col_name = ["status", "NumberOfClasses", "NumberOfFeatures", "NumberOfInstances"]
