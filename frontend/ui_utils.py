@@ -352,7 +352,7 @@ class UILoader:
             st.session_state.messages = []
 
     # container for company description and logo
-    def generate_logo_header(
+    def _generate_logo_header(
         self,
     ):
 
@@ -367,8 +367,9 @@ class UILoader:
 
     def generate_complete_ui(self):
 
-        self.generate_logo_header()
+        self._generate_logo_header()
         chat_container = st.container()
+        # self.disclaimer_dialog()
         with chat_container:
             with st.form(key="chat_form"):
                 user_input = st.text_input(
@@ -404,7 +405,7 @@ class UILoader:
             with st.chat_message(name="ai"):
                 st.write("OpenML Agent: ", "Hello! How can I help you today?")
                 st.write(
-                    "Note that results are powered by local LLM models and may not be accurate. Please refer to the official OpenML website for accurate information."
+                    ":warning: Note that results are powered by local LLM models and may not be accurate. Please refer to the official OpenML website for accurate information."
                 )
 
         # Handle user input
@@ -477,8 +478,6 @@ class UILoader:
         """
         Description: Display the results in a DataFrame
         """
-        # st.write("OpenML Agent: ")
-
         try:
             st.dataframe(initial_response)
         except:

@@ -15,4 +15,4 @@ st.title("OpenML AI Search")
 with st.spinner("Loading Required Data"):
     config_path = Path("../backend/config.json")
     ui_loader = UILoader(config_path)
-    ui_loader.generate_complete_ui()
+ui_loader.generate_complete_ui()

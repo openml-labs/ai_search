@@ -5,15 +5,21 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse, StreamingResponse
 from httpx import ConnectTimeout
 from tenacity import retry, retry_if_exception_type, stop_after_attempt
-from utils import ChromaStore, Crawler
+from documentation_query_utils import ChromaStore, Crawler, stream_response
+from langchain_ollama import ChatOllama
 
-# TODO : make this into a separate thing using config
 recrawl_websites = False
 
 crawled_files_data_path = "../data/crawler/crawled_data.csv"
 chroma_path = "../data/crawler/"
-model_name = "BAAI/bge-small-en"
+rag_model_name = "BAAI/bge-small-en"
 generation_model_name = "llama3"  # ollama
+
+generation_llm = ChatOllama(
+    model=generation_model_name, temperature=0.0
+)
+# Send test message to the generation model
+generation_llm.invoke("test generation")
 
 # Crawl the websites and save the data
 num_of_websites_to_crawl = None  # none for all
@@ -31,27 +37,16 @@ crawler.do_crawl()
 
 # Initialize the ChromaStore and embed the data
 chroma_store = ChromaStore(
-    model_name=model_name,
+    rag_model_name=rag_model_name,
     crawled_files_data_path=crawled_files_data_path,
     chroma_file_path=chroma_path,
-    generation_model_name=generation_model_name,
+    generation_llm=generation_llm,
 )
 if recrawl_websites == True:
     chroma_store.read_data_and_embed()
 
 app = FastAPI()
 session_id = str(uuid.uuid4())
-
-
-def stream_response(response):
-    for line in response:
-        try:
-            yield str(line["answer"])
-        except GeneratorExit:
-            break
-        except:
-            yield ""
-
 
 @app.get("/documentationquery/{query}", response_class=JSONResponse)
 @retry(stop=stop_after_attempt(3), retry=retry_if_exception_type(ConnectTimeout))
