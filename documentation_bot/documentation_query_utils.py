@@ -304,6 +304,11 @@ class ChromaStore:
         """
         self.store = {}
         self.session_id = session_id
+        self.vectorstore = Chroma(
+            persist_directory=self.chroma_file_path,
+            embedding_function=self.hf_embedding_function,
+        )
+        self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 1})
 
     def openml_page_search(self, input: str):
 
@@ -311,12 +316,6 @@ class ChromaStore:
         Description: Use the Chroma vector store to search for the most relevant page to the input question , contextualize the question and answer it.
         
         """
-
-        vectorstore = Chroma(
-            persist_directory=self.chroma_file_path,
-            embedding_function=self.hf_embedding_function,
-        )
-        retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 
         ### Contextualize question ###
         contextualize_q_prompt = ChatPromptTemplate.from_messages(
@@ -328,7 +327,7 @@ class ChromaStore:
         )
 
         history_aware_retriever = create_history_aware_retriever(
-            self.generation_llm, retriever, contextualize_q_prompt
+            self.generation_llm, self.retriever, contextualize_q_prompt
         )
 
         ### Answer question ###

@@ -15,10 +15,12 @@ chroma_path = "../data/crawler/"
 rag_model_name = "BAAI/bge-small-en"
 generation_model_name = "llama3"  # ollama
 
+
 generation_llm = ChatOllama(
     model=generation_model_name, temperature=0.0
 )
 # Send test message to the generation model
+print("Testing the generation model")
 generation_llm.invoke("test generation")
 
 # Crawl the websites and save the data
