@@ -17,3 +17,6 @@
 ### Evaluation Utils
 
 ::: evaluation_utils
+
+### Elastic Search Eval
+::: get_elastic_search_results

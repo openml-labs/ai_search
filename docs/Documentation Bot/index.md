@@ -1,6 +1,9 @@
 # Documentation Bot
 
 - This bot reads the documentation of OpenML and trains an LLM model to answer questions about the project.
+- It consists of two main parts
+  - A crawler that reads the documentation and stores the links and text information.
+  - The LLM utils -> Vectore store, conversational langchain, history.
 
 ## How to run
 

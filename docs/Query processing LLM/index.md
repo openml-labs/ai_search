@@ -5,6 +5,10 @@
 - This is done by providing a prompt to the RAG and telling it to extract the filters/etc and either structure it or not.
 - This implementation is served as a FastAPI service that can be queried quite easily.
 
+## Structured Implementation
+
+- TBD
+
 ## Unstructured Implementation
 - This implementation is independent of `langchain`, and takes a more manual approach to parsing the filters. At the moment, this does not separate the query from the filters either. (The structured query implementation attempts to do that.)
 - The response of the the LLM parser does not take into account how to apply the filters, it just provides a list of the ones that the LLM considered relevant to the UI.
@@ -20,8 +24,6 @@
 
 ### llm_service_utils.py
 - The main logic of the above is defined here.
-
-## Structured Query Implementation
 
 ## Additional information
 - In the process of testing this implementation, a blog was written about how the temperature parameter affects the results of the model. This can be [found here](https://openml-labs.github.io/blog/posts/Experiments-with-temperature/experiments_with_temp.html).

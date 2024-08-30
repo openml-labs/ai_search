@@ -41,7 +41,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [backend/modules, tests/, frontend, llm_service, ollama, tools, evaluation/, documentation_bot/]
+          paths: [backend/modules, tests/, frontend, llm_service, ollama, tools, evaluation/, documentation_bot/, structured_query/]
           load_external_modules: true
           show_source: true
           options:

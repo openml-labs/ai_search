@@ -2,6 +2,7 @@
 
 ## How to run
 - Start the language server at the root of this repository with `./start_llm_service.sh` . This is important, do not skip it.
+- Run `python get_elastic_search_results.py` to get the results from the Elastic search implementation of OpenML.
 - Run `python run_all_training.py` to train all models (get data, create vector store for each etc) and run the models on all possible versions of the queries.
   - Query templates are in `data/evaluation/query_templates.txt`. Add to this if you want different types of queries.
 - Run `python evaluate.py` to aggregate the results from the previous query. (This does not run the models on the queries) 
