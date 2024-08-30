@@ -25,3 +25,4 @@ tools/data/*
 !config.json
 .venv/
 *.bin
+*.pickle

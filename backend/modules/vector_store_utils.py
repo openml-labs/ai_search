@@ -21,6 +21,7 @@ class DataLoader:
         page_content_column: str,
         chunk_size: int = 1000,
         chunk_overlap: int = 150,
+        type:str = 'dataset'
     ):
         self.metadata_df = metadata_df
         self.page_content_column = page_content_column
@@ -28,6 +29,7 @@ class DataLoader:
         self.chunk_overlap = (
             chunk_overlap if self.chunk_size > chunk_overlap else self.chunk_size
         )
+        self.type = type
 
     def load_and_process_data(self) -> list:
         """
@@ -37,6 +39,8 @@ class DataLoader:
             self.metadata_df, page_content_column=self.page_content_column
         )
         documents = loader.load()
+        for d in documents:
+            d.metadata['type'] = self.type
 
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
@@ -133,9 +137,8 @@ class VectorStoreManager:
         """
         Description: Fixes some collection names. (workaround from OpenML API)
         """
-        return {"dataset": "datasets", "flow": "flows"}.get(
-            self.config["type_of_data"], "default"
-        )
+
+        return 'default'
 
     def load_vector_store(
         self, embeddings: HuggingFaceEmbeddings, collection_name: str
@@ -166,7 +169,7 @@ class VectorStoreManager:
             for i in range(0, len(unique_docs), bs):
                 db.add_documents(unique_docs[i : i + bs], ids=unique_ids[i : i + bs])
 
-    def create_vector_store(self, metadata_df: pd.DataFrame) -> Chroma:
+    def create_vector_store(self, metadata_df: pd.DataFrame, type:str) -> Chroma:
         """
         Description: Load embeddings, get chunked data, subset if needed , find unique, and then finally add to ChromaDB
         """
@@ -184,6 +187,7 @@ class VectorStoreManager:
             metadata_df,
             page_content_column="Combined_information",
             chunk_size=self.config["chunk_size"],
+            type = type
         )
         documents = data_loader.load_and_process_data()
 

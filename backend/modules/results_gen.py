@@ -11,6 +11,7 @@ from flashrank import Ranker, RerankRequest
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.document_transformers.long_context_reorder import \
     LongContextReorder
+from structured_query.structuring_query import filter_attribute_info
 from langchain_core.documents import BaseDocumentTransformer, Document
 from tqdm import tqdm
 
@@ -33,11 +34,13 @@ def long_context_reorder(results):
 
 
 class QueryProcessor:
-    def __init__(self, query: str, qa: RetrievalQA, type_of_query: str, config: dict):
+    def __init__(self, query: str, qa: RetrievalQA, type_of_query: str, config: dict, data_metadata, flow_metadata):
         self.query = query
         self.qa = qa
         self.type_of_query = type_of_query
         self.config = config
+        self.data_metadata = data_metadata
+        self.flow_metadata = flow_metadata
 
     def fetch_results(self):
         """
@@ -87,11 +90,8 @@ class QueryProcessor:
         """
         dict_results = OrderedDict()
         for result in source_documents:
-            dict_results[result.metadata["did"]] = {
-                "name": result.metadata["name"],
-                "page_content": result.page_content,
-            }
-        ids = [result.metadata["did"] for result in source_documents]
+            dict_results[result.metadata['did']] = result
+        ids = [(result.metadata["did"], result.metadata["type"]) for result in source_documents]
         return dict_results, ids
 
     @staticmethod
@@ -135,6 +135,31 @@ class QueryProcessor:
                 output_df = output_df.rename(columns={col: replace_dict[col]})
         return output_df
 
+    def meta_synthesize(self, ids_order) -> pd.DataFrame:
+        # Initialize an empty list to store the synthesized rows
+        synthesized_rows = []
+
+        # Iterate over ids_order and append the corresponding row from dataset_meta or flow_meta
+        for did, dtype in ids_order:
+            if dtype == 'dataset':
+                row = self.data_metadata[self.data_metadata['did'] == did].copy()
+                if not row.empty:
+                    row.loc[:, 'type'] = 'dataset'
+                    synthesized_rows.append(row.iloc[0])
+            elif dtype == 'flow':
+                row = self.flow_metadata[self.flow_metadata['did'] == did].copy()
+                if not row.empty:
+                    row.loc[:, 'type'] = 'flow'
+                    synthesized_rows.append(row.iloc[0])
+
+        # Convert the list of rows to a DataFrame
+        synthesized_df = pd.DataFrame(synthesized_rows).reset_index(drop=True)
+        # Reorder the columns to place 'type' as the second column
+        cols = synthesized_df.columns.tolist()
+        cols.insert(1, cols.pop(cols.index('type')))
+        synthesized_df = synthesized_df[cols]
+        return synthesized_df
+
     @staticmethod
     def check_query(query: str) -> str:
         """
@@ -154,19 +179,13 @@ class QueryProcessor:
         """
         Get the result from the query using the QA chain and return the results in a dataframe that is then sent to the frontend.
         """
-        if self.type_of_query == "dataset":
-            type_of_query = "data"
-        elif self.type_of_query == "flow":
-            type_of_query = "flow"
-        else:
-            raise ValueError(f"Unsupported type_of_data: {self.type_of_query}")
-
         query = self.check_query(self.query)
         if query == "":
             return pd.DataFrame(), []
 
         source_documents = self.fetch_results()
         dict_results, ids_order = self.process_documents(source_documents)
-        output_df = self.create_output_dataframe(dict_results, type_of_query, ids_order)
+        output_df = self.meta_synthesize(ids_order)
 
-        return output_df, ids_order
+        # Return as JSON
+        return output_df.to_json(orient="records")

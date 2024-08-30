@@ -29,7 +29,7 @@ qa_dataset_handler = QASetup(
     client=client,
 )
 
-qa_dataset, _ = qa_dataset_handler.setup_vector_db_and_qa()
+qa_dataset, data_metadata = qa_dataset_handler.setup_vector_db_and_qa()
 
 qa_flow_handler = QASetup(
     config=config,
@@ -37,7 +37,7 @@ qa_flow_handler = QASetup(
     client=client,
 )
 
-qa_flow, _ = qa_flow_handler.setup_vector_db_and_qa()
+qa_flow, flow_metadata = qa_flow_handler.setup_vector_db_and_qa()
 
 # get the llm chain and set the cache
 llm_chain_handler = LLMChainCreator(config=config, local=True)
@@ -54,49 +54,33 @@ try:
             qa=qa_dataset if type_of_query == "dataset" else qa_flow,
             type_of_query=type_of_query,
             config=config,
+            data_metadata=data_metadata,
+            flow_metadata=flow_metadata
         ).get_result_from_query()
 
 except Exception as e:
     print("Error in first query: ", e)
 
 
-@app.get("/dataset/{query}", response_class=JSONResponse)
+@app.get("/rag/{query}", response_class=JSONResponse)
 @retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
 async def read_dataset(query: str):
     try:
         # Fetch the result data frame based on the query
-        _, ids_order = QueryProcessor(
+        result = QueryProcessor(
             query=query,
             qa=qa_dataset,
             type_of_query="dataset",
             config=config,
+            data_metadata = data_metadata,
+            flow_metadata = flow_metadata
         ).get_result_from_query()
 
         response = JSONResponse(
-            content={"initial_response": ids_order}, status_code=200
+            content={"initial_response": result}, status_code=200
         )
 
         return response
 
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
-
-
-@app.get("/flow/{query}", response_class=JSONResponse)
-@retry(retry=retry_if_exception_type(ConnectTimeout), stop=stop_after_attempt(2))
-async def read_flow(query: str):
-    try:
-        _, ids_order = QueryProcessor(
-            query=query,
-            qa=qa_flow,
-            type_of_query="flow",
-            config=config,
-        ).get_result_from_query()
-
-        response = JSONResponse(
-            content={"initial_response": ids_order}, status_code=200
-        )
-
-        return response
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

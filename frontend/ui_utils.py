@@ -166,19 +166,14 @@ class ResponseParser:
                 f"{rag_response_path['local']}{query_type.lower()}/{query}",
                 json={"query": query, "type": query_type.lower()},
             ).json()
-        ordered_set = self._order_results()
-        self.rag_response["initial_response"] = ordered_set
+
+        # self.rag_response["initial_response"] = self.rag_response["initial_response"])
+        self.rag_response["initial_response"] = pd.DataFrame.from_records(json.loads(self.rag_response["initial_response"]))
+        # self.rag_response["initial_response"] = pd.read_json(self.rag_response['initial_response'], orient='records')
+        # ordered_set = self._order_results()
+        # self.rag_response["initial_response"] = ordered_set
 
         return self.rag_response
-
-    def _order_results(self):
-        doc_set = set()
-        ordered_set = []
-        for docid in self.rag_response["initial_response"]:
-            if docid not in doc_set:
-                ordered_set.append(docid)
-            doc_set.add(docid)
-        return ordered_set
 
     def parse_and_update_response(self, metadata: pd.DataFrame):
         """
@@ -239,11 +234,11 @@ class ResponseParser:
         filtered_metadata = metadata[
             metadata["did"].isin(self.rag_response["initial_response"])
         ]
-        filtered_metadata["did"] = pd.Categorical(
-            filtered_metadata["did"],
-            categories=self.rag_response["initial_response"],
-            ordered=True,
-        )
+        # filtered_metadata["did"] = pd.Categorical(
+        #     filtered_metadata["did"],
+        #     categories=self.rag_response["initial_response"],
+        #     ordered=True,
+        # )
         filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
 
         return filtered_metadata
@@ -262,12 +257,13 @@ class ResponseParser:
             # print(
             #     "Showing only rag response as filter is empty or none of the rag data satisfies filter conditions."
             # )
-        filtered_metadata["did"] = pd.Categorical(
-            filtered_metadata["did"],
-            categories=self.rag_response["initial_response"],
-            ordered=True,
-        )
+        # filtered_metadata["did"] = pd.Categorical(
+        #     filtered_metadata["did"],
+        #     categories=self.rag_response["initial_response"],
+        #     ordered=True,
+        # )
         filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
+        return filtered_metadata
 
     def _filter_before_rag(self, metadata):
         print("LLM filter before RAG")
@@ -277,11 +273,11 @@ class ResponseParser:
         filtered_metadata = filtered_metadata[
             metadata["did"].isin(self.rag_response["initial_response"])
         ]
-        filtered_metadata["did"] = pd.Categorical(
-            filtered_metadata["did"],
-            categories=self.rag_response["initial_response"],
-            ordered=True,
-        )
+        # filtered_metadata["did"] = pd.Categorical(
+        #     filtered_metadata["did"],
+        #     categories=self.rag_response["initial_response"],
+        #     ordered=True,
+        # )
         filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
 
         return filtered_metadata
@@ -291,11 +287,11 @@ class ResponseParser:
         filtered_metadata = metadata[
             metadata["did"].isin(self.rag_response["initial_response"])
         ]
-        filtered_metadata["did"] = pd.Categorical(
-            filtered_metadata["did"],
-            categories=self.rag_response["initial_response"],
-            ordered=True,
-        )
+        # filtered_metadata["did"] = pd.Categorical(
+        #     filtered_metadata["did"],
+        #     categories=self.rag_response["initial_response"],
+        #     ordered=True,
+        # )
         filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
         llm_parser = LLMResponseParser(self.llm_response)
         return filtered_metadata, llm_parser
@@ -304,11 +300,11 @@ class ResponseParser:
         filtered_metadata = metadata[
             metadata["did"].isin(self.rag_response["initial_response"])
         ]
-        filtered_metadata["did"] = pd.Categorical(
-            filtered_metadata["did"],
-            categories=self.rag_response["initial_response"],
-            ordered=True,
-        )
+        # filtered_metadata["did"] = pd.Categorical(
+        #     filtered_metadata["did"],
+        #     categories=self.rag_response["initial_response"],
+        #     ordered=True,
+        # )
         filtered_metadata = filtered_metadata.sort_values("did").reset_index(drop=True)
 
         return filtered_metadata
@@ -377,7 +373,7 @@ class UILoader:
                 )
                 query_type = st.selectbox(
                     "Select Query Type",
-                    ["General Query", "Dataset", "Flow"],
+                    ["General Query", "Dataset/Flow"],
                     help="Are you looking for a dataset or a flow or just have a general query?",
                 )
                 ai_filter = st.toggle(
@@ -399,6 +395,8 @@ class UILoader:
 
         """
         self.query_type = query_type
+        if self.query_type != "General Query":
+            self.query_type = "rag"
         self.ai_filter = ai_filter
 
         if user_input is None:
@@ -494,7 +492,7 @@ class UILoader:
             self.query_type, apply_llm_before_rag=apply_llm_before_rag
         )
 
-        if self.query_type == "Dataset" or self.query_type == "Flow":
+        if self.query_type == "rag":
             if not self.ai_filter:
                 response_parser.fetch_rag_response(self.query_type, query)
                 return response_parser.parse_and_update_response(self.data_metadata)
