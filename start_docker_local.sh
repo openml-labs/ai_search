@@ -11,18 +11,12 @@ cd ollama || exit
 echo $! > $PID_FILE
 
 # Fetch configuration from ../backend/config.json
-config_file="../backend/config.json"
-structured_query=$(jq -r '.structured_query' $config_file)
+config_file="backend/config.json"
+# structured_query=$(jq -r '.structured_query' $config_file)
 
-if [ "$structured_query" == true ]; then
-    cd ../structured_query || exit
-    uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8081 &
-    echo $! > $PID_FILE
-else
-    cd ../llm_service || exit
-    uvicorn llm_service:app --host 0.0.0.0 --port 8081 &
-    echo $! > $PID_FILE
-fi
+cd ../structured_query || exit
+uvicorn llm_service_structured_query:app --host 0.0.0.0 --port 8081 &
+echo $! > $PID_FILE
 
 cd ../documentation_bot || exit
 uvicorn documentation_query:app --host 0.0.0.0 --port 8083 &
