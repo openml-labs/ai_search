@@ -6,6 +6,5 @@ while [ "$(ollama list | grep 'NAME')" == "" ]; do
   sleep 1
 done
 
-
 ollama run llama3
 tail -f /dev/null

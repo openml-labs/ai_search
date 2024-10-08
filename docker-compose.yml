@@ -1,18 +1,16 @@
 services:
   ollama:
-#    build: ollama/
     image: ollama/ollama:latest
     ports: 
       - 11434:11434
     networks:
       - deploy_network
-    # restart: always
-    # tty: true
     container_name: ollama
-#    restart: unless-stopped
     volumes:
       - ./ollama/get_ollama.sh:/get_ollama.sh
-    entrypoint: ["/bin/bash", "/get_ollama.sh"]
+      # - ./data/:/data
+    entrypoint: ["/bin/bash", "/get_ollama.sh", "&&", "ollama", "run", "llama3"]
+    
 
   fastapi:
     build:
@@ -25,9 +23,11 @@ services:
     depends_on:
       - ollama
     container_name: fastapi
+    volumes:
+      - ./data/:/data
 
   llmservice:
-    build: llm_service/
+    build: structured_query
     ports:
       - 8081:8081
     networks:
@@ -35,6 +35,28 @@ services:
     depends_on:
       - ollama
     container_name: llmservice
+    volumes:
+      - ./data/:/data
+    
+  documentation_bot:
+    build: documentation_bot
+    ports:
+      - 8083:8083
+    networks:
+      - deploy_network
+    depends_on:
+      - fastapi
+      - ollama
+    container_name: documentation_query
+    volumes:
+      - ./data/:/data
+    deploy:
+      resources:
+        limits:
+          memory: "8g"
+      restart_policy:
+        condition: on-failure
+        delay: 50s
 
   streamlit:
     build:
@@ -44,10 +66,12 @@ services:
       - fastapi
       - ollama
     ports:
-        - 8501:8501
+      - 8501:8501
     networks:
       - deploy_network
     container_name: streamlit
+    volumes:
+      - ./data/:/data
 
 networks:
   deploy_network:

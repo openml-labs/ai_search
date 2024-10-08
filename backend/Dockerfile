@@ -1,8 +1,6 @@
 FROM python:3.10.14
 RUN mkdir /fastapi
-RUN mkdir /data
 COPY ./backend /fastapi
-COPY ./data /data
 WORKDIR /fastapi
 
 RUN pip install -r requirements.txt
