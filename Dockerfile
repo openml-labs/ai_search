@@ -1,41 +1,69 @@
-# Dockerfile
+# syntax=docker/dockerfile:1
 
-# Use a base image with Python
-FROM python:3.10.14
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
 
-# Set environment variables
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
+
+ARG PYTHON_VERSION=3.10.14
+FROM python:${PYTHON_VERSION} as base
+
+# Prevents Python from writing pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
+
+# Keeps Python from buffering stdout and stderr to avoid situations where
+# the application crashes without emitting any logs due to buffering.
 ENV PYTHONUNBUFFERED=1
 
-# Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y jq && \
-    apt-get clean
+# Create a non-privileged user that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+# ARG UID=10001
+# RUN adduser \
+#     --disabled-password \
+#     --gecos "" \
+#     --home "/nonexistent" \
+#     --shell "/sbin/nologin" \
+#     --no-create-home \
+#     --uid "${UID}" \
+#     appuser
 
-# Copy the Poetry lock files and install Poetry
-COPY pyproject.toml poetry.lock ./
-RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
-# Install ollama
+# Download dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
+# Leverage a bind mount to requirements.txt to avoid having to copy them into
+# into this layer.
+RUN --mount=type=cache,target=/root/.cache/pip \
+    --mount=type=bind,source=requirements.txt,target=requirements.txt \
+    python -m pip install -r requirements.txt
+
+# Switch to the non-privileged user to run the application.
+# USER appuser
+
+# Copy the source code into the container.
+COPY ./data ./data
+COPY ./backend ./backend
+COPY ./documentation_bot ./documentation_bot
+COPY ./frontend ./frontend
+COPY ./structured_query ./structured_query
+COPY ./ollama ./ollama
+COPY ./llm_service ./llm_service
+COPY ./start_docker_local.sh ./start_docker_local.sh 
+COPY ./start_local.sh ./start_local.sh
+COPY ./start_training.sh ./start_training.sh
+COPY ./stop_docker.sh ./stop_docker.sh
+
 RUN curl -fsSL https://ollama.com/install.sh | sh
-
-RUN ollama serve&
-# RUN while [ "$(ollama list | grep 'NAME')" == "" ]; do sleep 1 done
-# RUN until ollama list | grep -q 'NAME'; do sleep 1; done
-# RUN timeout 120 bash -c 'until ollama list | grep -q "NAME"; do sleep 1; done'
 RUN ollama serve & sleep 5 && ollama run llama3
+# Expose the port that the application listens on.
+EXPOSE 8000
+EXPOSE 8081
+EXPOSE 8083
+EXPOSE 8501
+EXPOSE 11434
 
-
-
-# RUN ollama pull llama3
-
-# Copy the application code
-COPY . .
-
-# Expose the necessary ports
-EXPOSE 8000 8081 8083 8050 11434 8501
-
-# Start the application
-CMD ["bash", "start_docker_local.sh"]
+# Run the application.
+# CMD uvicorn 'backend.backend:app' --host=0.0.0.0 --port=8000
+# CMD [ "ls" ]
+CMD [ "./start_docker_local.sh" ]
