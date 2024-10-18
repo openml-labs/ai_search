@@ -1,0 +1,3678 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../docker/">
+      
+      
+        <link rel="next" href="../../Ollama%20server/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.41">
+    
+    
+      
+        <title>Inference - OpenML RAG Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#inference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="OpenML RAG Documentation" class="md-header__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            OpenML RAG Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="OpenML RAG Documentation" class="md-nav__button md-logo" aria-label="OpenML RAG Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    OpenML RAG Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RAG Pipeline for OpenML
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Documentation Bot
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Documentation Bot
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Documentation%20Bot/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Documentation Bot
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Documentation%20Bot/api_reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Api reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Inference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Index
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../docker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Docker container
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Inference
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stopping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-access-to-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI access to the API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI access to the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ollama
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM Service
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      ui_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.LLMResponseParser" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLMResponseParser
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LLMResponseParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.LLMResponseParser.update_subset_cols" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_subset_cols
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser" class="md-nav__link">
+    <span class="md-ellipsis">
+      ResponseParser
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ResponseParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.database_filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      database_filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_llm_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_llm_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_rag_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_rag_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_structured_query" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_structured_query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.load_paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_paths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.parse_and_update_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse_and_update_response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.UILoader" class="md-nav__link">
+    <span class="md-ellipsis">
+      UILoader
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UILoader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.create_chat_interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_chat_interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.display_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      display_results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.load_paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_paths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.process_query_chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      process_query_chat
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ollama server
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Ollama server
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Ollama%20server/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ollama Server
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Query processing LLM
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Query processing LLM
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Query%20processing%20LLM/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    LLM Query parsing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Query%20processing%20LLM/api_reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Structured query
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rag Pipeline
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Rag Pipeline
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RAG Pipeline
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Configuration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/general_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    General utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/llm_module/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RAG LLM
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/metadata_module/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metadata Module
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/result_gen/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Result gen
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/training/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Training
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/vector_store/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vector Store Utilities
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_9" id="__nav_6_9_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Developer Tutorials
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_9">
+            <span class="md-nav__icon md-icon"></span>
+            Developer Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/Developer%20Tutorials/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Developer Tutorials
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/Developer%20Tutorials/change%20data%20input/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change data input
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/Developer%20Tutorials/change%20model/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Change model
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/Developer%20Tutorials/create%20vectordb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Create vectordb
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Rag%20Pipeline/Developer%20Tutorials/load%20vectordb%20and%20get%20results/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load vectordb and get results
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    UI
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            UI
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UI/api_reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Api reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UI/frontend/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Evaluation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Evaluation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluating the AI search
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/api_reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Api reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/evaluation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Evaluation of LLM models and techniques
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/labelling_tool/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Labeling Tool
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/merging_labels/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Merging labels
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../evaluation/testing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#stopping" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stopping
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-access-to-the-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI access to the API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI access to the API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ollama
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLM Service
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backend
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils" class="md-nav__link">
+    <span class="md-ellipsis">
+      ui_utils
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.LLMResponseParser" class="md-nav__link">
+    <span class="md-ellipsis">
+      LLMResponseParser
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LLMResponseParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.LLMResponseParser.update_subset_cols" class="md-nav__link">
+    <span class="md-ellipsis">
+      update_subset_cols
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser" class="md-nav__link">
+    <span class="md-ellipsis">
+      ResponseParser
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ResponseParser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.database_filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      database_filter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_llm_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_llm_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_rag_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_rag_response
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.fetch_structured_query" class="md-nav__link">
+    <span class="md-ellipsis">
+      fetch_structured_query
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.load_paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_paths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.ResponseParser.parse_and_update_response" class="md-nav__link">
+    <span class="md-ellipsis">
+      parse_and_update_response
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui_utils.UILoader" class="md-nav__link">
+    <span class="md-ellipsis">
+      UILoader
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UILoader">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.create_chat_interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      create_chat_interface
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.display_results" class="md-nav__link">
+    <span class="md-ellipsis">
+      display_results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.load_paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_paths
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ui_utils.UILoader.process_query_chat" class="md-nav__link">
+    <span class="md-ellipsis">
+      process_query_chat
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="inference">Inference<a class="headerlink" href="#inference" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Just run ./start_local.sh and it will take care of everything.</li>
+<li>The UI should either pop up or you can navigate to http://localhost:8501/ in your browser.</li>
+<li>Note that it takes a decent bit of time to load everything. </li>
+</ul>
+<h2 id="stopping">Stopping<a class="headerlink" href="#stopping" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Run ./stop_local.sh</li>
+<li>./start_local.sh stores the PIDs of all the processes it starts in files in all the directories it starts them in. stop_local.sh reads these files and kills the processes.</li>
+</ul>
+<h2 id="cli-access-to-the-api">CLI access to the API<a class="headerlink" href="#cli-access-to-the-api" title="Permanent link">&para;</a></h2>
+<ul>
+<li>We all are lazy sometimes and don't want to use the interface sometimes. Or just want to test out different parts of the API without any hassle. To that end, you can either test out the individual components like so: </li>
+<li>Note that the <code>%20</code> are spaces in the URL. </li>
+</ul>
+<h3 id="ollama">Ollama<a class="headerlink" href="#ollama" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This is the server that runs an Ollama server (This is basically an optimized version of a local LLM. It does not do anything of itself but runs as a background service so you can use the LLM). </li>
+<li>You can start it by running <code>cd ollama &amp;&amp; ./get_ollama.sh &amp;</code></li>
+</ul>
+<h3 id="llm-service">LLM Service<a class="headerlink" href="#llm-service" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This component is the one that runs the query processing using LLMs module. It uses the Ollama server, runs queries and processes them. </li>
+<li>You can start it by running <code>cd llm_service &amp;&amp; uvicorn llm_service:app --host 0.0.0.0 --port 8081 &amp;</code></li>
+<li>Curl Example : <code>curl http://0.0.0.0:8081/llmquery/find%20me%20a%20mushroom%20dataset%20with%20less%20than%203000%20classes</code></li>
+</ul>
+<h3 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This component runs the RAG pipeline. It returns a JSON with dataset ids of the OpenML datasets that match the query.</li>
+<li>You can start it by running <code>cd backend &amp;&amp; uvicorn backend:app --host 0.0.0.0 --port 8000 &amp;</code></li>
+<li>Curl Example : <code>curl http://0.0.0.0:8000/dataset/find%20me%20a%20mushroom%20dataset</code></li>
+</ul>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This component runs the Streamlit frontend. It is the UI that you see when you navigate to <code>http://localhost:8501</code>.</li>
+<li>You can start it by running <code>cd frontend &amp;&amp; streamlit run ui.py &amp;</code></li>
+</ul>
+<h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+<ul>
+<li>If you get an error about file permissions, run <code>chmod +x start_local.sh</code> and <code>chmod +x stop_local.sh</code> to make them executable.</li>
+</ul>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="ui_utils"></a>
+    <div class="doc doc-contents first">
+
+
+
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="ui_utils.LLMResponseParser" class="doc doc-heading">
+            <code>LLMResponseParser</code>
+
+
+<a href="#ui_utils.LLMResponseParser" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Description: Parse the response from the LLM service and update the columns based on the response.</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">LLMResponseParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Parse the response from the LLM service and update the columns based on the response.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llm_response</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="n">llm_response</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_sort</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">process_size_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_size</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">size</span><span class="p">,</span> <span class="n">sort</span> <span class="o">=</span> <span class="n">attr_size</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">attr_size</span> <span class="k">else</span> <span class="p">(</span><span class="n">attr_size</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NumberOfInstances&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sort</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size_sort</span> <span class="o">=</span> <span class="n">sort</span>
+
+    <span class="k">def</span> <span class="nf">missing_values_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_missing</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr_missing</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NumberOfMissingValues&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">classification_type_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_classification</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr_classification</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span> <span class="o">=</span> <span class="n">attr_classification</span>
+
+    <span class="k">def</span> <span class="nf">uploader_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_uploader</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">attr_uploader</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;uploader&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span> <span class="o">=</span> <span class="n">attr_uploader</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_attributes_from_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">attribute_processors</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;size_of_dataset&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_size_attribute</span><span class="p">,</span>
+            <span class="s2">&quot;missing_values&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">missing_values_attribute</span><span class="p">,</span>
+            <span class="s2">&quot;classification_type&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type_attribute</span><span class="p">,</span>
+            <span class="s2">&quot;uploader&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">uploader_attribute</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">attribute</span> <span class="ow">in</span> <span class="n">attribute_processors</span><span class="p">:</span>
+                <span class="n">attribute_processors</span><span class="p">[</span><span class="n">attribute</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">update_subset_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Filter the metadata based on the updated subset columns and extra conditions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;multi&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="s2">&quot;binary&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">uploader</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span><span class="p">)</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;uploader&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">uploader</span><span class="p">]</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">metadata</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.LLMResponseParser.update_subset_cols" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">update_subset_cols</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></code>
+
+<a href="#ui_utils.LLMResponseParser.update_subset_cols" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Filter the metadata based on the updated subset columns and extra conditions</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_subset_cols</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Filter the metadata based on the updated subset columns and extra conditions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;multi&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="s2">&quot;binary&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">classification_type</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">uploader</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uploader_name</span><span class="p">)</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;uploader&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">uploader</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="k">return</span> <span class="n">metadata</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subset_cols</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="ui_utils.ResponseParser" class="doc doc-heading">
+            <code>ResponseParser</code>
+
+
+<a href="#ui_utils.ResponseParser" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Description : This classe is used to decide the order of operations and run the response parsing.
+It loads the paths, fetches the Query parsing LLM response, the rag response, loads the metadatas and then based on the config, decides the order in which to apply each of them.</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ResponseParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description : This classe is used to decide the order of operations and run the response parsing.</span>
+<span class="sd">    It loads the paths, fetches the Query parsing LLM response, the rag response, loads the metadatas and then based on the config, decides the order in which to apply each of them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_llm_before_rag</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">=</span> <span class="n">query_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_paths</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span> <span class="o">=</span> <span class="n">apply_llm_before_rag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">load_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Load paths from paths.json</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;paths.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">fetch_llm_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Fetch the response from the query parsing LLM service as a json</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">llm_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;llm_response&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span>
+
+    <span class="k">def</span> <span class="nf">fetch_structured_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Fetch the response for a structured query from the LLM service as a JSON</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">structured_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;structured_query&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">structured_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">},</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Print the error for debugging purposes</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Set structured_query_response to None on error</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">structured_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">},</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Print the error for debugging purposes</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred while fetching from local endpoint: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Set structured_query_response to None if the local request also fails</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span>
+
+    <span class="k">def</span> <span class="nf">database_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_condition</span><span class="p">,</span> <span class="n">collec</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply database filter on the rag_response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span> <span class="o">=</span> <span class="n">collec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">filter_condition</span><span class="p">)[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span><span class="p">))</span>
+        <span class="c1"># print(self.database_filtered)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span>
+
+    <span class="k">def</span> <span class="nf">fetch_rag_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Fetch the response from RAG pipeline</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rag_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;rag_response&quot;</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rag_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()},</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rag_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()},</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">ordered_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order_results</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ordered_set</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span>
+
+    <span class="k">def</span> <span class="nf">_order_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">doc_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">ordered_set</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">docid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">docid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">doc_set</span><span class="p">:</span>
+                <span class="n">ordered_set</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+            <span class="n">doc_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">docid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ordered_set</span>
+
+    <span class="k">def</span> <span class="nf">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Description: Parse the response from the RAG and LLM services and update the metadata based on the response.</span>
+<span class="sd">         Decide which order to apply them</span>
+<span class="sd">         -  self.apply_llm_before_rag == False</span>
+<span class="sd">             - Metadata is filtered based on the rag response first and then by the Query parsing LLM</span>
+<span class="sd">        -  self.apply_llm_before_rag == False</span>
+<span class="sd">             - Metadata is filtered based by the Query parsing LLM first and the rag response second</span>
+<span class="sd">        - in case structured_query == true, take results are applying data filters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No LLM filter.&quot;</span><span class="p">)</span>
+            <span class="c1"># print(self.rag_response, flush=True)</span>
+            <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_filter</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+            <span class="c1"># print(filtered_metadata)</span>
+            <span class="c1"># if no llm response is required, return the initial response</span>
+            <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;structured_query&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span><span class="p">:</span>
+                <span class="n">filtered_metadata</span><span class="p">,</span> <span class="n">llm_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rag_before_llm</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;dataset&quot;</span><span class="p">:</span>
+                    <span class="n">llm_parser</span><span class="o">.</span><span class="n">get_attributes_from_response</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="n">llm_parser</span><span class="o">.</span><span class="n">update_subset_cols</span><span class="p">(</span><span class="n">filtered_metadata</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span><span class="p">:</span>
+                <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_before_rag</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+        <span class="k">elif</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">col_name</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NumberOfFeatures&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NumberOfInstances&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="c1"># print(self.structured_query_response)  # Only for debugging. Comment later.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dict</span>
+            <span class="p">):</span>
+                <span class="c1"># Safely attempt to access the &quot;filter&quot; key in the first element</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_structured_query_on_success</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_structured_query_on_fail</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+                <span class="c1"># print(&quot;Showing only rag response&quot;)</span>
+            <span class="k">return</span> <span class="n">filtered_metadata</span><span class="p">[[</span><span class="s2">&quot;did&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">col_name</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">_structured_query_on_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+            <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">],</span>
+            <span class="n">categories</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">],</span>
+            <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;did&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+    <span class="k">def</span> <span class="nf">_structured_query_on_success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span>
+        <span class="p">):</span>
+            <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span><span class="p">)]</span>
+            <span class="c1"># print(&quot;Showing database filtered data&quot;)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span>
+                <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">])</span>
+            <span class="p">]</span>
+            <span class="c1"># print(</span>
+            <span class="c1">#     &quot;Showing only rag response as filter is empty or none of the rag data satisfies filter conditions.&quot;</span>
+            <span class="c1"># )</span>
+        <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+            <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">],</span>
+            <span class="n">categories</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">],</span>
+            <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;did&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_filter_before_rag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;LLM filter before RAG&quot;</span><span class="p">)</span>
+        <span class="n">llm_parser</span> <span class="o">=</span> <span class="n">LLMResponseParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span><span class="p">)</span>
+        <span class="n">llm_parser</span><span class="o">.</span><span class="n">get_attributes_from_response</span><span class="p">()</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">llm_parser</span><span class="o">.</span><span class="n">update_subset_cols</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="p">[</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+            <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">],</span>
+            <span class="n">categories</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">],</span>
+            <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;did&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+    <span class="k">def</span> <span class="nf">_rag_before_llm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;RAG before LLM filter.&quot;</span><span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+            <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">],</span>
+            <span class="n">categories</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">],</span>
+            <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;did&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">llm_parser</span> <span class="o">=</span> <span class="n">LLMResponseParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filtered_metadata</span><span class="p">,</span> <span class="n">llm_parser</span>
+
+    <span class="k">def</span> <span class="nf">_no_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span>
+            <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">])</span>
+        <span class="p">]</span>
+        <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span>
+            <span class="n">filtered_metadata</span><span class="p">[</span><span class="s2">&quot;did&quot;</span><span class="p">],</span>
+            <span class="n">categories</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">],</span>
+            <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="n">filtered_metadata</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;did&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">filtered_metadata</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.database_filter" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">database_filter</span><span class="p">(</span><span class="n">filter_condition</span><span class="p">,</span> <span class="n">collec</span><span class="p">)</span></code>
+
+<a href="#ui_utils.ResponseParser.database_filter" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply database filter on the rag_response</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">database_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filter_condition</span><span class="p">,</span> <span class="n">collec</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply database filter on the rag_response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">]))</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span> <span class="o">=</span> <span class="n">collec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">filter_condition</span><span class="p">)[</span><span class="s2">&quot;ids&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span><span class="p">))</span>
+    <span class="c1"># print(self.database_filtered)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_filtered</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.fetch_llm_response" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fetch_llm_response</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></code>
+
+<a href="#ui_utils.ResponseParser.fetch_llm_response" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Fetch the response from the query parsing LLM service as a json</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_llm_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Fetch the response from the query parsing LLM service as a json</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">llm_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;llm_response&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">llm_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.fetch_rag_response" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fetch_rag_response</span><span class="p">(</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span></code>
+
+<a href="#ui_utils.ResponseParser.fetch_rag_response" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Fetch the response from RAG pipeline</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_rag_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Fetch the response from RAG pipeline</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rag_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;rag_response&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rag_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rag_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">ordered_set</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_order_results</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span><span class="p">[</span><span class="s2">&quot;initial_response&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ordered_set</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.fetch_structured_query" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">fetch_structured_query</span><span class="p">(</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span></code>
+
+<a href="#ui_utils.ResponseParser.fetch_structured_query" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Fetch the response for a structured query from the LLM service as a JSON</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fetch_structured_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Fetch the response for a structured query from the LLM service as a JSON</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">structured_response_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;structured_query&quot;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">structured_response_path</span><span class="p">[</span><span class="s1">&#39;docker&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Print the error for debugging purposes</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Set structured_query_response to None on error</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">structured_response_path</span><span class="p">[</span><span class="s1">&#39;local&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="n">query</span><span class="p">},</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Print the error for debugging purposes</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred while fetching from local endpoint: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># Set structured_query_response to None if the local request also fails</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.load_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load_paths</span><span class="p">()</span></code>
+
+<a href="#ui_utils.ResponseParser.load_paths" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Load paths from paths.json</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Load paths from paths.json</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;paths.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.ResponseParser.parse_and_update_response" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">parse_and_update_response</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></code>
+
+<a href="#ui_utils.ResponseParser.parse_and_update_response" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Parse the response from the RAG and LLM services and update the metadata based on the response.
+ Decide which order to apply them
+ -  self.apply_llm_before_rag == False
+     - Metadata is filtered based on the rag response first and then by the Query parsing LLM
+-  self.apply_llm_before_rag == False
+     - Metadata is filtered based by the Query parsing LLM first and the rag response second
+- in case structured_query == true, take results are applying data filters.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Description: Parse the response from the RAG and LLM services and update the metadata based on the response.</span>
+<span class="sd">     Decide which order to apply them</span>
+<span class="sd">     -  self.apply_llm_before_rag == False</span>
+<span class="sd">         - Metadata is filtered based on the rag response first and then by the Query parsing LLM</span>
+<span class="sd">    -  self.apply_llm_before_rag == False</span>
+<span class="sd">         - Metadata is filtered based by the Query parsing LLM first and the rag response second</span>
+<span class="sd">    - in case structured_query == true, take results are applying data filters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No LLM filter.&quot;</span><span class="p">)</span>
+        <span class="c1"># print(self.rag_response, flush=True)</span>
+        <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_no_filter</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+        <span class="c1"># print(filtered_metadata)</span>
+        <span class="c1"># if no llm response is required, return the initial response</span>
+        <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+    <span class="k">elif</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;structured_query&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span><span class="p">:</span>
+            <span class="n">filtered_metadata</span><span class="p">,</span> <span class="n">llm_parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rag_before_llm</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;dataset&quot;</span><span class="p">:</span>
+                <span class="n">llm_parser</span><span class="o">.</span><span class="n">get_attributes_from_response</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">llm_parser</span><span class="o">.</span><span class="n">update_subset_cols</span><span class="p">(</span><span class="n">filtered_metadata</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_llm_before_rag</span><span class="p">:</span>
+            <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_before_rag</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">filtered_metadata</span>
+
+    <span class="k">elif</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rag_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="n">col_name</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;status&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NumberOfClasses&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NumberOfFeatures&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;NumberOfInstances&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="c1"># print(self.structured_query_response)  # Only for debugging. Comment later.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nb">dict</span>
+        <span class="p">):</span>
+            <span class="c1"># Safely attempt to access the &quot;filter&quot; key in the first element</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_structured_query_on_success</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filtered_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_structured_query_on_fail</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="c1"># print(&quot;Showing only rag response&quot;)</span>
+        <span class="k">return</span> <span class="n">filtered_metadata</span><span class="p">[[</span><span class="s2">&quot;did&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">col_name</span><span class="p">]]</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="ui_utils.UILoader" class="doc doc-heading">
+            <code>UILoader</code>
+
+
+<a href="#ui_utils.UILoader" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents ">
+
+
+        <p>Description : Create the chat interface</p>
+
+
+
+
+
+
+              <details class="quote">
+                <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UILoader</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description : Create the chat interface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_path</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="c1"># Load config</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="c1"># Paths and display information</span>
+
+        <span class="c1"># Load metadata chroma database for structured query</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collec</span> <span class="o">=</span> <span class="n">load_chroma_metadata</span><span class="p">()</span>
+
+        <span class="c1"># Metadata paths</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_metadata_path</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;all_dataset_description.csv&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flow_metadata_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;data_dir&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="s2">&quot;all_flow_description.csv&quot;</span>
+
+        <span class="c1"># Read metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_metadata_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flow_metadata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flow_metadata_path</span><span class="p">)</span>
+
+        <span class="c1"># defaults</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">=</span> <span class="s2">&quot;Dataset&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_filter</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_paths</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        &lt;p style=&#39;text-align: center; color: white;&#39;&gt;Machine learning research should be easily accessible and reusable. &lt;a href = &quot;https://openml.org/&quot;&gt;OpenML&lt;/a&gt; is an open platform for sharing datasets, algorithms, and experiments - to learn how to learn better, together. &lt;/p&gt;</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logo</span> <span class="o">=</span> <span class="s2">&quot;images/favicon.ico&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chatbot_display</span> <span class="o">=</span> <span class="s2">&quot;How do I do X using OpenML? / Find me a dataset about Y&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;messages&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># container for company description and logo</span>
+    <span class="k">def</span> <span class="nf">_generate_logo_header</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="n">col1</span><span class="p">,</span> <span class="n">col2</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">columns</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">col1</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logo</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">col2</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
+                <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">generate_complete_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_logo_header</span><span class="p">()</span>
+        <span class="n">chat_container</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">container</span><span class="p">()</span>
+        <span class="c1"># self.disclaimer_dialog()</span>
+        <span class="k">with</span> <span class="n">chat_container</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">form</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">&quot;chat_form&quot;</span><span class="p">):</span>
+                <span class="n">user_input</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">text_input</span><span class="p">(</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Query&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chatbot_display</span>
+                <span class="p">)</span>
+                <span class="n">query_type</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span>
+                    <span class="s2">&quot;Select Query Type&quot;</span><span class="p">,</span>
+                    <span class="p">[</span><span class="s2">&quot;General Query&quot;</span><span class="p">,</span> <span class="s2">&quot;Dataset&quot;</span><span class="p">,</span> <span class="s2">&quot;Flow&quot;</span><span class="p">],</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Are you looking for a dataset or a flow or just have a general query?&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">ai_filter</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">toggle</span><span class="p">(</span>
+                    <span class="s2">&quot;Use AI powered filtering&quot;</span><span class="p">,</span>
+                    <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Uses an AI model to identify what columns might be useful to you.&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">form_submit_button</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Search&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">create_chat_interface</span><span class="p">(</span><span class="n">user_input</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user_input</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">create_chat_interface</span><span class="p">(</span>
+                    <span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="o">=</span><span class="n">query_type</span><span class="p">,</span> <span class="n">ai_filter</span><span class="o">=</span><span class="n">ai_filter</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">create_chat_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ai_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">=</span> <span class="n">query_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai_filter</span> <span class="o">=</span> <span class="n">ai_filter</span>
+
+        <span class="k">if</span> <span class="n">user_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ai&quot;</span><span class="p">):</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OpenML Agent: &quot;</span><span class="p">,</span> <span class="s2">&quot;Hello! How can I help you today?&quot;</span><span class="p">)</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">&quot;:warning: Note that results are powered by local LLM models and may not be accurate. Please refer to the official OpenML website for accurate information.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Handle user input</span>
+        <span class="k">if</span> <span class="n">user_input</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle_user_input</span><span class="p">(</span><span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_handle_user_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="p">):</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">user_input</span><span class="p">})</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Waiting for results...&quot;</span><span class="p">):</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_query_chat</span><span class="p">(</span><span class="n">user_input</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;General Query&quot;</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenML Agent&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">}</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stream_results</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+            <span class="c1"># reverse messages to show the latest message at the top</span>
+        <span class="n">reversed_messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reverse_session_history</span><span class="p">()</span>
+
+            <span class="c1"># Display chat history</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_display_chat_history</span><span class="p">(</span><span class="n">query_type</span><span class="p">,</span> <span class="n">reversed_messages</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_download_button</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_display_chat_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query_type</span><span class="p">,</span> <span class="n">reversed_messages</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">reversed_messages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;General Query&quot;</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">if</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;role&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;user&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">display_results</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span> <span class="s2">&quot;user&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ai&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">display_results</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">],</span> <span class="s2">&quot;ai&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_reverse_session_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">reversed_messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">reversed_messages</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+            <span class="n">reversed_messages</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">reversed_messages</span>
+
+    <span class="k">def</span> <span class="nf">_stream_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Fetching results...&quot;</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">r</span><span class="p">:</span>
+                <span class="n">resp_contain</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+                <span class="n">streamed_response</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_content</span><span class="p">(</span><span class="n">chunk_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">chunk</span><span class="p">:</span>
+                        <span class="n">streamed_response</span> <span class="o">+=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                        <span class="n">resp_contain</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">streamed_response</span><span class="p">)</span>
+                <span class="n">resp_contain</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenML Agent&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">streamed_response</span><span class="p">}</span>
+            <span class="p">)</span>
+
+    <span class="nd">@st</span><span class="o">.</span><span class="n">experimental_fragment</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">create_download_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="n">st</span><span class="o">.</span><span class="n">session_state</span><span class="o">.</span><span class="n">messages</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">download_button</span><span class="p">(</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Download chat history&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+            <span class="n">file_name</span><span class="o">=</span><span class="s2">&quot;chat_history.txt&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">display_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_response</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Display the results in a DataFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">initial_response</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">initial_response</span><span class="p">)</span>
+
+    <span class="c1"># Function to handle query processing</span>
+    <span class="k">def</span> <span class="nf">process_query_chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Process the query and return the results based on the query type and the LLM filter.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">apply_llm_before_rag</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_filter</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">response_parser</span> <span class="o">=</span> <span class="n">ResponseParser</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">apply_llm_before_rag</span><span class="o">=</span><span class="n">apply_llm_before_rag</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Dataset&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Flow&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_filter</span><span class="p">:</span>
+                <span class="n">response_parser</span><span class="o">.</span><span class="n">fetch_rag_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_metadata</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># get structured query</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_display_structured_query_results</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">response_parser</span><span class="p">)</span>
+
+            <span class="n">results</span> <span class="o">=</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_metadata</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;General Query&quot;</span><span class="p">:</span>
+            <span class="c1"># Return documentation response path</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;documentation_query&quot;</span><span class="p">][</span><span class="s2">&quot;local&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">query</span>
+
+    <span class="k">def</span> <span class="nf">_display_structured_query_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">response_parser</span><span class="p">):</span>
+        <span class="n">response_parser</span><span class="o">.</span><span class="n">fetch_structured_query</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># get rag response</span>
+            <span class="c1"># using original query instead of extracted topics.</span>
+            <span class="n">response_parser</span><span class="o">.</span><span class="n">fetch_rag_response</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span>
+                <span class="n">response_parser</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;query&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="s2">&quot;Detected Filter(s): &quot;</span><span class="p">,</span>
+                    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                        <span class="n">response_parser</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Detected Filter(s): &quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;filter&quot;</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">spinner</span><span class="p">(</span><span class="s2">&quot;Applying LLM Detected Filter(s)...&quot;</span><span class="p">):</span>
+                    <span class="n">response_parser</span><span class="o">.</span><span class="n">database_filter</span><span class="p">(</span>
+                        <span class="n">response_parser</span><span class="o">.</span><span class="n">structured_query_response</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;filter&quot;</span><span class="p">],</span>
+                        <span class="n">collec</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># fallback to RAG response</span>
+            <span class="n">response_parser</span><span class="o">.</span><span class="n">fetch_rag_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">load_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description: Load paths from paths.json</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;paths.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.UILoader.create_chat_interface" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">create_chat_interface</span><span class="p">(</span><span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ai_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+<a href="#ui_utils.UILoader.create_chat_interface" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_chat_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ai_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Create the chat interface and display the chat history and results. Show the user input and the response from the OpenML Agent.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">=</span> <span class="n">query_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ai_filter</span> <span class="o">=</span> <span class="n">ai_filter</span>
+
+    <span class="k">if</span> <span class="n">user_input</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">st</span><span class="o">.</span><span class="n">chat_message</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ai&quot;</span><span class="p">):</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;OpenML Agent: &quot;</span><span class="p">,</span> <span class="s2">&quot;Hello! How can I help you today?&quot;</span><span class="p">)</span>
+            <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="s2">&quot;:warning: Note that results are powered by local LLM models and may not be accurate. Please refer to the official OpenML website for accurate information.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Handle user input</span>
+    <span class="k">if</span> <span class="n">user_input</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_user_input</span><span class="p">(</span><span class="n">user_input</span><span class="p">,</span> <span class="n">query_type</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.UILoader.display_results" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">display_results</span><span class="p">(</span><span class="n">initial_response</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></code>
+
+<a href="#ui_utils.UILoader.display_results" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Display the results in a DataFrame</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">display_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_response</span><span class="p">,</span> <span class="n">role</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Display the results in a DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">dataframe</span><span class="p">(</span><span class="n">initial_response</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">st</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">initial_response</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.UILoader.load_paths" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">load_paths</span><span class="p">()</span></code>
+
+<a href="#ui_utils.UILoader.load_paths" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Load paths from paths.json</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Load paths from paths.json</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;paths.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="ui_utils.UILoader.process_query_chat" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">process_query_chat</span><span class="p">(</span><span class="n">query</span><span class="p">)</span></code>
+
+<a href="#ui_utils.UILoader.process_query_chat" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Description: Process the query and return the results based on the query type and the LLM filter.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>frontend/ui_utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_query_chat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Description: Process the query and return the results based on the query type and the LLM filter.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">apply_llm_before_rag</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_filter</span> <span class="k">else</span> <span class="kc">False</span>
+    <span class="n">response_parser</span> <span class="o">=</span> <span class="n">ResponseParser</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">apply_llm_before_rag</span><span class="o">=</span><span class="n">apply_llm_before_rag</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Dataset&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;Flow&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai_filter</span><span class="p">:</span>
+            <span class="n">response_parser</span><span class="o">.</span><span class="n">fetch_rag_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">query_type</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_metadata</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># get structured query</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_display_structured_query_results</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">response_parser</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">response_parser</span><span class="o">.</span><span class="n">parse_and_update_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span>
+
+    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">query_type</span> <span class="o">==</span> <span class="s2">&quot;General Query&quot;</span><span class="p">:</span>
+        <span class="c1"># Return documentation response path</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">[</span><span class="s2">&quot;documentation_query&quot;</span><span class="p">][</span><span class="s2">&quot;local&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">query</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
